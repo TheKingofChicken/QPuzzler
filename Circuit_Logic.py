@@ -3,14 +3,6 @@ from qiskit import *
 import math
 from qiskit.circuit.quantumregister import Qubit
 
-class Entity:
-    def __init__(self, height, width, sprite, x_cord, y_cord):
-        self.x_cord = x_cord
-        self.y_cord = y_cord
-        self.height = height
-        self.width = width
-        self.sprite = sprite
-
 class Quantum_Gate(ABC):
     
     def __init__(self, cost, conditionals, current_Track, entity):
@@ -27,7 +19,7 @@ class Quantum_Gate(ABC):
             pass
         self.conditionals[conditional_Slot] = new_conditional
 
-class Track(Qubit):
+class Track(Qubit): #class for the track which each qbit moves along
     def __init__(self, input):
         self.input = input
         self.gates = []
@@ -69,7 +61,8 @@ class Conditional_Gate(Quantum_Gate):
     def Set_Control_Qbit(self, new_Control_Qbit):
         self.Control_Qbit = new_Control_Qbit
 
-#here we start setting up the quantum gate that<ll be in the final game
+#here we start setting up the quantum gate that'll be in the final game
+# they're all exactly the same, except for their Qiskit_Equivalent
 class SWAP_Gate(Quantum_Gate):
     def __init__(self, cost, conditionals, current_Track, target_Track, entity):
         self.cost = cost
@@ -79,7 +72,7 @@ class SWAP_Gate(Quantum_Gate):
         self.entity = entity
     
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
@@ -98,7 +91,7 @@ class SWAP_Gate(Quantum_Gate):
 
 class H_Gate(Quantum_Gate):
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
@@ -117,7 +110,7 @@ class H_Gate(Quantum_Gate):
 
 class X_Gate(Quantum_Gate):
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
@@ -136,7 +129,7 @@ class X_Gate(Quantum_Gate):
 
 class T_Gate(Quantum_Gate):
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
@@ -155,7 +148,7 @@ class T_Gate(Quantum_Gate):
 
 class Z_Gate(Quantum_Gate):
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
@@ -174,7 +167,7 @@ class Z_Gate(Quantum_Gate):
 
 class S_Gate(Quantum_Gate):
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None:
+        if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
