@@ -3,7 +3,7 @@
 import pygame
 from pygame import display
 
-class Entity:
+class Entity: #with the artstyle we're going with, we probably won't even need sprites, maybe only for the qubits
     def __init__(self, height, width, sprite, x_cord, y_cord):
         self.x_cord = x_cord
         self.y_cord = y_cord
