@@ -1,32 +1,34 @@
 from abc import ABC
-from numpy import imag, real
+import numpy as np
 from qiskit import *
 import cmath
 import math
 from qiskit.circuit.quantumregister import Qubit
 from qiskit.providers.ibmq.exceptions import IBMQAccountMultipleCredentialsFound
 
+class Entity: #with the artstyle we're going with, we probably won't even need sprites, maybe only for the qubits
+    def __init__(self, x_Cord, y_Cord):
+        self.x_cord = x_Cord
+        self.y_cord = y_Cord
+
+    def set_Pos(self, x_Cord, y_Cord):
+        self.x_cord = x_Cord
+        self.y_cord = y_Cord
+
 class Quantum_Gate():
     
-    def __init__(self, cost, conditionals, current_Track, entity):
+    def __init__(self, cost, conditional, current_Track, current_Position):
         self.cost = cost
-        self.conditionals = conditionals
+        self.conditional = conditional
         self.current_Track = current_Track
-        self.entity = entity
+        self.current_Position = current_Position
 
-    def Set_Current_Track(self,new_Track):
-        self.current_Track = new_Track
+    def Set_Current_Placement(self, coords):
+        self.current_Track = coords[0]
+        self.current_position = coords[1]
 
-    def Add_conditionals(self, new_conditional, conditional_Slot):
-        if conditional_Slot>len(self.conditionals):
-            pass
-        self.conditionals[conditional_Slot] = new_conditional
-
-    def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
-        Qiskit_Equivalent(self, Quantum_Circuit)# YES IT'S DEFINED WHAT DO YOU FUCKIN MEAN
-
-    def Qiskit_Equivalent(self, quantum_Circuit):
-        quantum_Circuit.id(self.current_Track)
+    def Add_conditional(self, new_conditional):
+        self.conditional = new_conditional
 
 class Track(Qubit): #class for the track which each qbit moves along
     def __init__(self, input):
@@ -35,9 +37,9 @@ class Track(Qubit): #class for the track which each qbit moves along
         self.total_Cost = 0
     
     def Add_Gate(self,new_Gate, position):
-        self.gates.insert(new_Gate, position)
+        self.gates.append(new_Gate)
         self.total_Cost =+ new_Gate.cost
-    
+
     def Get_Gates(self):
         return self.gates
 
@@ -47,30 +49,23 @@ class Level(QuantumCircuit):
         self.outputs = outputs
         self.total_Cost = 0
         self.tracks = []
-        for input in inputs:
-            self.tracks.append(Track(input))
+        for input in self.inputs:
+            self.tracks.append(Track(input, 0, 0))
 
     def Add_Track(self):
         self.inputs.append(Track(Quantum_Bit))
 
     def Run(self):
-        gates = []
-        longest_Length = 0
-        #pulls and stores all the gates, as well as finds the longest one
-        for track_Gates in self.tracks:
-            gates.append(track_Gates.get_Gates())
-            if len(track_Gates.get_Gates())> longest_Length:
-                longest_Length = len(track_Gates.get_Gates())
-        """ this parts only serves to make the quantum gate array a rectangle, a Quantum_Gate object's quiskit equivalent is an 
-        identity gate, which keeps the same qbit"""
-        for track_Gates in self.tracks:
-            for x in range(longest_Length - len(track_Gates.get_Gates())):
-                track_Gates.Add_Gate(Quantum_Gate,len(track_Gates)-1)
+        #to iterate over the matrix column by column, we place it into a np.array object
+        gate_Layers = np.array(self.tracks)
         #construction of the adequate QuantumCircuit object
         q = QuantumRegister(len(self.tracks))
         self.add_register(q)
-        for track_Position in range(len(self.tracks)):
-            for 
+        for gate_Layer in gate_Layers.transpose():
+            for gate in gate_Layer:
+                gate.Qiskit_Equivalent_Dispatcher(q)
+        
+        
 
 class Quantum_Bit:
     def __init__(self):
@@ -82,7 +77,7 @@ class Quantum_Bit:
         self.state = [zero_Prob,zero_Angle,one_Prob,one_Angle]
 
     def Update(self, statevector_Coordinates):
-       self.state = [real(statevector_Coordinates[0]) ** 2 + imag(statevector_Coordinates[0]) ** 2, cmath.phase(statevector_Coordinates[0]), real(statevector_Coordinates[1]) ** 2 + imag(statevector_Coordinates[1]) ** 2, cmath.phase(statevector_Coordinates[1])]
+       self.state = [np.real(statevector_Coordinates[0]) ** 2 + np.imag(statevector_Coordinates[0]) ** 2, cmath.phase(statevector_Coordinates[0]), np.real(statevector_Coordinates[1]) ** 2 + np.imag(statevector_Coordinates[1]) ** 2, cmath.phase(statevector_Coordinates[1])]
     """the statevector qiskit uses to describe entangled qbits are incomplete, for example: qbit 0 is (50%, 0%) and 1bit 1 is (0%, 50%)
         so far, the way we've found to deal with this is to add the possibilities together, but we still need to check if it would work
         all the time """
@@ -103,9 +98,9 @@ class Conditional_Gate(Quantum_Gate):
 #here we start setting up the quantum gate that'll be in the final game
 # they're all exactly the same, except for their Qiskit_Equivalent
 class SWAP_Gate(Quantum_Gate):
-    def __init__(self, cost, conditionals, current_Track, target_Track, entity):
+    def __init__(self, cost, conditional, current_Track, target_Track, entity):
         self.cost = cost
-        self.conditionals = conditionals
+        self.conditional = conditional
         self.current_Track = current_Track
         self.target_Track = target_Track
         self.entity = entity

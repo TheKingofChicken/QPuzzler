@@ -2,6 +2,7 @@ import pygame
 import ctypes
 from pygame import *
 from pygame.constants import FULLSCREEN, KEYDOWN
+import Circuit_Logic as cl
 
 #without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
 ctypes.windll.user32.SetProcessDPIAware()
@@ -57,6 +58,13 @@ level_Select_Buttons = (back_Button, start_Button)
 #colors we're actually gonna use
 white = (255,255,255)
 black=(0,0,0)
+grey = (200,200,200)
+
+#levels:
+gate = cl.H_Gate(0,0,0,0)
+track = cl.Track(0)
+track.Add_Gate(gate, 0)
+level = cl.Level(track,0)
 
 #Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
@@ -120,7 +128,7 @@ def level_Select(display):
             if back_Button.collidepoint((mx,my)):
                 running = False
             if start_Button.collidepoint((mx,my)):
-                level()
+                level(level)
         #events
         click = False
         for event in pygame.event.get():
@@ -174,8 +182,14 @@ def options_Menu(display):
                     (mx, my) = pygame.mouse.get_pos()
                     click = True #this one here is the important one
 
-def level():
-    pass #placeholder
+def level(level):
+    #render section
+    display.fill(white)
+    for track in level.Tracks:
+        for gate in track.gates:
+            pygame.draw.rect(display, grey, pygame.Rect(0,0, 400, 100))
+
+    
 
 #runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
