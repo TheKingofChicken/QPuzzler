@@ -6,22 +6,13 @@ import math
 from qiskit.circuit.quantumregister import Qubit
 from qiskit.providers.ibmq.exceptions import IBMQAccountMultipleCredentialsFound
 
-class Entity: #with the artstyle we're going with, we probably won't even need sprites, maybe only for the qubits
-    def __init__(self, x_Cord, y_Cord):
-        self.x_cord = x_Cord
-        self.y_cord = y_Cord
-
-    def set_Pos(self, x_Cord, y_Cord):
-        self.x_cord = x_Cord
-        self.y_cord = y_Cord
-
 class Quantum_Gate():
-    
     def __init__(self, cost, conditional, current_Track, current_Position):
         self.cost = cost
         self.conditional = conditional
         self.current_Track = current_Track
         self.current_Position = current_Position
+        self.rectangle = None
 
     def Set_Current_Placement(self, coords):
         self.current_Track = coords[0]
@@ -30,30 +21,27 @@ class Quantum_Gate():
     def Add_conditional(self, new_conditional):
         self.conditional = new_conditional
 
-class Track(Qubit): #class for the track which each qbit moves along
+class Track(): #class for the track which each qbit moves along
     def __init__(self, input):
         self.input = input
         self.gates = []
         self.total_Cost = 0
+        self.rectangle = None
     
-    def Add_Gate(self,new_Gate, position):
+    def Add_Gate(self,new_Gate):
         self.gates.append(new_Gate)
         self.total_Cost =+ new_Gate.cost
 
-    def Get_Gates(self):
-        return self.gates
 
-class Level(QuantumCircuit):
+class Level():
     def __init__(self, inputs, outputs):
         self.inputs = inputs
         self.outputs = outputs
         self.total_Cost = 0
-        self.tracks = []
-        for input in self.inputs:
-            self.tracks.append(Track(input, 0, 0))
-
-    def Add_Track(self):
-        self.inputs.append(Track(Quantum_Bit))
+        self.tracks = [Track(input)]
+    
+    def Add_Track(self, track):
+        self.tracks.append(track)
 
     def Run(self):
         #to iterate over the matrix column by column, we place it into a np.array object
@@ -89,21 +77,9 @@ class Conditional_Gate(Quantum_Gate):
     def __init__(self, Control_Qbit):
         self.Control_Qbit = Control_Qbit
 
-    def Get_Control_Qbit(self):
-        return self.Control_Qbit
-
-    def Set_Control_Qbit(self, new_Control_Qbit):
-        self.Control_Qbit = new_Control_Qbit
-
 #here we start setting up the quantum gate that'll be in the final game
 # they're all exactly the same, except for their Qiskit_Equivalent
 class SWAP_Gate(Quantum_Gate):
-    def __init__(self, cost, conditional, current_Track, target_Track, entity):
-        self.cost = cost
-        self.conditional = conditional
-        self.current_Track = current_Track
-        self.target_Track = target_Track
-        self.entity = entity
     
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
