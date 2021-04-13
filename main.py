@@ -1,7 +1,5 @@
 import pygame as pg
 import ctypes
-
-from pygame.constants import FULLSCREEN
 import Circuit_Logic as cl
 
 #without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
@@ -11,7 +9,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 pg.init()
 
 #setting up display
-display = pg.display.set_mode((0,0), pg.FULLSCREEN)
+display = pg.display.set_mode((0,0),pg.FULLSCREEN)
 pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
@@ -223,8 +221,9 @@ def Level(display, level):
         for track in level.tracks:
             gate_Rectangle_X = track.rectangle.x + 117
             for gate in track.gates:
-                if gate.rectangle is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
+                if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
                     pg.draw.rect(display, black, gate.rectangle)
+                    continue
                 gate.rectangle.center = (gate_Rectangle_X, track.rectangle.centery)
                 pg.draw.rect(display, black, gate.rectangle)
                 gate_Rectangle_X+=125
@@ -243,14 +242,17 @@ def Level(display, level):
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
+                    rectangle_is_gate = False
                     (mx, my) = pg.mouse.get_pos()
                     for track in level.tracks:
                         for gate in track.gates:
                             if gate.rectangle.collidepoint(mx,my):
                                 holding = True
                                 held_rectangle = gate
+                                rectangle_is_gate = True
                                 break
-                    for track in level.tracks:
+                        if rectangle_is_gate:
+                            break
                         if track.rectangle.collidepoint(mx,my):
                             holding = True
                             held_rectangle = track
@@ -258,12 +260,11 @@ def Level(display, level):
             if event.type == pg.MOUSEBUTTONUP:
                 holding = False
                 held_rectangle = None
-            if pg.mouse.get_pressed():
-                    if holding :
-                        (mx, my) = pg.mouse.get_pos()
-                        if held_rectangle in level.tracks:
-                                held_rectangle.centery = my
-                        else :held_rectangle.center = (mx,my)
+            if holding :
+                (mx, my) = pg.mouse.get_pos()
+                if held_rectangle in level.tracks:
+                    held_rectangle.rectangle.centery = my
+                else :held_rectangle.rectangle.center = (mx,my)
 
 #runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
