@@ -1,6 +1,7 @@
 import pygame as pg
 import ctypes
 import Circuit_Logic as cl
+from Circuit_Logic import colordict, fontdict, draw_Text
 
 #without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
 ctypes.windll.user32.SetProcessDPIAware()
@@ -14,23 +15,6 @@ pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
 fps_Limiter = pg.time.Clock()
-
-#text shenanigans
-pg.font.init()
-normal_Font = pg.font.Font("square.ttf", 48)
-menu_Font = pg.font.Font("square.ttf", 192)
-
-fontdict = {
-    "menu" : menu_Font,
-    "normal" : normal_Font
-}
-
-def draw_Text(text, color,font, X, Y,):
-    textobj = font.render(text, 1, color)
-    textrect = textobj.get_rect()
-    textrect.center = (X,Y)
-    display.blit(textobj, textrect)
-
 
 # main menu buttons
 level_Select_Button = pg.Rect(0,0, 400, 100)
@@ -54,14 +38,9 @@ start_Button = pg.Rect(0,0,200,100)
 start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
-#colors we're actually gonna use
-white = (255,255,255)
-black=(0,0,0)
-grey = (200,200,200)
-
 #levels:
 gate = cl.H_Gate(0,0,0,0)
-gate2 = cl.H_Gate(0,0,0,0)
+gate2 = cl.X_Gate(0,0,0,0)
 track = cl.Track(0)
 track2 = cl.Track(0)
 track.Add_Gate(gate)
@@ -81,13 +60,13 @@ def main_Menu():
     while running:
         fps_Limiter.tick(60)
         #everything that needs to be rendered:
-        display.fill(white)
+        display.fill(colordict["white"])
         for button in main_Menu_Buttons:
-            pg.draw.rect(display, black, button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        draw_Text("QPUZZLER", black, fontdict["menu"], disp_Width/2, disp_Height/5)
-        draw_Text("LEVEL SELECT", black, fontdict["normal"], disp_Width/2,3*disp_Height/6)
-        draw_Text("OPTIONS", black, fontdict["normal"], disp_Width/2,4*disp_Height/6)
-        draw_Text("EXIT", black, fontdict["normal"], disp_Width/2,5*disp_Height/6)
+            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+        draw_Text(display,"QPUZZLER", colordict["black"], fontdict["menu"], disp_Width/2, disp_Height/5)
+        draw_Text(display,"LEVEL SELECT", colordict["black"], fontdict["normal"], disp_Width/2,3*disp_Height/6)
+        draw_Text(display,"OPTIONS", colordict["black"], fontdict["normal"], disp_Width/2,4*disp_Height/6)
+        draw_Text(display,"EXIT", colordict["black"], fontdict["normal"], disp_Width/2,5*disp_Height/6)
         pg.display.update()
 
         #the interactive bits, events and what to when they occur, (update section)
@@ -121,11 +100,11 @@ def level_Select(display):
     while running:
         fps_Limiter.tick(60)
         #render section
-        display.fill(white)
+        display.fill(colordict["white"])
         for button in level_Select_Buttons:
-            pg.draw.rect(display, black, button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        draw_Text("BACK", black, fontdict["normal"],disp_Width/5,7*disp_Height/8)
-        draw_Text("START", black, fontdict["normal"],4*disp_Width/5, 7* disp_Height/8)
+            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+        draw_Text(display,"BACK", colordict["black"], fontdict["normal"],disp_Width/5,7*disp_Height/8)
+        draw_Text(display,"START", colordict["black"], fontdict["normal"],4*disp_Width/5, 7* disp_Height/8)
         pg.display.update()
 
         #update section
@@ -160,12 +139,12 @@ def options_Menu(display):
     while running :
         fps_Limiter.tick(60)
         #render section
-        display.fill(white)
+        display.fill(colordict["white"])
         for button in option_Buttons:
-            pg.draw.rect(display, black, button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        draw_Text("OPTIONS", black, fontdict["menu"], disp_Width/2, disp_Height/5)
-        draw_Text("BACK", black, fontdict["normal"],disp_Width/5,7*disp_Height/8)
-        draw_Text("APPLY", black, fontdict["normal"],4*disp_Width/5,7*disp_Height/8)
+            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+        draw_Text(display,"OPTIONS", colordict["black"], fontdict["menu"], disp_Width/2, disp_Height/5)
+        draw_Text(display,"BACK", colordict["black"], fontdict["normal"],disp_Width/5,7*disp_Height/8)
+        draw_Text(display,"APPLY", colordict["black"], fontdict["normal"],4*disp_Width/5,7*disp_Height/8)
         pg.display.update()
 
         #update section
@@ -205,32 +184,32 @@ def Level(display, level):
         fps_Limiter.tick(60)
         track_Rectangle_Y = 10
         #render section
-        display.fill(white)
+        display.fill(colordict["white"])
         for track in level.tracks:
             if track is held_rectangle: #skips the whole positioning code if the track is the one currently being moved
-                pg.draw.rect(display, grey, track.rectangle, 10)
+                pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
                 continue
             track.rectangle.y = track_Rectangle_Y
             if held_rectangle in level.tracks:
                 if track.rectangle.inflate((10,10)).collidepoint((mx,my)):
                     track_Rectangle_Y += 160
                     track.rectangle.y += 160
-            pg.draw.rect(display, grey, track.rectangle, 10)
+            pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
             track_Rectangle_Y += 160 #offsets the position for the next track to be drawn below this current one
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         for track in level.tracks:
             gate_Rectangle_X = track.rectangle.x + 117
             for gate in track.gates:
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
-                    pg.draw.rect(display, black, gate.rectangle)
+                    gate.draw(display, gate.rectangle)
                     continue
                 gate.rectangle.center = (gate_Rectangle_X, track.rectangle.centery)
-                pg.draw.rect(display, black, gate.rectangle)
+                gate.draw(display, gate.rectangle)
                 gate_Rectangle_X+=125
-        pg.draw.rect(display, white, pg.Rect(10, 890, 1900, 300))
-        pg.draw.rect(display, black, pg.Rect(10, 890, 1900, 300), 10)
-        pg.draw.rect(display, white, pg.Rect(10, 10, 400, 860))
-        pg.draw.rect(display, black, pg.Rect(10, 10, 400, 860), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 890, 1900, 300))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 890, 1900, 300), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 860))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 860), 10)
         pg.display.update()
 
         #update section
