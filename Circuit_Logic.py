@@ -101,6 +101,9 @@ class H_Gate(Quantum_Gate):
     
     def __str__(self):
         return "H"
+
+    def __repr__(self):
+        return "H"
     
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
@@ -123,6 +126,9 @@ class H_Gate(Quantum_Gate):
 class X_Gate(Quantum_Gate):
     
     def __str__(self):
+        return "X"
+
+    def __repr__(self):
         return "X"
 
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):

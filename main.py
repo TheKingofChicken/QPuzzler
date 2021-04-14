@@ -1,7 +1,5 @@
 import pygame as pg
 import ctypes
-
-from pygame import draw
 import Circuit_Logic as cl
 
 #without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
@@ -11,7 +9,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 pg.init()
 
 #setting up display
-display = pg.display.set_mode((0,0),pg.FULLSCREEN)
+display = pg.display.set_mode((0,0), pg.FULLSCREEN)
 pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
@@ -35,7 +33,7 @@ def draw_Text(display,text, color,font, X, Y,):
 colordict = {
     "white" : (255,255,255),
     "black" : (0,0,0),
-    "grey" : (200,200,200),
+    "grey" : (150,150,150),
     "blue" : (0,137,255),
     "red" : (255,50,50)
     }
@@ -74,6 +72,7 @@ start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
 #levels:
+base_Gates = [cl.H_Gate(0,0,0,0),cl.X_Gate(0,0,0,0)]
 gate = cl.H_Gate(0,0,0,0)
 gate2 = cl.X_Gate(0,0,0,0)
 track = cl.Track(0)
@@ -208,16 +207,20 @@ def Level(display, level):
     #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
     holding = False
     held_rectangle = None
+    base_Gate_Rectangle_Y = 1010
     (mx,my) = (0,0)
     for track in level.tracks:# creates a rectangle for every track and gate
         track.rectangle = pg.Rect(430,0, 1480, 150)
         for gate in track.gates:
             gate.rectangle = pg.Rect(0,0, 100, 100)
+    for gate in base_Gates:
+        gate.rectangle = pg.Rect(20,1010,100,100)
     
     #game loop
     while running:
         fps_Limiter.tick(60)
         track_Rectangle_Y = 10
+        base_Gate_Rectangle_X = -95
         #render section
         display.fill(colordict["white"])
         for track in level.tracks:
@@ -231,19 +234,27 @@ def Level(display, level):
                     track.rectangle.y += 160
             pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
             track_Rectangle_Y += 160 #offsets the position for the next track to be drawn below this current one
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 890, 1900, 300))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 890, 1900, 300), 10)
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 860))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 860), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 990, 1900, 200))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 990, 1900, 200), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 960))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 960), 10)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         for track in level.tracks:
-            gate_Rectangle_X = track.rectangle.x + 117
+            gate_Rectangle_X = track.rectangle.x
             for gate in track.gates:
+                gate_Rectangle_X+=125
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
                     continue
                 gate.rectangle.center = (gate_Rectangle_X, track.rectangle.centery)
                 draw_Gate(gate)
-                gate_Rectangle_X+=125
+        for gate in base_Gates:
+            base_Gate_Rectangle_X += 125
+            if gate is held_rectangle:
+                draw_Gate(gate)
+                continue
+            gate.rectangle.x = base_Gate_Rectangle_X
+            gate.rectangle.y = base_Gate_Rectangle_Y
+            draw_Gate(gate)
         if held_rectangle and held_rectangle not in level.tracks:
             draw_Gate(held_rectangle)
         pg.display.update()
@@ -272,6 +283,11 @@ def Level(display, level):
                             holding = True
                             held_rectangle = track
                             break
+                        for gate in base_Gates:
+                            if gate.rectangle.collidepoint(mx,my):
+                                holding = True
+                                held_rectangle = gate
+                                break
             if event.type == pg.MOUSEBUTTONUP:
                 holding = False
                 held_rectangle = None
