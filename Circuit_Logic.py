@@ -4,30 +4,6 @@ import cmath
 import math
 from pygame import draw, font
 
-
-#colors we're actually gonna use, previously defined in main(), it would cause a circular import, so weve move it here
-colordict = {
-    "white" : (255,255,255),
-    "black" : (0,0,0),
-    "grey" : (200,200,200),
-    "blue" : (0,137,255),
-    "red" : (255,50,50)
-    }
-#litterally the exact same error
-#text shenanigans
-font.init()
-normal_Font = font.Font("square.ttf", 48)
-menu_Font = font.Font("square.ttf", 192)
-fontdict = {
-    "menu" : menu_Font,
-    "normal" : normal_Font
-}
-#WHY IS PYTHON LIKE THIS WHY ARE CIRCULAR IMPORTS BAD NOW THOSE THINGS DON"T MAKES SENSE WHY ARE THEY HERE argh
-def draw_Text(display,text, color,font, X, Y,):
-    textobj = font.render(text, 1, color)
-    textrect = textobj.get_rect()
-    textrect.center = (X,Y)
-    display.blit(textobj, textrect)
 class Quantum_Gate():
     def __init__(self, cost, conditional, current_Track, current_Position):
         self.cost = cost
@@ -122,11 +98,9 @@ class SWAP_Gate(Quantum_Gate):
         return Quantum_Circuit
 
 class H_Gate(Quantum_Gate):
-
-    def draw(self, display, rectangle):
-        draw.rect(display, colordict["blue"], rectangle)
-        draw.rect(display, colordict["black"], rectangle, 10)
-        draw_Text(display,"H", colordict["white"],fontdict["normal"], rectangle.centerx, rectangle.centery)
+    
+    def __str__(self):
+        return "H"
     
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
@@ -147,12 +121,10 @@ class H_Gate(Quantum_Gate):
         return Quantum_Circuit
 
 class X_Gate(Quantum_Gate):
-
-    def draw(self, display, rectangle):
-        draw.rect(display, colordict["red"], rectangle)
-        draw.rect(display, colordict["black"], rectangle, 10)
-        draw_Text(display,"x", colordict["white"],fontdict["normal"],rectangle.centerx, rectangle.centery)
     
+    def __str__(self):
+        return "X"
+
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
@@ -172,6 +144,10 @@ class X_Gate(Quantum_Gate):
         return Quantum_Circuit
 
 class T_Gate(Quantum_Gate):
+
+    def __str__(self):
+        return "T"
+
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
@@ -191,6 +167,10 @@ class T_Gate(Quantum_Gate):
         return Quantum_Circuit
 
 class Z_Gate(Quantum_Gate):
+
+    def __str__(self):
+        return "Z"
+
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
@@ -210,6 +190,10 @@ class Z_Gate(Quantum_Gate):
         return Quantum_Circuit
 
 class S_Gate(Quantum_Gate):
+
+    def __str__(self):
+        return "S"
+
     def Qiskit_Equivalent_Dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)

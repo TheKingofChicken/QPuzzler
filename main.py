@@ -1,7 +1,8 @@
 import pygame as pg
 import ctypes
+
+from pygame import draw
 import Circuit_Logic as cl
-from Circuit_Logic import colordict, fontdict, draw_Text
 
 #without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
 ctypes.windll.user32.SetProcessDPIAware()
@@ -15,6 +16,40 @@ pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
 fps_Limiter = pg.time.Clock()
+
+#text shenanigans
+pg.font.init()
+normal_Font = pg.font.Font("square.ttf", 48)
+menu_Font = pg.font.Font("square.ttf", 192)
+fontdict = {
+    "menu" : menu_Font,
+    "normal" : normal_Font
+}
+def draw_Text(display,text, color,font, X, Y,):
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.center = (X,Y)
+    display.blit(textobj, textrect)
+
+#colors we're actually gonna use
+colordict = {
+    "white" : (255,255,255),
+    "black" : (0,0,0),
+    "grey" : (200,200,200),
+    "blue" : (0,137,255),
+    "red" : (255,50,50)
+    }
+
+#Things to draw the gates
+gatedict = {
+    "H" : colordict["blue"],
+    "X" : colordict["red"]
+}
+
+def draw_Gate(gate):
+        pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
+        pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
+        draw_Text(display,str(gate), colordict["white"],fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
 
 # main menu buttons
 level_Select_Button = pg.Rect(0,0, 400, 100)
@@ -196,20 +231,21 @@ def Level(display, level):
                     track.rectangle.y += 160
             pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
             track_Rectangle_Y += 160 #offsets the position for the next track to be drawn below this current one
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 890, 1900, 300))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 890, 1900, 300), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 860))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 860), 10)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         for track in level.tracks:
             gate_Rectangle_X = track.rectangle.x + 117
             for gate in track.gates:
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
-                    gate.draw(display, gate.rectangle)
                     continue
                 gate.rectangle.center = (gate_Rectangle_X, track.rectangle.centery)
-                gate.draw(display, gate.rectangle)
+                draw_Gate(gate)
                 gate_Rectangle_X+=125
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 890, 1900, 300))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 890, 1900, 300), 10)
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 860))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 860), 10)
+        if held_rectangle and held_rectangle not in level.tracks:
+            draw_Gate(held_rectangle)
         pg.display.update()
 
         #update section
