@@ -2,7 +2,7 @@ import numpy as np
 import qiskit as qs
 import cmath
 import math
-from pygame import draw, font
+import pygame as pg
 
 class Quantum_Gate():
     def __init__(self, cost, conditional, current_Track, current_Position):
@@ -10,7 +10,7 @@ class Quantum_Gate():
         self.conditional = conditional
         self.current_Track = current_Track
         self.current_Position = current_Position
-        self.rectangle = None
+        self.rectangle = pg.Rect(0, 0, 100, 100)
 
     def Set_Current_Placement(self, coords):
         self.current_Track = coords[0]
@@ -24,7 +24,7 @@ class Track(): #class for the track which each qbit moves along
         self.input = input
         self.gates = []
         self.total_Cost = 0
-        self.rectangle = None
+        self.rectangle = pg.Rect(430, 0, 1480, 150)
     
     def Add_Gate(self,new_Gate):
         self.gates.append(new_Gate)
@@ -36,7 +36,7 @@ class Level():
         self.inputs = inputs
         self.outputs = outputs
         self.total_Cost = 0
-        self.tracks = [Track(input)]
+        self.tracks = []
     
     def Add_Track(self, track):
         self.tracks.append(track)
