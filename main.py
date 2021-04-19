@@ -9,7 +9,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 pg.init()
 
 # setting up display
-display = pg.display.set_mode((1920,1200))
+display = pg.display.set_mode((1920, 1200))
 pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
@@ -36,19 +36,23 @@ colordict = {
     "black" : (0, 0, 0), 
     "grey" : (150, 150, 150), 
     "blue" : (0, 137, 255), 
-    "red" : (255, 50, 50)
+    "red" : (255, 50, 50), 
+    "yellow" : (240, 240, 50)
     }
 
 # Things to draw the gates
 gatedict = {
     "H" : colordict["blue"], 
-    "X" : colordict["red"]
+    "X" : colordict["red"], 
+    "T" : colordict["yellow"]
 }
 
 def draw_gate(gate):
-        pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
-        pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
-        draw_text(display, str(gate), colordict["white"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
+    if str(gate) == "I":
+        return ""
+    pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
+    pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
+    draw_text(display, str(gate), colordict["white"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
 
 # main menu buttons
 level_Select_Button = pg.Rect(0, 0, 400, 100)
@@ -76,13 +80,16 @@ level_Select_Buttons = (back_Button, start_Button)
 base_Gates = [cl.H_Gate(0, 0, 0, 0), cl.X_Gate(0, 0, 0, 0)]
 gate = cl.H_Gate(0, 0, 0, 0)
 gate2 = cl.X_Gate(0, 0, 0, 0)
-gate3 = cl.X_Gate(0, 0, 0, 0)
+gate3 = cl.T_Gate(0, 0, 0, 0)
 track = cl.Track(0)
 track2 = cl.Track(0)
 track3 = cl.Track(0)
-track.Add_Gate(gate)
-track.Add_Gate(gate2)
-track2.Add_Gate(gate3)
+track.gates.append(gate)
+gate.current_Track = track
+track.gates.append(gate2)
+gate2.current_Track = track
+track2.gates.append(gate3)
+gate3.current_Track = track2
 current_level = cl.Level([], [])
 current_level.Add_Track(track)
 current_level.Add_Track(track2)
@@ -226,10 +233,9 @@ def level(display, level):
                 pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
                 for gate in track.gates:
                     gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
-                    draw_gate(gate)
                 continue
-            if held_rectangle in level.tracks:
-                if track.rectangle.inflate((10,10)).collidepoint((mx, my)):
+            if isinstance(held_rectangle, cl.Track):#everything inside this if is to change the position of the track when it is dropped
+                if track.rectangle.inflate((10, 10)).collidepoint((mx, my)):
                     if level.tracks.index(held_rectangle) < level.tracks.index(track):
                         offset = 1
                     else: offset = 0
@@ -242,6 +248,14 @@ def level(display, level):
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
                 draw_gate(gate)
+                if isinstance(held_rectangle, cl.Quantum_Gate):
+                    new_gate_pos = round((mx - 555)/125)
+                    if track != held_rectangle.current_Track:
+                        if track.rectangle.collidepoint((mx, my)):
+                            track.move_gate(new_gate_pos, held_rectangle)
+                    elif held_rectangle.current_Track.gates.index(held_rectangle) != new_gate_pos:
+                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
+                        track.gates.insert(new_gate_pos, held_rectangle)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         pg.draw.rect(display, colordict["white"], pg.Rect(10, 990, 1900, 200))
         pg.draw.rect(display, colordict["black"], pg.Rect(10, 990, 1900, 200), 10)
@@ -282,12 +296,24 @@ def level(display, level):
                             holding = True
                             held_rectangle = track
                             break
-                        for gate in base_Gates:
-                            if gate.rectangle.collidepoint(mx, my):
-                                holding = True
-                                held_rectangle = gate
-                                break
+                    for gate in base_Gates:
+                        if gate.rectangle.collidepoint(mx, my):
+                            holding = True
+                            held_rectangle = gate
+                            break
             if event.type == pg.MOUSEBUTTONUP:
+                if isinstance(held_rectangle, cl.Quantum_Gate):
+                    for track in level.tracks:
+                        if track.rectangle.collidepoint((mx, my)):
+                            new_Gate_pos = round((mx - 555)/125)
+                            if len(track.gates) < new_Gate_pos:
+                                held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
+                                for x in range(new_Gate_pos-len(track.gates)):
+                                    temp_gate = cl.I_Gate(0, 0, 0, 0)
+                                    temp_gate.current_Track = track
+                                    track.gates.append(temp_gate)
+                                track.gates.append(held_rectangle)
+                                held_rectangle.current_Track = track
                 holding = False
                 held_rectangle = None
             if holding :
