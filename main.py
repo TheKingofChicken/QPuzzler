@@ -91,9 +91,9 @@ gate2.current_Track = track
 track2.gates.append(gate3)
 gate3.current_Track = track2
 current_level = cl.Level([], [])
-current_level.Add_Track(track)
-current_level.Add_Track(track2)
-current_level.Add_Track(track3)
+current_level.add_track(track)
+current_level.add_track(track2)
+current_level.add_track(track3)
 # Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
 update and render sections, the player can move between those different game states by using buttons, which just launches the corresponding 
@@ -221,33 +221,22 @@ def level(display, level):
     base_Gate_Rectangle_Y = 1010
     base_Gate_Rectangle_X = 30
     track_Rectangle_Y = 10
+    track_Rectangle_X = 420
     (mx, my) = (0, 0)
+    old_mouse_pos = (0,0)
     
     #game loop
     while running:
         fps_Limiter.tick(60)
-        #render section
+        #render and positionnement section
         display.fill(colordict["white"])
         for track in level.tracks:
-            if track is held_rectangle: #skips the whole positioning code if the track is the one currently being moved
-                pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
-                for gate in track.gates:
-                    gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
-                continue
-            if isinstance(held_rectangle, cl.Track):#everything inside this if is to change the position of the track when it is dropped
-                if track.rectangle.inflate((10, 10)).collidepoint((mx, my)):
-                    if level.tracks.index(held_rectangle) < level.tracks.index(track):
-                        offset = 1
-                    else: offset = 0
-                    level.tracks.remove(held_rectangle)
-                    level.tracks.insert(level.tracks.index(track) + offset, held_rectangle)
-            track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
-            pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
             for gate in track.gates:
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
                 draw_gate(gate)
+                draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
                 if isinstance(held_rectangle, cl.Quantum_Gate):
                     new_gate_pos = round((mx - 555)/125)
                     if track != held_rectangle.current_Track:
@@ -256,11 +245,25 @@ def level(display, level):
                     elif held_rectangle.current_Track.gates.index(held_rectangle) != new_gate_pos:
                         held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
                         track.gates.insert(new_gate_pos, held_rectangle)
+            if track is held_rectangle: #skips the whole positioning code if the track is the one currently being moved
+                pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
+                for gate in track.gates:
+                    gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
+                continue
+            if isinstance(held_rectangle, cl.Track):#everything inside this if is to change the position of the track when it is dropped
+                if track.rectangle.inflate((11, 11)).collidepoint((mx, my)):
+                    if level.tracks.index(held_rectangle) < level.tracks.index(track):
+                        offset = 1
+                    else: offset = 0
+                    level.move_track(level.tracks.index(track)+offset,held_rectangle)
+            track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
+            track.rectangle.x = track_Rectangle_X
+            pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 990, 1900, 200))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 990, 1900, 200), 10)
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, 960))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, 960), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
         for gate in base_Gates:
             if gate is held_rectangle:
                 draw_gate(gate)
@@ -273,6 +276,7 @@ def level(display, level):
         pg.display.update()
                 
         #update section
+        (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type is pg.QUIT:
                 pg.quit()
@@ -282,7 +286,6 @@ def level(display, level):
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     rectangle_is_gate = False
-                    (mx, my) = pg.mouse.get_pos()
                     for track in level.tracks:
                         for gate in track.gates:
                             if gate.rectangle.collidepoint(mx, my):
@@ -302,25 +305,27 @@ def level(display, level):
                             held_rectangle = gate
                             break
             if event.type == pg.MOUSEBUTTONUP:
-                if isinstance(held_rectangle, cl.Quantum_Gate):
-                    for track in level.tracks:
-                        if track.rectangle.collidepoint((mx, my)):
-                            new_Gate_pos = round((mx - 555)/125)
-                            if len(track.gates) < new_Gate_pos:
-                                held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
-                                for x in range(new_Gate_pos-len(track.gates)):
-                                    temp_gate = cl.I_Gate(0, 0, 0, 0)
-                                    temp_gate.current_Track = track
-                                    track.gates.append(temp_gate)
-                                track.gates.append(held_rectangle)
-                                held_rectangle.current_Track = track
-                holding = False
-                held_rectangle = None
-            if holding :
-                (mx, my) = pg.mouse.get_pos()
-                if held_rectangle in level.tracks:
-                    held_rectangle.rectangle.centery = my
-                else :held_rectangle.rectangle.center = (mx, my)
+                if event.button == 1:
+                    if isinstance(held_rectangle, cl.Quantum_Gate):
+                        for track in level.tracks:
+                            if track.rectangle.collidepoint((mx, my)):
+                                new_Gate_pos = round((mx - 555)/125)
+                                if len(track.gates) < new_Gate_pos:
+                                    held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
+                                    for x in range(new_Gate_pos-len(track.gates)):
+                                        temp_gate = cl.I_Gate(0, 0, 0, 0)
+                                        temp_gate.current_Track = track
+                                        track.gates.append(temp_gate)
+                                    track.gates.append(held_rectangle)
+                                    held_rectangle.current_Track = track
+                    if isinstance(held_rectangle, cl.Quantum_Gate): 
+                        held_rectangle.current_Track.i_gate_cleaner()
+                    holding = False
+                    held_rectangle = None
+        if holding :
+            if held_rectangle in level.tracks:
+                held_rectangle.rectangle.centery = my
+            else :held_rectangle.rectangle.center = (mx, my)
 
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":

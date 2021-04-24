@@ -27,16 +27,30 @@ class Track(): #class for the track which each qbit moves along
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
     def move_gate(self, pos, new_gate):
-        new_gate.current_Track.gates.insert(new_gate.current_Track.gates.index(new_gate), I_Gate(0, 0, self, 0))
-        new_gate.current_Track.gates.pop(new_gate.current_Track.gates.index(new_gate))
+        if isinstance(new_gate, I_Gate):
+            return 1
+        old_track = new_gate.current_Track
+        old_track.gates.insert(new_gate.current_Track.gates.index(new_gate), I_Gate(0, 0, self, 0))
+        old_track.gates.pop(new_gate.current_Track.gates.index(new_gate))
+        old_track.i_gate_cleaner()
         if pos < len(self.gates):
             if isinstance(self.gates[pos], I_Gate):
                 self.gates.pop(pos)
         self.gates.insert(pos, new_gate)
         new_gate.current_Track = self
         new_gate.current_Position = pos
+        self.i_gate_cleaner()
+    #    self.rectangle.width = (len(self.gates) + 1) * 125
+    
+    def i_gate_cleaner(self):
+        I_gates_length = 0
+        for gate_index in range(len(self.gates)):
+            if isinstance(self.gates[gate_index], I_Gate):
+                I_gates_length += 1
+            else:
+                I_gates_length = 0
+        self.gates = self.gates[0:len(self.gates) - I_gates_length]
         
-
 class Level():
     def __init__(self, inputs, outputs):
         self.inputs = inputs
@@ -46,7 +60,11 @@ class Level():
     
     def add_track(self, track):
         self.tracks.append(track)
-
+        
+    def move_track(self, pos, new_track):
+        self.tracks.remove(new_track)
+        self.tracks.insert(pos, new_track)
+        
     def run(self):
         #to iterate over the matrix column by column, we place it into a np.array object
         gate_Layers = np.array(self.tracks)
