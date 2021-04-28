@@ -236,15 +236,6 @@ def level(display, level):
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
                 draw_gate(gate)
-                draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-                if isinstance(held_rectangle, cl.Quantum_Gate):
-                    new_gate_pos = round((mx - 555)/125)
-                    if track != held_rectangle.current_Track:
-                        if track.rectangle.collidepoint((mx, my)):
-                            track.move_gate(new_gate_pos, held_rectangle)
-                    elif held_rectangle.current_Track.gates.index(held_rectangle) != new_gate_pos:
-                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
-                        track.gates.insert(new_gate_pos, held_rectangle)
             if track is held_rectangle: #skips the whole positioning code if the track is the one currently being moved
                 pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
                 for gate in track.gates:
@@ -259,6 +250,14 @@ def level(display, level):
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
             pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
+        if isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates:
+                    new_gate_pos = round((mx - 555)/125)
+                    if track != held_rectangle.current_Track:
+                        if track.rectangle.collidepoint((mx, my)):
+                            track.move_gate(new_gate_pos, held_rectangle)
+                    elif held_rectangle.current_Track.gates.index(held_rectangle) != new_gate_pos:
+                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
+                        track.gates.insert(new_gate_pos, held_rectangle)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
         pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
@@ -311,14 +310,15 @@ def level(display, level):
                             if track.rectangle.collidepoint((mx, my)):
                                 new_Gate_pos = round((mx - 555)/125)
                                 if len(track.gates) < new_Gate_pos:
-                                    held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
+                                    if not held_rectangle in base_Gates:
+                                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
                                     for x in range(new_Gate_pos-len(track.gates)):
                                         temp_gate = cl.I_Gate(0, 0, 0, 0)
                                         temp_gate.current_Track = track
                                         track.gates.append(temp_gate)
                                     track.gates.append(held_rectangle)
                                     held_rectangle.current_Track = track
-                    if isinstance(held_rectangle, cl.Quantum_Gate): 
+                    if isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates: 
                         held_rectangle.current_Track.i_gate_cleaner()
                     holding = False
                     held_rectangle = None

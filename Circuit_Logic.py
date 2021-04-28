@@ -3,6 +3,7 @@ import qiskit as qs
 import cmath
 import math
 import pygame as pg
+import copy
 
 class Quantum_Gate():
     def __init__(self, cost, conditional, current_Track, current_Position):
@@ -18,6 +19,9 @@ class Quantum_Gate():
 
     def add_conditional(self, new_conditional):
         self.conditional = new_conditional
+        
+    def __deepcopy__(self):
+        return Quantum_Gate(self.cost,self.conditional,self.current_Track, self.current_Position) 
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, input):
@@ -26,20 +30,24 @@ class Track(): #class for the track which each qbit moves along
         self.total_Cost = 0
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
-    def move_gate(self, pos, new_gate):
+    def move_gate(self, pos, new_gate):#moves around gates in the different tracks
         if isinstance(new_gate, I_Gate):
             return 1
-        old_track = new_gate.current_Track
-        old_track.gates.insert(new_gate.current_Track.gates.index(new_gate), I_Gate(0, 0, self, 0))
-        old_track.gates.pop(new_gate.current_Track.gates.index(new_gate))
-        old_track.i_gate_cleaner()
+        if new_gate.current_Track:
+            old_track = new_gate.current_Track
+            old_track.gates.insert(new_gate.current_Track.gates.index(new_gate), I_Gate(0, 0, self, 0))
+            old_track.gates.pop(new_gate.current_Track.gates.index(new_gate))
+            old_track.i_gate_cleaner()
+        else:
+            new_gate = copy.deepcopy(new_gate)
         if pos < len(self.gates):
             if isinstance(self.gates[pos], I_Gate):
                 self.gates.pop(pos)
-        self.gates.insert(pos, new_gate)
+        self.gates.insert(pos,new_gate)
         new_gate.current_Track = self
         new_gate.current_Position = pos
-        self.i_gate_cleaner()
+        if new_gate.current_Track:
+            self.i_gate_cleaner()
     #    self.rectangle.width = (len(self.gates) + 1) * 125
     
     def i_gate_cleaner(self):
