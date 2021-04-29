@@ -18,10 +18,7 @@ class Quantum_Gate():
         self.current_position = coords[1]
 
     def add_conditional(self, new_conditional):
-        self.conditional = new_conditional
-        
-    def __deepcopy__(self):
-        return Quantum_Gate(self.cost,self.conditional,self.current_Track, self.current_Position) 
+        self.conditional = new_conditional 
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, input):
@@ -33,22 +30,29 @@ class Track(): #class for the track which each qbit moves along
     def move_gate(self, pos, new_gate):#moves around gates in the different tracks
         if isinstance(new_gate, I_Gate):
             return 1
-        if new_gate.current_Track:
-            old_track = new_gate.current_Track
-            old_track.gates.insert(new_gate.current_Track.gates.index(new_gate), I_Gate(0, 0, self, 0))
-            old_track.gates.pop(new_gate.current_Track.gates.index(new_gate))
-            old_track.i_gate_cleaner()
-        else:
-            new_gate = copy.deepcopy(new_gate)
+        old_track = new_gate.current_Track
+        if old_track:
+            old_track.gates.insert(old_track.gates.index(new_gate), I_Gate(0, None, self, old_track.gates.index(new_gate)))
+            old_track.gates.pop(old_track.gates.index(new_gate))
         if pos < len(self.gates):
             if isinstance(self.gates[pos], I_Gate):
                 self.gates.pop(pos)
-        self.gates.insert(pos,new_gate)
-        new_gate.current_Track = self
-        new_gate.current_Position = pos
+        else:
+            for x in range((pos+1)-len(self.gates)):
+                self.gates.append(I_Gate(0,None,self,len(self.gates) + x))
+        if new_gate.current_Track:
+            updated_gate = new_gate
+        else:
+            updated_gate = copy.copy(new_gate)
+        self.gates.insert(pos,updated_gate)
+        updated_gate.current_Track = self
+        updated_gate.current_Position = pos
         if new_gate.current_Track:
             self.i_gate_cleaner()
     #    self.rectangle.width = (len(self.gates) + 1) * 125
+    
+    def delete_gate(self, del_gate):
+            self.gates.remove(del_gate)
     
     def i_gate_cleaner(self):
         I_gates_length = 0
@@ -128,6 +132,9 @@ class SWAP_Gate(Quantum_Gate):
         Quantum_Circuit.cswap(self.Conditional.Get_Control_Qbit , self.current_Track, self.target_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return SWAP_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class H_Gate(Quantum_Gate):
     
@@ -154,6 +161,9 @@ class H_Gate(Quantum_Gate):
         Quantum_Circuit.ch(self.Conditional.Get_Control_Qbit, self.current_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class X_Gate(Quantum_Gate):
     
@@ -180,6 +190,9 @@ class X_Gate(Quantum_Gate):
         Quantum_Circuit.cnot(self.Conditional.Get_Control_Qbit, self.current_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return X_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class T_Gate(Quantum_Gate):
 
@@ -206,6 +219,9 @@ class T_Gate(Quantum_Gate):
         Quantum_Circuit.cp(math.pi/4, self.Conditional.Get_Control_Qbit, self.current_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return T_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class Z_Gate(Quantum_Gate):
 
@@ -232,6 +248,9 @@ class Z_Gate(Quantum_Gate):
         Quantum_Circuit.cp(math.pi, self.Conditional.Get_Control_Qbit, self.current_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class S_Gate(Quantum_Gate):
 
@@ -259,6 +278,9 @@ class S_Gate(Quantum_Gate):
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
     
+    def __copy__(self):
+        return S_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+    
 class I_Gate(Quantum_Gate):
     
     def __str__(self):
@@ -272,3 +294,6 @@ class I_Gate(Quantum_Gate):
         Quantum_Circuit.id(self.current_Track)
         Quantum_Circuit.snapshot()
         return Quantum_Circuit
+    
+    def __copy__(self):
+        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)

@@ -1,6 +1,7 @@
 import pygame as pg
 import ctypes
 import Circuit_Logic as cl
+import math
 
 # without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
 ctypes.windll.user32.SetProcessDPIAware()
@@ -223,7 +224,6 @@ def level(display, level):
     track_Rectangle_Y = 10
     track_Rectangle_X = 420
     (mx, my) = (0, 0)
-    old_mouse_pos = (0,0)
     
     #game loop
     while running:
@@ -250,14 +250,10 @@ def level(display, level):
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
             pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
-        if isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates:
-                    new_gate_pos = round((mx - 555)/125)
-                    if track != held_rectangle.current_Track:
-                        if track.rectangle.collidepoint((mx, my)):
-                            track.move_gate(new_gate_pos, held_rectangle)
-                    elif held_rectangle.current_Track.gates.index(held_rectangle) != new_gate_pos:
-                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
-                        track.gates.insert(new_gate_pos, held_rectangle)
+            if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates:
+                new_pos = math.trunc((mx-505)/125)
+                if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
+                        track.move_gate(new_pos, held_rectangle)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
         pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
@@ -303,23 +299,18 @@ def level(display, level):
                             holding = True
                             held_rectangle = gate
                             break
+                elif event.button == 3:
+                    for track in level.tracks:
+                        for gate in track.gates:
+                            if gate.rectangle.collidepoint(mx, my):
+                                track.delete_gate(gate)
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
-                    if isinstance(held_rectangle, cl.Quantum_Gate):
+                    if held_rectangle in base_Gates: 
+                        new_pos = math.trunc((mx-505)/125)
                         for track in level.tracks:
                             if track.rectangle.collidepoint((mx, my)):
-                                new_Gate_pos = round((mx - 555)/125)
-                                if len(track.gates) < new_Gate_pos:
-                                    if not held_rectangle in base_Gates:
-                                        held_rectangle.current_Track.gates.pop(held_rectangle.current_Track.gates.index(held_rectangle))
-                                    for x in range(new_Gate_pos-len(track.gates)):
-                                        temp_gate = cl.I_Gate(0, 0, 0, 0)
-                                        temp_gate.current_Track = track
-                                        track.gates.append(temp_gate)
-                                    track.gates.append(held_rectangle)
-                                    held_rectangle.current_Track = track
-                    if isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates: 
-                        held_rectangle.current_Track.i_gate_cleaner()
+                                track.move_gate(new_pos, held_rectangle)
                     holding = False
                     held_rectangle = None
         if holding :
