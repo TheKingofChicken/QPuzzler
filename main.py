@@ -78,7 +78,7 @@ start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
 # levels:
-base_Gates = [cl.H_Gate(0, 0, 0, 0), cl.X_Gate(0, 0, 0, 0)]
+base_Gates = [cl.H_Gate(0, 0, 0, 0), cl.X_Gate(0, 0, 0, 0), cl.T_Gate(0,0,0,0)]
 gate = cl.H_Gate(0, 0, 0, 0)
 gate2 = cl.X_Gate(0, 0, 0, 0)
 gate3 = cl.T_Gate(0, 0, 0, 0)
@@ -283,6 +283,8 @@ def level(display, level):
                     rectangle_is_gate = False
                     for track in level.tracks:
                         for gate in track.gates:
+                            if isinstance(gate, cl.I_Gate):
+                                continue
                             if gate.rectangle.collidepoint(mx, my):
                                 holding = True
                                 held_rectangle = gate
