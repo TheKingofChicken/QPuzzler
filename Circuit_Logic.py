@@ -85,14 +85,16 @@ class Level():
         #to iterate over the matrix column by column, we place it into a np.array object
         gate_Layers = np.array(self.tracks)
         #construction of the adequate QuantumCircuit object
-        q = qs.QuantumRegister(len(self.tracks))
-        self.add_register(q)
+        qr = qs.QuantumRegister(len(self.tracks))
+        qc = qs.QuantumCircuit()
+        qc.add_register(qr)
+        for qbit_index in range(len(self.tracks)):
+            qc.initialise(self.inputs,qr[qbit_index])
         for gate_Layer in gate_Layers.transpose():
             for gate in gate_Layer:
-                gate.Qiskit_Equivalent_Dispatcher(q)
+                gate.Qiskit_Equivalent_Dispatcher(qr)
         
         
-
 class Quantum_Bit:
     def __init__(self):
         self.state = [1, 0, 0, 0]
@@ -103,7 +105,7 @@ class Quantum_Bit:
         self.state = [zero_Prob, zero_Angle, one_Prob, one_Angle]
 
     def update(self, statevector_Coordinates):
-       self.state = [np.real(statevector_Coordinates[0]) ** 2 + np.imag(statevector_Coordinates[0]) ** 2, cmath.phase(statevector_Coordinates[0]), np.real(statevector_Coordinates[1]) ** 2 + np.imag(statevector_Coordinates[1]) ** 2, cmath.phase(statevector_Coordinates[1])]
+       self.state =  statevector_Coordinates
     """the statevector qiskit uses to describe entangled qbits are incomplete, for example: qbit 0 is (50%, 0%) and 1bit 1 is (0%, 50%)
         so far, the way we've found to deal with this is to add the possibilities together, but we still need to check if it would work
         all the time """
