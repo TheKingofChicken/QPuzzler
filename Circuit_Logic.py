@@ -69,9 +69,13 @@ class Level():
         self.outputs = outputs
         self.total_Cost = 0
         self.tracks = []
-    
+        self.goal_text = ""
+
     def add_track(self, track):
         self.tracks.append(track)
+
+    def clear(self):
+        self.tracks.clear()
         
     def move_track(self, pos, new_track):
         self.tracks.remove(new_track)

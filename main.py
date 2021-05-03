@@ -1,7 +1,9 @@
 import pygame as pg
 import ctypes
 import Circuit_Logic as cl
+import Levels
 import math
+import pickle
 
 # without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
 ctypes.windll.user32.SetProcessDPIAware()
@@ -10,7 +12,7 @@ ctypes.windll.user32.SetProcessDPIAware()
 pg.init()
 
 # setting up display
-display = pg.display.set_mode((1920, 1200))
+display = pg.display.set_mode((1920, 1080))
 pg.display.set_caption('QPuzzler')
 disp_Width = display.get_width()
 disp_Height = display.get_height()
@@ -75,30 +77,100 @@ option_Buttons = (back_Button, apply_Button)
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
-level_Select_Buttons = (back_Button, start_Button)
+level1_Button = pg.Rect(0, 0, 100, 100)
+level1_Button.center = (disp_Width/5, disp_Height/4)
+level2_Button = pg.Rect(0, 0, 100, 100)
+level2_Button.center = (disp_Width/5 + 140, disp_Height/4)
+level3_Button = pg.Rect(0, 0, 100, 100)
+level3_Button.center = (disp_Width/5 + 280, disp_Height/4)
+level4_Button = pg.Rect(0, 0, 100, 100)
+level4_Button.center = (disp_Width/5 + 420, disp_Height/4)
+level_Select_Buttons = (back_Button, start_Button, level1_Button, level2_Button, level3_Button, level4_Button)
 
-# levels:
-base_Gates = [cl.H_Gate(0, 0, 0, 0), cl.X_Gate(0, 0, 0, 0), cl.T_Gate(0,0,0,0)]
-gate = cl.H_Gate(0, 0, 0, 0)
-gate2 = cl.X_Gate(0, 0, 0, 0)
-gate3 = cl.T_Gate(0, 0, 0, 0)
-track = cl.Track(0)
-track2 = cl.Track(0)
-track3 = cl.Track(0)
-track.gates.append(gate)
-gate.current_Track = track
-track.gates.append(gate2)
-gate2.current_Track = track
-track2.gates.append(gate3)
-gate3.current_Track = track2
+# level buttons / setup:
+base_Gates = [cl.H_Gate(80, 0, 0, 0), cl.X_Gate(100, 0, 0, 0), cl.T_Gate(120,0,0,0)]
 current_level = cl.Level([], [])
-current_level.add_track(track)
-current_level.add_track(track2)
-current_level.add_track(track3)
+
+"""
+# level 1
+level1_ogfile = cl.Level([], [])
+level1_ogfile.add_track(cl.Track(0))
+level1_ogfile.add_track(cl.Track(0))
+level1_ogfile.goal_text = "goal : tbd"
+pickled_level1 = pickle.dump(level1_ogfile, open("Levels\level1_file", "wb"))
+
+# level 2
+gate1_level2 = cl.H_Gate(80, 0, 0, 0)
+gate2_level2 = cl.X_Gate(100, 0, 0, 0)
+gate3_level2 = cl.T_Gate(120, 0, 0, 0)
+track1_level2 = cl.Track(0)
+track2_level2 = cl.Track(0)
+track3_level2 = cl.Track(0)
+
+level2_ogfile = cl.Level([], [])
+track1_level2.gates.append(gate1_level2)
+gate1_level2.current_Track = track1_level2
+track2_level2.gates.append(gate2_level2)
+gate2_level2.current_Track = track2_level2
+track3_level2.gates.append(gate3_level2)
+gate3_level2.current_Track = track3_level2
+level2_ogfile.add_track(track1_level2)
+level2_ogfile.add_track(track2_level2)
+level2_ogfile.add_track(track3_level2)
+level2_ogfile.goal_text = "goal : tbd"
+pickled_level2 = pickle.dump(level2_ogfile, open("Levels\level2_file", "wb"))
+#print (f"pickled level 2 file: \n{pickled_level2}\n")
+
+# level 3
+gate1_level3 = cl.H_Gate(80, 0, 0, 0)
+gate2_level3 = cl.X_Gate(100, 0, 0, 0)
+gate3_level3 = cl.T_Gate(120, 0, 0, 0)
+track1_level3 = cl.Track(0)
+track2_level3 = cl.Track(0)
+track3_level3 = cl.Track(0)
+
+level3_ogfile = cl.Level([], [])
+track1_level3.gates.append(gate1_level3)
+gate1_level3.current_Track = track1_level3
+track1_level3.gates.append(gate2_level3)
+gate2_level3.current_Track = track1_level3
+track2_level3.gates.append(gate3_level3)
+gate3_level3.current_Track = track2_level3
+level3_ogfile.add_track(track1_level3)
+level3_ogfile.add_track(track2_level3)
+level3_ogfile.add_track(track3_level3)
+level3_ogfile.goal_text = "goal : tbd"
+pickled_level3 = pickle.dump(level3_ogfile, open("Levels\level3_file", "wb"))
+#print (f"pickled level 3 file: \n{pickled_level3}\n")
+
+# level 4
+gate1_level4 = cl.H_Gate(80, 0, 0, 0)
+gate2_level4 = cl.X_Gate(100, 0, 0, 0)
+gate3_level4 = cl.T_Gate(120, 0, 0, 0)
+track1_level4 = cl.Track(0)
+track2_level4 = cl.Track(0)
+track3_level4 = cl.Track(0)
+
+level4_ogfile = cl.Level([], [])
+track1_level4.gates.append(gate1_level4)
+gate1_level4.current_Track = track1_level4
+track1_level4.gates.append(gate2_level4)
+gate2_level4.current_Track = track1_level4
+track2_level4.gates.append(gate3_level4)
+gate3_level4.current_Track = track2_level4
+level4_ogfile.add_track(track1_level4)
+level4_ogfile.add_track(track2_level4)
+level4_ogfile.add_track(track3_level4)
+level4_ogfile.goal_text = "goal : tbd"
+pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
+#print (f"pickled level 4 file: \n{pickled_level4}\n")
+"""
+
 # Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
 update and render sections, the player can move between those different game states by using buttons, which just launches the corresponding 
 game loop and interrupts the current one"""
+
 # main menu loop
 def main_menu():
     click = False #suddenly, python doesn't like it when click's value is given elsewhere, 
@@ -151,6 +223,10 @@ def level_select(display):
             pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
         draw_text(display, "BACK", colordict["black"], fontdict["normal"], disp_Width/5, 7*disp_Height/8)
         draw_text(display, "START", colordict["black"], fontdict["normal"], 4*disp_Width/5, 7* disp_Height/8)
+        draw_text(display, "1", colordict["black"], fontdict["normal"], disp_Width/5, disp_Height/4)
+        draw_text(display, "2", colordict["black"], fontdict["normal"], disp_Width/5 + 140, disp_Height/4)
+        draw_text(display, "3", colordict["black"], fontdict["normal"], disp_Width/5 + 280, disp_Height/4)
+        draw_text(display, "4", colordict["black"], fontdict["normal"], disp_Width/5 + 420, disp_Height/4)
         pg.display.update()
 
         #update section
@@ -159,6 +235,19 @@ def level_select(display):
             if back_Button.collidepoint((mx, my)):
                 running = False
             if start_Button.collidepoint((mx, my)):
+                current_level = pickle.load(open("Levels\level1_file", "rb"))
+                level(display, current_level)
+            if level1_Button.collidepoint((mx, my)):
+                current_level = pickle.load(open("Levels\level1_file", "rb"))
+                level(display, current_level)
+            if level2_Button.collidepoint((mx, my)):
+                current_level = pickle.load(open("Levels\level2_file", "rb"))
+                level(display, current_level)
+            if level3_Button.collidepoint((mx, my)):
+                current_level = pickle.load(open("Levels\level3_file", "rb"))
+                level(display, current_level)
+            if level4_Button.collidepoint((mx, my)):
+                current_level = pickle.load(open("Levels\level4_file", "rb"))
                 level(display, current_level)
         #events
         click = False
@@ -219,7 +308,7 @@ def level(display, level):
     #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
     holding = False
     held_rectangle = None
-    base_Gate_Rectangle_Y = 1010
+    base_Gate_Rectangle_Y = 890
     base_Gate_Rectangle_X = 30
     track_Rectangle_Y = 10
     track_Rectangle_X = 420
@@ -230,6 +319,11 @@ def level(display, level):
         fps_Limiter.tick(60)
         #render and positionnement section
         display.fill(colordict["white"])
+
+        # Box on the left of the screen
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
+
         for track in level.tracks:
             for gate in track.gates:
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
@@ -247,18 +341,21 @@ def level(display, level):
                         offset = 1
                     else: offset = 0
                     level.move_track(level.tracks.index(track)+offset,held_rectangle)
+            # display the track and the total cost the of track
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
             pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
+            draw_text(display, str(track.total_Cost), colordict["black"], fontdict["normal"], track.rectangle.x - 100, track.rectangle.y + 80) 
             if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not held_rectangle in base_Gates:
                 new_pos = math.trunc((mx-505)/125)
                 if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
                         track.move_gate(new_pos, held_rectangle)
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
+
+        # Box at the bottom of the screen, base_Gates, ...
         pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
         pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
+        draw_text(display, level.goal_text, colordict["black"], fontdict["normal"], 2*disp_Width/3, disp_Height-160) # display the goal of the level
         for gate in base_Gates:
             if gate is held_rectangle:
                 draw_gate(gate)
@@ -266,6 +363,7 @@ def level(display, level):
             gate.rectangle.x = base_Gate_Rectangle_X + (125 * base_Gates.index(gate))
             gate.rectangle.y = base_Gate_Rectangle_Y
             draw_gate(gate)
+            draw_text(display, str(gate.cost), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery + 100) # display the cost of the gate
         if held_rectangle and held_rectangle not in level.tracks:
             draw_gate(held_rectangle)
         pg.display.update()
@@ -319,6 +417,12 @@ def level(display, level):
             if held_rectangle in level.tracks:
                 held_rectangle.rectangle.centery = my
             else :held_rectangle.rectangle.center = (mx, my)
+        
+        # Calculate the cost of each track
+        for track in level.tracks:
+            track.total_Cost = 0
+            for gate in track.gates:
+                track.total_Cost += gate.cost
 
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
