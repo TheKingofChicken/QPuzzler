@@ -49,7 +49,7 @@ class Track(): #class for the track which each qbit moves along
         updated_gate.current_Position = pos
         if new_gate.current_Track:
             self.i_gate_cleaner()
-    #    self.rectangle.width = (len(self.gates) + 1) * 125
+        return updated_gate
     
     def delete_gate(self, del_gate):
             self.gates.remove(del_gate)
@@ -64,12 +64,13 @@ class Track(): #class for the track which each qbit moves along
         self.gates = self.gates[0:len(self.gates) - I_gates_length]
         
 class Level():
-    def __init__(self, inputs, outputs):
+    def __init__(self, inputs, outputs, goal_text,name):
         self.inputs = inputs
         self.outputs = outputs
         self.total_Cost = 0
         self.tracks = []
-        self.goal_text = ""
+        self.goal_text = goal_text
+        self.name = name
 
     def add_track(self, track):
         self.tracks.append(track)
@@ -114,8 +115,12 @@ class Quantum_Bit:
         return self.state
 
 class Conditional_Gate(Quantum_Gate):
-    def __init__(self, Control_Qbit):
-        self.Control_Qbit = Control_Qbit
+    def __str__(self):
+        return "if"
+    
+    def __copy__(self):
+        return Conditional_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+
 
 # here we start setting up the quantum gate that'll be in the final game
 # they're all exactly the same, except for their Qiskit_Equivalent
@@ -256,7 +261,7 @@ class Z_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return Z_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
 
 class S_Gate(Quantum_Gate):
 
@@ -302,4 +307,4 @@ class I_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return I_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
