@@ -12,6 +12,8 @@ class Quantum_Gate():
         self.current_Track = current_Track
         self.current_Position = current_Position
         self.rectangle = pg.Rect(0, 0, 100, 100)
+        if isinstance(self, Conditional_Gate):
+            self.aux_rectangle = pg.Rect(self.rectangle.midbottom[0] - 10, self.rectangle.midbottom[1] - 10, 30, 30)
 
     def set_current_placement(self, coords):
         self.current_Track = coords[0]
