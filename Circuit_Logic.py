@@ -1,19 +1,20 @@
 import numpy as np
 import qiskit as qs
-import cmath
 import math
 import pygame as pg
 import copy
 
 class Quantum_Gate():
-    def __init__(self, cost, conditional, current_Track, current_Position):
+        
+    def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None):
         self.cost = cost
         self.conditional = conditional
         self.current_Track = current_Track
         self.current_Position = current_Position
-        self.rectangle = pg.Rect(0, 0, 100, 100)
-        if isinstance(self, Conditional_Gate):
-            self.aux_rectangle = pg.Rect(self.rectangle.midbottom[0] - 10, self.rectangle.midbottom[1] - 10, 30, 30)
+        if rectangle is None:
+            self.rectangle = pg.Rect(0, 0, 100, 100)
+        else:
+            self.rectangle = rectangle
 
     def set_current_placement(self, coords):
         self.current_Track = coords[0]
@@ -21,6 +22,17 @@ class Quantum_Gate():
 
     def add_conditional(self, new_conditional):
         self.conditional = new_conditional 
+        
+    def unlink(self):
+        if self.conditional:
+            if isinstance(self, Conditional_Gate):
+                self.conditional.conditional = None
+                self.conditional = None
+                self.aux_rectangle = pg.Rect(self.rectangle.midbottom[0], self.rectangle.midbottom[1] - 10, 30, 30)
+            else:
+                self.conditional.aux_rectangle = pg.Rect(self.rectangle.midbottom[0], self.rectangle.midbottom[1] - 10, 30, 30)
+                self.conditional.conditional = None
+                self.conditional = None
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, input):
@@ -32,16 +44,20 @@ class Track(): #class for the track which each qbit moves along
     def move_gate(self, pos, new_gate):#moves around gates in the different tracks
         if isinstance(new_gate, I_Gate):
             return 1
+        
         old_track = new_gate.current_Track
+        
         if old_track:
             old_track.gates.insert(old_track.gates.index(new_gate), I_Gate(0, None, self, old_track.gates.index(new_gate)))
             old_track.gates.pop(old_track.gates.index(new_gate))
+        
         if pos < len(self.gates):
             if isinstance(self.gates[pos], I_Gate):
                 self.gates.pop(pos)
         else:
             for x in range((pos+1)-len(self.gates)):
                 self.gates.append(I_Gate(0,None,self,len(self.gates) + x))
+        
         if new_gate.current_Track:
             updated_gate = new_gate
         else:
@@ -51,10 +67,21 @@ class Track(): #class for the track which each qbit moves along
         updated_gate.current_Position = pos
         if new_gate.current_Track:
             self.i_gate_cleaner()
+            
+        new_gate.unlink()
+            
         return updated_gate
     
     def delete_gate(self, del_gate):
-            self.gates.remove(del_gate)
+        after_gate = False
+        for gate in self.gates:
+            if after_gate:
+                gate.current_Position -= 1
+                gate.unlink()
+            if gate == del_gate:
+                after_gate = True
+        self.gates.remove(del_gate)
+        del_gate.unlink()
     
     def i_gate_cleaner(self):
         I_gates_length = 0
@@ -66,11 +93,12 @@ class Track(): #class for the track which each qbit moves along
         self.gates = self.gates[0:len(self.gates) - I_gates_length]
         
 class Level():
-    def __init__(self, inputs, outputs, goal_text,name):
+    def __init__(self, inputs, outputs, available_gates, goal_text, name):
         self.inputs = inputs
         self.outputs = outputs
         self.total_Cost = 0
         self.tracks = []
+        self.available_gates = available_gates
         self.goal_text = goal_text
         self.name = name
 
@@ -84,6 +112,15 @@ class Level():
         self.tracks.remove(new_track)
         self.tracks.insert(pos, new_track)
         
+    def assign_Conditional(self, gate, conditional):
+        if gate.current_Position == conditional.current_Position and (self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) + 1 or self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) - 1):
+            gate.unlink()
+            conditional.unlink()
+            gate.conditional = conditional
+            conditional.conditional = gate
+            conditional.aux_rectangle = gate.rectangle.inflate(30,30)
+    
+    
     def run(self):
         #to iterate over the matrix column by column, we place it into a np.array object
         gate_Layers = np.array(self.tracks)
@@ -117,11 +154,23 @@ class Quantum_Bit:
         return self.state
 
 class Conditional_Gate(Quantum_Gate):
+    def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None):
+        self.cost = cost
+        self.conditional = conditional
+        self.current_Track = current_Track
+        self.current_Position = current_Position
+        if rectangle is None:
+            self.rectangle = pg.Rect(0, 0, 100, 100)
+        else:
+            self.rectangle = rectangle
+        self.aux_rectangle = pg.Rect(self.rectangle.midbottom[0], self.rectangle.midbottom[1] - 10, 30, 30)
+    
     def __str__(self):
         return "if"
     
     def __copy__(self):
-        return Conditional_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return Conditional_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
+    
 
 
 # here we start setting up the quantum gate that'll be in the final game
@@ -147,7 +196,7 @@ class SWAP_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return SWAP_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return SWAP_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class H_Gate(Quantum_Gate):
     
@@ -176,7 +225,7 @@ class H_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return H_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class X_Gate(Quantum_Gate):
     
@@ -205,7 +254,7 @@ class X_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return X_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return X_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class T_Gate(Quantum_Gate):
 
@@ -234,7 +283,7 @@ class T_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return T_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return T_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class Z_Gate(Quantum_Gate):
 
@@ -263,7 +312,7 @@ class Z_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return Z_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return Z_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class S_Gate(Quantum_Gate):
 
@@ -292,7 +341,7 @@ class S_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return S_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return S_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
     
 class I_Gate(Quantum_Gate):
     
@@ -309,4 +358,4 @@ class I_Gate(Quantum_Gate):
         return Quantum_Circuit
     
     def __copy__(self):
-        return I_Gate(self.cost,self.conditional,self.current_Track, self.current_Position)
+        return I_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())

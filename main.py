@@ -38,7 +38,8 @@ def draw_text(display, text, color, font, X, Y, ):
 colordict = {
     "white" : (255, 255, 255), 
     "black" : (0, 0, 0), 
-    "grey" : (150, 150, 150), 
+    "grey" : (150, 150, 150),
+    "dark grey" : (200,200,200), 
     "blue" : (0, 137, 255), 
     "red" : (255, 50, 50), 
     "yellow" : (240, 240, 50),
@@ -61,46 +62,17 @@ def draw_gate(gate):
         pass
     elif isinstance(gate,cl.Conditional_Gate):
         pg.draw.rect(display, colordict["grey"], gate.rectangle, 10)
-        draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-        if isinstance(gate, cl.Conditional_Gate) and gate.current_Track:
+        draw_text(display, str(gate), colordict["grey"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
+        if gate.current_Track:
             pg.draw.rect(display, colordict["grey"], gate.aux_rectangle, 10)
             if gate.rectangle.y < gate.aux_rectangle.y:
                 pg.draw.line(display,colordict["grey"], gate.rectangle.midbottom, gate.aux_rectangle.midtop, 10)
             else:
                 pg.draw.line(display,colordict["grey"], gate.rectangle.midtop, gate.aux_rectangle.midbottom, 10)
-            
-        
-def draw_level(level):
-    
-    first_layer_elements = []
-    
-    display.fill(colordict["white"])
-    
-    pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
-    pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
-        
-    pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
-    pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
-    draw_text(display, level.goal_text, colordict["black"], fontdict["normal"], 200, 35)    
-    
-    pg.draw.rect(display, colordict["grey"], pg.Rect(430, 10, 80, 50), 10)
-    pg.draw.line(display, colordict["grey"],(470, 20),(470,50), 10)
-    pg.draw.line(display, colordict["grey"],(455, 35),(485,35), 10)
-    
-    for track in level.tracks:
-        pg.draw.rect(display, colordict["grey"], track.rectangle, 10)
-        for gate in track.gates:
-            if isinstance(gate, cl.Conditional_Gate):
-                first_layer_elements.append(gate)
-                continue
-            draw_gate(gate)
-    for gate in base_Gates:
-        if isinstance(gate, cl.Conditional_Gate):
-            first_layer_elements.append(gate)
-            continue
-        draw_gate(gate)
-    for gate in first_layer_elements:
-        draw_gate(gate)
+    else:
+        pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
+        pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
+        draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
 
 # main menu buttons
 level_Select_Button = pg.Rect(0, 0, 400, 100)
@@ -119,7 +91,8 @@ apply_Button.center = (4*disp_Width/5, 7* disp_Height/8)
 option_Buttons = (back_Button, apply_Button)
 
 # level select buttons
-current_level = cl.Level([], [],"goal + tutorial bit", "test level")
+base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
+current_level = cl.Level([], [], base_Gates,"goal + tutorial bit", "test level")
 Levels = [current_level]
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
@@ -132,9 +105,6 @@ for level in Levels:
     level_starters.append(Button)
 
 # level buttons / setup:
-base_Gates = [cl.H_Gate(80, 0, 0, 0), cl.X_Gate(100, 0, 0, 0), cl.T_Gate(120,0,0,0), cl.Z_Gate(0,0,0,0), cl.S_Gate(0,0,0,0), cl.Conditional_Gate(0,0,0,0)]
-current_level = cl.Level([], [],"placeholder", "name")
-
 """
 # level 1
 level1_ogfile = cl.Level([], [])
@@ -361,19 +331,55 @@ def level(display, level):
     holding_aux_rectangle = False
     extra_track_button = pg.Rect(430, 10, 80, 50)
     
+    def draw_level(level):
+    
+        first_layer_elements = []
+    
+        display.fill(colordict["white"])
+    
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
+    
+        pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
+        pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
+        draw_text(display, level.goal_text, colordict["black"], fontdict["normal"], 200, 35)    
+    
+        pg.draw.rect(display, colordict["grey"], pg.Rect(430, 10, 80, 50), 10)
+        pg.draw.line(display, colordict["grey"],(470, 20),(470,50), 10)
+        pg.draw.line(display, colordict["grey"],(455, 35),(485,35), 10)
+    
+        for track in level.tracks:
+            pg.draw.rect(display, colordict["dark grey"], track.rectangle, 10)
+            for gate in track.gates:
+                if isinstance(gate, cl.Conditional_Gate):
+                    first_layer_elements.append(gate)
+                    continue
+                draw_gate(gate)
+        for gate in level.available_gates:
+            draw_gate(gate)
+        for gate in first_layer_elements:
+            draw_gate(gate)
+    
     #game loop
     while running:
         fps_Limiter.tick(60)
         
         for track in level.tracks:
+            if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not holding_aux_rectangle:
+                new_pos = math.trunc((mx-505)/125)
+                if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
+                    held_rectangle = track.move_gate(new_pos, held_rectangle)
             for gate in track.gates:
-                if isinstance(gate, cl.Conditional_Gate) and not gate.conditional:
-                    gate.aux_rectangle.midtop = (gate.rectangle.midbottom[0], gate.rectangle.midbottom[1] +20)
+                if isinstance(gate, cl.Conditional_Gate):
+                    if gate.conditional:
+                        gate.aux_rectangle = gate.conditional.rectangle.inflate(30,30)
+                    elif not holding_aux_rectangle:
+                        gate.aux_rectangle = pg.Rect(gate.rectangle.midbottom[0] - 15, gate.rectangle.midbottom[1] + 20, 30, 30)
                 if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
             if isinstance(held_rectangle, cl.Track):#everything inside this if is to change the position of the track when it is dropped
-                if track.rectangle.inflate((0, 11)).collidepoint((mx, my)):
+                if track.rectangle.inflate((20, 0)).collidepoint((mx, my)):
                     if level.tracks.index(held_rectangle) < level.tracks.index(track):
                         offset = 1
                     else: offset = 0
@@ -381,18 +387,14 @@ def level(display, level):
             # display the track and the total cost the of track
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
-            if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate):
-                new_pos = math.trunc((mx-505)/125)
-                if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
-                    held_rectangle = track.move_gate(new_pos, held_rectangle)
             if track is held_rectangle:
                 track.rectangle.centery = my
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         # Box at the bottom of the screen, base_Gates, ...
-        for gate in base_Gates:
+        for gate in level.available_gates:
             if gate is held_rectangle:
                 continue
-            gate.rectangle.x = base_Gate_Rectangle_X + (125 * base_Gates.index(gate))
+            gate.rectangle.x = base_Gate_Rectangle_X + (125 * level.available_gates.index(gate))
             gate.rectangle.y = base_Gate_Rectangle_Y
         
         draw_level(level)
@@ -420,13 +422,14 @@ def level(display, level):
                                     holding = True
                                     held_rectangle = gate
                                     rectangle_is_gate = True
-                                    break
+                                    gate.unlink()
                                 elif isinstance(gate, cl.Conditional_Gate):
                                     if gate.aux_rectangle.collidepoint(mx, my):
                                         holding = True
                                         held_rectangle = gate
                                         rectangle_is_gate = True
                                         holding_aux_rectangle  = True
+                                        gate.unlink()
                                         break
                             if rectangle_is_gate:
                                 break
@@ -434,7 +437,7 @@ def level(display, level):
                                 holding = True
                                 held_rectangle = track
                                 break
-                        for gate in base_Gates:
+                        for gate in level.available_gates:
                             if gate.rectangle.collidepoint(mx, my):
                                 holding = True
                                 held_rectangle = gate
@@ -446,23 +449,26 @@ def level(display, level):
                                 track.delete_gate(gate)
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
-                    if held_rectangle in base_Gates: 
+                    if holding_aux_rectangle:
+                        for track in level.tracks:
+                            for gate in track.gates:
+                                if gate.rectangle.collidepoint(mx, my) and not isinstance(gate, cl.Conditional_Gate):
+                                    level.assign_Conditional(gate, held_rectangle)
+                    elif held_rectangle in level.available_gates: 
                         new_pos = math.trunc((mx-505)/125)
                         for track in level.tracks:
                             if track.rectangle.collidepoint((mx, my)):
                                 track.move_gate(new_pos, held_rectangle)
                     holding = False
                     held_rectangle = None
+                    holding_aux_rectangle = False
         if holding :
             if held_rectangle in level.tracks:
                 held_rectangle.rectangle.centery = my
+            elif holding_aux_rectangle:
+                held_rectangle.aux_rectangle.center = (mx, my)
             else :held_rectangle.rectangle.center = (mx, my)
-        
-        # Calculate the cost of each track
-        for track in level.tracks:
-            track.total_Cost = 0
-            for gate in track.gates:
-                track.total_Cost += gate.cost
+
 
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
