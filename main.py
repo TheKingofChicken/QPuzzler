@@ -73,12 +73,43 @@ back_Button = pg.Rect(0, 0, 200, 100)
 back_Button.center = (disp_Width/5, 7*disp_Height/8)
 apply_Button = pg.Rect(0, 0, 200, 100)
 apply_Button.center = (4*disp_Width/5, 7* disp_Height/8)
-option_Buttons = (back_Button, apply_Button)
+help_Button = pg.Rect(0, 0, 400, 100)
+help_Button.center =(disp_Width/2, disp_Height/2)
+option_Buttons = (back_Button, apply_Button, help_Button)
+
+# help screen buttons
+back_help_Button = pg.Rect(0, 0, 400, 100)
+back_help_Button.center = (210, disp_Height-60)
+qubit_help_Button = pg.Rect(0, 0, 400, 100)
+qubit_help_Button.center = (210, 60)
+swapgate_help_Button = pg.Rect(0, 0, 400, 100)
+swapgate_help_Button.center = (210, 180)
+hgate_help_Button = pg.Rect(0, 0, 400, 100)
+hgate_help_Button.center = (210, 300)
+xgate_help_Button = pg.Rect(0, 0, 400, 100)
+xgate_help_Button.center = (210, 420)
+tgate_help_Button = pg.Rect(0, 0, 400, 100)
+tgate_help_Button.center = (210, 540)
+zgate_help_Button = pg.Rect(0, 0, 400, 100)
+zgate_help_Button.center = (210, 660)
+sgate_help_Button = pg.Rect(0, 0, 400, 100)
+sgate_help_Button.center = (210, 780)
+help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate_help_Button, xgate_help_Button, tgate_help_Button, zgate_help_Button, sgate_help_Button)
+
+
 
 # level select buttons
 base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
 current_level = cl.Level([], [], base_Gates,"goal and tutorial bit", "test level")
 Levels = [current_level]
+#level1 = pickle.load(open("Levels\level1_file", "rb"))
+#Levels.append(level1)
+#level2 = pickle.load(open("Levels\level2_file", "rb"))
+#Levels.append(level2)
+#level3 = pickle.load(open("Levels\level3_file", "rb"))
+#Levels.append(level3)
+#level4 = pickle.load(open("Levels\level4_file", "rb"))
+#Levels.append(level4)
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
@@ -92,78 +123,84 @@ for level in Levels:
 # level buttons / setup:
 """
 # level 1
-level1_ogfile = cl.Level([], [])
+level1_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 1")
 level1_ogfile.add_track(cl.Track(0))
 level1_ogfile.add_track(cl.Track(0))
-level1_ogfile.goal_text = "goal : tbd"
+#level1_ogfile.goal_text = "goal : tbd"
+#level1_ogfile.name = "level 1"
+
 pickled_level1 = pickle.dump(level1_ogfile, open("Levels\level1_file", "wb"))
 
 # level 2
-gate1_level2 = cl.H_Gate(80, 0, 0, 0)
-gate2_level2 = cl.X_Gate(100, 0, 0, 0)
-gate3_level2 = cl.T_Gate(120, 0, 0, 0)
-track1_level2 = cl.Track(0)
-track2_level2 = cl.Track(0)
-track3_level2 = cl.Track(0)
+#gate1_level2 = cl.H_Gate(80, 0, 0, 0)
+#gate2_level2 = cl.X_Gate(100, 0, 0, 0)
+#gate3_level2 = cl.T_Gate(120, 0, 0, 0)
+#track1_level2 = cl.Track(0)
+#track2_level2 = cl.Track(0)
+#track3_level2 = cl.Track(0)
 
-level2_ogfile = cl.Level([], [])
-track1_level2.gates.append(gate1_level2)
-gate1_level2.current_Track = track1_level2
-track2_level2.gates.append(gate2_level2)
-gate2_level2.current_Track = track2_level2
-track3_level2.gates.append(gate3_level2)
-gate3_level2.current_Track = track3_level2
-level2_ogfile.add_track(track1_level2)
-level2_ogfile.add_track(track2_level2)
-level2_ogfile.add_track(track3_level2)
-level2_ogfile.goal_text = "goal : tbd"
+level2_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 2")
+#track1_level2.gates.append(gate1_level2)
+#gate1_level2.current_Track = track1_level2
+#track2_level2.gates.append(gate2_level2)
+#gate2_level2.current_Track = track2_level2
+#track3_level2.gates.append(gate3_level2)
+#gate3_level2.current_Track = track3_level2
+#level2_ogfile.add_track(track1_level2)
+#level2_ogfile.add_track(track2_level2)
+#level2_ogfile.add_track(track3_level2)
+#level2_ogfile.goal_text = "goal : tbd"
+#level2_ogfile.name = "level 2"
 pickled_level2 = pickle.dump(level2_ogfile, open("Levels\level2_file", "wb"))
 #print (f"pickled level 2 file: \n{pickled_level2}\n")
 
 # level 3
-gate1_level3 = cl.H_Gate(80, 0, 0, 0)
-gate2_level3 = cl.X_Gate(100, 0, 0, 0)
-gate3_level3 = cl.T_Gate(120, 0, 0, 0)
-track1_level3 = cl.Track(0)
-track2_level3 = cl.Track(0)
-track3_level3 = cl.Track(0)
+#gate1_level3 = cl.H_Gate(80, 0, 0, 0)
+#gate2_level3 = cl.X_Gate(100, 0, 0, 0)
+#gate3_level3 = cl.T_Gate(120, 0, 0, 0)
+#track1_level3 = cl.Track(0)
+#track2_level3 = cl.Track(0)
+#track3_level3 = cl.Track(0)
 
-level3_ogfile = cl.Level([], [])
-track1_level3.gates.append(gate1_level3)
-gate1_level3.current_Track = track1_level3
-track1_level3.gates.append(gate2_level3)
-gate2_level3.current_Track = track1_level3
-track2_level3.gates.append(gate3_level3)
-gate3_level3.current_Track = track2_level3
-level3_ogfile.add_track(track1_level3)
-level3_ogfile.add_track(track2_level3)
-level3_ogfile.add_track(track3_level3)
-level3_ogfile.goal_text = "goal : tbd"
+level3_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 3")
+#track1_level3.gates.append(gate1_level3)
+#gate1_level3.current_Track = track1_level3
+#track1_level3.gates.append(gate2_level3)
+#gate2_level3.current_Track = track1_level3
+#track2_level3.gates.append(gate3_level3)
+#gate3_level3.current_Track = track2_level3
+#level3_ogfile.add_track(track1_level3)
+#level3_ogfile.add_track(track2_level3)
+#level3_ogfile.add_track(track3_level3)
+#level3_ogfile.goal_text = "goal : tbd"
+#level3_ogfile.name = "level 3"
 pickled_level3 = pickle.dump(level3_ogfile, open("Levels\level3_file", "wb"))
 #print (f"pickled level 3 file: \n{pickled_level3}\n")
 
 # level 4
-gate1_level4 = cl.H_Gate(80, 0, 0, 0)
-gate2_level4 = cl.X_Gate(100, 0, 0, 0)
-gate3_level4 = cl.T_Gate(120, 0, 0, 0)
-track1_level4 = cl.Track(0)
-track2_level4 = cl.Track(0)
-track3_level4 = cl.Track(0)
+#gate1_level4 = cl.H_Gate(80, 0, 0, 0)
+#gate2_level4 = cl.X_Gate(100, 0, 0, 0)
+#gate3_level4 = cl.T_Gate(120, 0, 0, 0)
+#track1_level4 = cl.Track(0)
+#track2_level4 = cl.Track(0)
+#track3_level4 = cl.Track(0)
 
-level4_ogfile = cl.Level([], [])
-track1_level4.gates.append(gate1_level4)
-gate1_level4.current_Track = track1_level4
-track1_level4.gates.append(gate2_level4)
-gate2_level4.current_Track = track1_level4
-track2_level4.gates.append(gate3_level4)
-gate3_level4.current_Track = track2_level4
-level4_ogfile.add_track(track1_level4)
-level4_ogfile.add_track(track2_level4)
-level4_ogfile.add_track(track3_level4)
-level4_ogfile.goal_text = "goal : tbd"
+level4_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 4")
+#track1_level4.gates.append(gate1_level4)
+#gate1_level4.current_Track = track1_level4
+#track1_level4.gates.append(gate2_level4)
+#gate2_level4.current_Track = track1_level4
+#track2_level4.gates.append(gate3_level4)
+#gate3_level4.current_Track = track2_level4
+#level4_ogfile.add_track(track1_level4)
+#level4_ogfile.add_track(track2_level4)
+#level4_ogfile.add_track(track3_level4)
+#level4_ogfile.goal_text = "goal : tbd"
+#level4_ogfile.name = "level 4"
 pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
 #print (f"pickled level 4 file: \n{pickled_level4}\n")
 """
+
 
 # Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
@@ -264,6 +301,9 @@ def level_select(display):
 
 
 def options_menu(display):
+
+    def apply_settings():
+            pass
     
     click = False
     running = True
@@ -275,6 +315,7 @@ def options_menu(display):
         for button in option_Buttons:
             pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
         draw_text(display, "OPTIONS", colordict["black"], fontdict["menu"], disp_Width/2, disp_Height/5)
+        draw_text(display, "HELP", colordict["black"], fontdict["normal"], disp_Width/2, disp_Height/2)
         draw_text(display, "BACK", colordict["black"], fontdict["normal"], disp_Width/5, 7*disp_Height/8)
         draw_text(display, "APPLY", colordict["black"], fontdict["normal"], 4*disp_Width/5, 7*disp_Height/8)
         pg.display.update()
@@ -285,7 +326,76 @@ def options_menu(display):
             if back_Button.collidepoint((mx, my)):
                 running = False
             if apply_Button.collidepoint((mx, my)):
+                apply_settings()
                 running = False
+            if help_Button.collidepoint((mx, my)):
+                help_screen(display)
+                running = False
+        #events
+        click = False
+        for event in pg.event.get():
+            if event.type is pg.QUIT:
+                pg.quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    (mx, my) = pg.mouse.get_pos()
+                    click = True #this one here is the important one
+
+def help_screen(display):
+
+    running = True
+    click = False
+    chosen_button_text = ""
+
+    qubit_help_text = "1"
+    swapgate_help_text = "2"
+    hgate_help_text = "3"
+    xgate_help_text = "4"
+    tgate_help_text = "5"
+    zgate_help_text = "6"
+    sgate_help_text = "7"
+
+    while running :
+        fps_Limiter.tick(60)
+
+        #render section
+        display.fill(colordict["white"])
+        for button in help_Buttons:
+            pg.draw.rect(display, colordict["black"], button, 10)
+        draw_text(display, chosen_button_text, colordict["black"], fontdict["normal"], disp_Width/2, disp_Height/2)
+        draw_text(display, "BACK", colordict["black"], fontdict["normal"], 210, disp_Height-60)
+        draw_text(display, "QUANTUM BIT", colordict["black"], fontdict["normal"], 210, 60)
+        draw_text(display, "SWAP GATE", colordict["black"], fontdict["normal"], 210, 180)
+        draw_text(display, "H GATE", colordict["black"], fontdict["normal"], 210, 300)
+        draw_text(display, "X GATE", colordict["black"], fontdict["normal"], 210, 420)
+        draw_text(display, "T GATE", colordict["black"], fontdict["normal"], 210, 540)
+        draw_text(display, "Z GATE", colordict["black"], fontdict["normal"], 210, 660)
+        draw_text(display, "S GATE", colordict["black"], fontdict["normal"], 210, 780)
+        pg.display.update()
+
+        #update section
+        #buttons
+        if click:
+            if back_help_Button.collidepoint((mx, my)):
+                running = False
+            elif qubit_help_Button.collidepoint((mx, my)):
+                chosen_button_text = qubit_help_text
+            elif swapgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = swapgate_help_text
+            elif hgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = hgate_help_text
+            elif xgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = xgate_help_text
+            elif tgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = tgate_help_text
+            elif zgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = zgate_help_text
+            elif sgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = sgate_help_text
+
         #events
         click = False
         for event in pg.event.get():
