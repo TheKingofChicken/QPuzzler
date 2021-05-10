@@ -436,8 +436,13 @@ def level(display, level):
                 else:
                     pg.draw.line(display,colordict["grey"], gate.rectangle.midtop, gate.aux_rectangle.midbottom, 10)
         elif isinstance(held_rectangle, cl.SWAP_Gate) and not gate in level.available_gates:
-            draw_gate(held_rectangle)
-            draw_gate(held_rectangle.aux_gate)
+            pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
+            pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
+            draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
+            
+            pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
+            pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
+            draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
         else:
             pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
             pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
@@ -531,13 +536,15 @@ def level(display, level):
                                 if isinstance(gate, cl.I_Gate):
                                     continue
                                 elif isinstance(gate, cl.SWAP_Gate):
-                                    holding = True
-                                    rectangle_is_gate = True
-                                    gate.unlink()
-                                    if level.tracks.index(gate.current_Track) > level.tracks.index(gate.aux_gate.current_Track):
-                                        holding_aux_gate = False
-                                    else:
-                                        holding_aux_gate = True
+                                    if gate.aux_gate.rectangle.collidepoint(mx, my):
+                                        holding = True
+                                        rectangle_is_gate = True
+                                        held_rectangle = gate
+                                        gate.unlink()
+                                        if level.tracks.index(gate.current_Track) > level.tracks.index(gate.aux_gate.current_Track):
+                                            holding_aux_gate = False
+                                        else:
+                                            holding_aux_gate = True
                                 elif gate.rectangle.collidepoint(mx, my):
                                     holding = True
                                     held_rectangle = gate
@@ -590,10 +597,10 @@ def level(display, level):
                 held_rectangle.aux_rectangle.center = (mx, my)
             elif isinstance(held_rectangle, cl.SWAP_Gate):
                 if holding_aux_gate:
-                    held_rectangle.center = (mx,my)
+                    held_rectangle.rectangle.center = (mx,my)
                     held_rectangle.aux_gate.center = (mx-70, my-70)
                 else:
-                    held_rectangle.center = (mx,my)
+                    held_rectangle.rectangle.center = (mx,my)
                     held_rectangle.aux_gate.center = (mx+70, my+70)
             else :held_rectangle.rectangle.center = (mx, my)
 

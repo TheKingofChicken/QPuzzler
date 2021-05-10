@@ -186,7 +186,7 @@ class SWAP_Gate(Quantum_Gate):
         self.cost = cost
         self.__SWAPconditional = conditional
         self.__SWAPcurrent_Track = current_Track
-        self.__SWAPcurrent_Track = current_Position
+        self.__SWAPcurrent_Position = current_Position
         if rectangle is None:
             self.rectangle = pg.Rect(430, 0, 1480, 150)
         else:
@@ -198,22 +198,35 @@ class SWAP_Gate(Quantum_Gate):
     def __setattr__(self, name, value):
         super(SWAP_Gate, self).__setattr__(name, value)
         if name == "conditional":
-            self.aux_gate.__dict__["__SWAPconditional"] = value
+            self.aux_gate.__SWAPconditional = value
         elif name == "current_Track":
-            Track_index_difference = self.__dict__["__SWAPcurrent_Track"].level.tracks.index(self.__dict__["__SWAPcurrent_Track"]) - self.__dict__["__SWAPcurrent_Track"].level.tracks.index(self.aux_gate.__dict__["__SWAPcurrent_Track"])
+            if self.__SWAPcurrent_Track:
+                Track_index_difference = self.__SWAPcurrent_Track.level.tracks.index(self.__SWAPcurrent_Track) - self.__SWAPcurrent_Track.level.tracks.index(self.aux_gate.__SWAPcurrent_Track)
+            else:
+                Track_index_difference = 1
             original_track = self.__SWAcurrent_Track
-            original_aux_track = self.aux_gate.__dict__["__SWAPcurrent_Track"]
+            original_aux_track = self.aux_gate.__SWAPcurrent_Track
             try:
-                self.__dict__["__SWAPcurrent_Track"] = value
-                self.aux_gate.__dict__["__SWAPcurrent_Track"] = self.__dict__["__SWAPcurrent_Track"].level.tracks[self.__dict__["__SWAPcurrent_Track"].level.tracks.index(self.__dict__["__SWAPcurrent_Track"]) + Track_index_difference]
+                self.__SWAPcurrent_Track = value
+                self.aux_gate.__SWAPcurrent_Track = self.__SWAPcurrent_Track.level.tracks[self.__SWAPcurrent_Track.level.tracks.index(self.__SWAPcurrent_Track) + Track_index_difference]
             except IndexError:
-                self.__dict__["__SWAPcurrent_Track"] = original_track
-                self.aux_gate.__dict__["__SWAPcurrent_Track"] = original_aux_track
+                self.__SWAPcurrent_Track = original_track
+                self.aux_gate.__SWAPcurrent_Track = original_aux_track
         elif name == "current_Position":
-            self.__dict__["__SWAPcurrent_Position"] = value
-            self.aux_gate.__dict__["__SWAPcurrent_Position"] = value
+            self.__SWAPcurrent_Position = value
+            self.aux_gate.__SWAPcurrent_Position = value
         elif name == "aux_gate":
             self.__dict__["aux_gate"] == value
+        else:
+            self.__dict__[name] = value
+    
+    def __getattr__(self, name):
+        if name == "conditional":
+            return self.__SWAPconditional
+        elif name == "current_Track":
+            return self.__SWAPcurrent_Track
+        elif name == "current_Position":
+            return self.__SWAPcurrent_Position
         
     def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
