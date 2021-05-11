@@ -435,14 +435,15 @@ def level(display, level):
                     pg.draw.line(display,colordict["grey"], gate.rectangle.midbottom, gate.aux_rectangle.midtop, 10)
                 else:
                     pg.draw.line(display,colordict["grey"], gate.rectangle.midtop, gate.aux_rectangle.midbottom, 10)
-        elif isinstance(held_rectangle, cl.SWAP_Gate) and not gate in level.available_gates:
+        elif isinstance(gate, cl.SWAP_Gate):
             pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
             pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
             draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
             
-            pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
-            pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
-            draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
+            if not gate in level.available_gates and not gate.current_Track:
+                pg.draw.rect(display, gatedict[str(gate)], gate.aux_gate.rectangle)
+                pg.draw.rect(display, colordict["black"], gate.aux_gate.rectangle, 10)
+                draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.aux_gate.rectangle.centerx, gate.aux_gate.rectangle.centery)
         else:
             pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
             pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
@@ -489,6 +490,14 @@ def level(display, level):
                 new_pos = math.trunc((mx-505)/125)
                 if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
                     held_rectangle = track.move_gate(new_pos, held_rectangle)
+                    if isinstance(held_rectangle, cl.SWAP_Gate):
+                        try:
+                            if holding_aux_gate:
+                                level.tracks[level.tracks.index(held_rectangle.current_Track) - 1].move_gate(new_pos, held_rectangle.aux_gate)
+                            else:
+                                level.tracks[level.tracks.index(held_rectangle.current_Track) + 1].move_gate(new_pos, held_rectangle.aux_gate)
+                        except IndexError:
+                            pass
             for gate in track.gates:
                 if isinstance(gate, cl.Conditional_Gate):
                     if gate.conditional:
@@ -528,7 +537,7 @@ def level(display, level):
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if extra_track_button.collidepoint((mx, my)):
-                        level.tracks.append(cl.Track(cl.Quantum_Bit, level))
+                        level.tracks.append(cl.Track(cl.Quantum_Bit, level, len(level.tracks)))
                     else:
                         rectangle_is_gate = False
                         for track in level.tracks:
@@ -570,10 +579,19 @@ def level(display, level):
                                 held_rectangle = gate
                                 break
                 elif event.button == 3:
+                    gate_is_found = False
                     for track in level.tracks:
                         for gate in track.gates:
+                            if isinstance(gate, cl.Conditional_Gate) and gate.aux_rectangle.collidepoint(mx, my):
+                                gate.unlink()
+                                gate_is_found = True
+                                break
                             if gate.rectangle.collidepoint(mx, my):
                                 track.delete_gate(gate)
+                                gate_is_found = True
+                                break
+                        if gate_is_found:
+                            break
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     if holding_aux_rectangle:
@@ -586,6 +604,14 @@ def level(display, level):
                         for track in level.tracks:
                             if track.rectangle.collidepoint((mx, my)):
                                 track.move_gate(new_pos, held_rectangle)
+                            if isinstance(held_rectangle, cl.SWAP_Gate):
+                                try:
+                                    if holding_aux_gate:
+                                        level.tracks[level.tracks.index(held_rectangle.current_Track) - 1].move_gate(new_pos, held_rectangle.aux_gate)
+                                    else:
+                                        level.tracks[level.tracks.index(held_rectangle.current_Track) + 1].move_gate(new_pos, held_rectangle.aux_gate)
+                                except IndexError:
+                                    pass
                     holding = False
                     held_rectangle = None
                     holding_aux_rectangle = False
@@ -598,10 +624,10 @@ def level(display, level):
             elif isinstance(held_rectangle, cl.SWAP_Gate):
                 if holding_aux_gate:
                     held_rectangle.rectangle.center = (mx,my)
-                    held_rectangle.aux_gate.center = (mx-70, my-70)
+                    held_rectangle.aux_gate.rectangle.center = (mx, my-120)
                 else:
                     held_rectangle.rectangle.center = (mx,my)
-                    held_rectangle.aux_gate.center = (mx+70, my+70)
+                    held_rectangle.aux_gate.rectangle.center = (mx, my+120)
             else :held_rectangle.rectangle.center = (mx, my)
 
 
