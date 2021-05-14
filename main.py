@@ -101,34 +101,37 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 # level select buttons
 base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
 current_level = cl.Level([], [], base_Gates,"goal and tutorial bit", "test level")
+#pickled_level = pickle.dump(current_level, open("Levels\leveltest_file", "wb"))
 Levels = [current_level]
-#level1 = pickle.load(open("Levels\level1_file", "rb"))
-#Levels.append(level1)
-#level2 = pickle.load(open("Levels\level2_file", "rb"))
-#Levels.append(level2)
-#level3 = pickle.load(open("Levels\level3_file", "rb"))
-#Levels.append(level3)
-#level4 = pickle.load(open("Levels\level4_file", "rb"))
-#Levels.append(level4)
+level1 = pickle.load(open("Levels\level1_file", "rb"))
+Levels.append(level1)
+level2 = pickle.load(open("Levels\level2_file", "rb"))
+Levels.append(level2)
+level3 = pickle.load(open("Levels\level3_file", "rb"))
+Levels.append(level3)
+level4 = pickle.load(open("Levels\level4_file", "rb"))
+Levels.append(level4)
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 level_starters = []
+i = 0
 for level in Levels:
-    Button = pg.Rect(0, 0, 300, 200)
-    Button.center = (disp_Width/5, disp_Height/4)
+    Button = pg.Rect(0, 0, 200, 200)
+    Button.center = ((i*240) + disp_Width/5, disp_Height/4)
     level_starters.append(Button)
+    i += 1
 
 # level buttons / setup:
+
 """
 # level 1
 level1_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 1")
-level1_ogfile.add_track(cl.Track(0))
-level1_ogfile.add_track(cl.Track(0))
+#level1_ogfile.add_track(cl.Track(0))
+#level1_ogfile.add_track(cl.Track(0))
 #level1_ogfile.goal_text = "goal : tbd"
 #level1_ogfile.name = "level 1"
-
 pickled_level1 = pickle.dump(level1_ogfile, open("Levels\level1_file", "wb"))
 
 # level 2
@@ -201,6 +204,10 @@ pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
 #print (f"pickled level 4 file: \n{pickled_level4}\n")
 """
 
+def save_levels(levels):
+    levelfile_text = ["Levels\leveltest_file", "Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file"]
+    for x in range(len(levels)):
+        pickled_level = pickle.dump(levels[x], open(levelfile_text[x], "wb"))
 
 # Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
@@ -231,14 +238,17 @@ def main_menu():
             if options_Button.collidepoint(mx, my):
                 options_menu(display)
             if exit_Button.collidepoint(mx, my):
+                save_levels(Levels)
                 running = False
         #the bit that takes care of the different events
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
+                save_levels(Levels)
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
+                    save_levels(Levels)
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -251,6 +261,7 @@ def level_select(display):
     click = False
     running = True
     chosen_level = None
+    chosen_level_index = 0
 
     while running:
         fps_Limiter.tick(60)
@@ -266,8 +277,8 @@ def level_select(display):
         draw_text(display, "START", colordict["black"], fontdict["normal"], 4*disp_Width/5, 7* disp_Height/8)
         for x in range(len(Levels)):
             if level_starters[x] is chosen_level:
-                draw_text(display, Levels[x].name, colordict["red"], fontdict["normal"], disp_Width/5 + 140*x, disp_Height/4)
-            else: draw_text(display, Levels[x].name, colordict["black"], fontdict["normal"], disp_Width/5 + 140*x, disp_Height/4)
+                draw_text(display, Levels[x].name, colordict["red"], fontdict["normal"], disp_Width/5 + 240*x, disp_Height/4)
+            else: draw_text(display, Levels[x].name, colordict["black"], fontdict["normal"], disp_Width/5 + 240*x, disp_Height/4)
         pg.display.update()
 
         #update section
@@ -277,7 +288,7 @@ def level_select(display):
                 running = False
             elif start_Button.collidepoint((mx, my)):
                 #current_level = pickle.load(open("Levels\level1_file", "rb"))
-                level(display, Levels[level_starters.index(button)])
+                level(display, Levels[chosen_level_index])
                 chosen_level = None
             for button in level_starters:
                 if button.collidepoint((mx, my)):
@@ -285,6 +296,7 @@ def level_select(display):
                         chosen_level = None
                     else:
                         chosen_level = button
+                        chosen_level_index = level_starters.index(button)
                     
         #events
         click = False
@@ -530,9 +542,11 @@ def level(display, level):
         (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type is pg.QUIT:
+                save_levels(Levels)
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
+                    save_levels(Levels)
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:

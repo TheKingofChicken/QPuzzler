@@ -16,6 +16,10 @@ class Quantum_Gate():
         else:
             self.rectangle = rectangle
 
+    def set_current_placement(self, coords):
+        self.current_Track = coords[0]
+        self.current_position = coords[1]
+
     def add_conditional(self, new_conditional):
         self.conditional = new_conditional 
         
@@ -30,12 +34,10 @@ class Quantum_Gate():
                 self.conditional.conditional = None
                 self.conditional = None
 
-class Track(): #class for the track which each qbit moves along
-    def __init__(self, input, Level, position):
+class Track(): #class for the track which each gate moves along
+    def __init__(self, input):
         self.input = input
         self.gates = []
-        self.Level = Level
-        self.position = 0
         self.total_Cost = 0
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
@@ -109,7 +111,6 @@ class Level():
     def move_track(self, pos, new_track):
         self.tracks.remove(new_track)
         self.tracks.insert(pos, new_track)
-        new_track.position = pos
         
     def assign_Conditional(self, gate, conditional):
         if gate.current_Position == conditional.current_Position and (self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) + 1 or self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) - 1):
@@ -118,8 +119,7 @@ class Level():
             gate.conditional = conditional
             conditional.conditional = gate
             conditional.aux_rectangle = gate.rectangle.inflate(30,30)
-    
-    
+
     def run(self):
         #to iterate over the matrix column by column, we place it into a np.array object
         gate_Layers = np.array(self.tracks)
@@ -128,12 +128,11 @@ class Level():
         qc = qs.QuantumCircuit()
         qc.add_register(qr)
         for qbit_index in range(len(self.tracks)):
-            qc.initialise(self.inputs,qr[qbit_index])
+            qc.initialize(self.inputs, qr[qbit_index])
         for gate_Layer in gate_Layers.transpose():
             for gate in gate_Layer:
                 gate.Qiskit_Equivalent_Dispatcher(qr)
-        
-        
+
 class Quantum_Bit:
     def __init__(self):
         self.state = [1, 0, 0, 0]
@@ -145,7 +144,7 @@ class Quantum_Bit:
 
     def update(self, statevector_Coordinates):
        self.state =  statevector_Coordinates
-    """the statevector qiskit uses to describe entangled qbits are incomplete, for example: qbit 0 is (50%, 0%) and 1bit 1 is (0%, 50%)
+    """the statevector qiskit uses to describe entangled qbits are incomplete, for example: qbit 0 is (50%, 0%) and qbit 1 is (0%, 50%)
         so far, the way we've found to deal with this is to add the possibilities together, but we still need to check if it would work
         all the time """
 
@@ -176,56 +175,6 @@ class Conditional_Gate(Quantum_Gate):
 # they're all exactly the same, except for their Qiskit_Equivalent
 class SWAP_Gate(Quantum_Gate):
     
-    def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None, aux_gate = None):
-        if aux_gate is None:
-            self.aux_gate = SWAP_Gate(cost,conditional,current_Track,current_Position, aux_gate = self)
-        else:
-            self.aux_gate = aux_gate
-        self.cost = cost
-        self.__SWAPconditional = conditional
-        self.__SWAPcurrent_Track = current_Track
-        self.__SWAPcurrent_Position = current_Position
-        if rectangle is None:
-            self.rectangle = pg.Rect(430, 0, 100, 100)
-        else:
-            self.rectangle = rectangle
-    
-    def __setattribute__(self, name, value):
-        if name == "conditional":
-            self.aux_gate.__SWAPconditional = value
-        elif name == "current_Track":
-            if self.__SWAPcurrent_Track:
-                Track_index_difference = self.__SWAPcurrent_Track.level.tracks.index(self.__SWAPcurrent_Track) - self.__SWAPcurrent_Track.level.tracks.index(self.aux_gate.__SWAPcurrent_Track)
-            else:
-                Track_index_difference = 1
-            original_track = self.__SWA__SWAPcurrent_Track
-            original_aux_track = self.aux_gate.__SWAPcurrent_Track
-            try:
-                self.__SWAPcurrent_Track = value
-                self.aux_gate.__SWAPcurrent_Track = self.__SWAPcurrent_Track.level.tracks[self.__SWAPcurrent_Track.level.tracks.index(self.__SWAPcurrent_Track) + Track_index_difference]
-            except IndexError:
-                self.__SWAPcurrent_Track = original_track
-                self.aux_gate.__SWAPcurrent_Track = original_aux_track
-        elif name == "current_Position":
-            self.__SWAPcurrent_Position = value
-            self.aux_gate.__SWAPcurrent_Position = value
-        elif name == "aux_gate":
-            self.__dict__["aux_gate"] == value
-        else:
-            super(SWAP_Gate, self).__setattr__(name, value)
-    
-    def __getattr__(self, name):
-        if name == "conditional":
-            return self.__SWAPconditional
-        elif name == "current_Track":
-            return self.__SWAPcurrent_Track
-        elif name == "current_Position":
-            return self.__SWAPcurrent_Position
-    
-    
-    def __str__(self):
-        return "SWAP"
-        
     def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
         if self.Conditional is None or self.conditional is False:
             self.Qiskit_Equivalent(Quantum_Circuit)
@@ -248,7 +197,7 @@ class SWAP_Gate(Quantum_Gate):
         return SWAP_Gate(self.cost,self.conditional,self.current_Track, self.current_Position, self.rectangle.copy())
 
 class H_Gate(Quantum_Gate):
-    
+
     def __str__(self):
         return "H"
 
@@ -256,7 +205,7 @@ class H_Gate(Quantum_Gate):
         return self.__str__()
     
     def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
+        if self.Conditional is None :
             self.Qiskit_Equivalent(Quantum_Circuit)
         else:
             self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
