@@ -1,85 +1,34 @@
 import pygame as pg
 import ctypes
+import Views
 import Circuit_Logic as cl
 import Levels
 import math
 import pickle
 
-# without this line, pygame thinks the screen is only 1536 pixels wide, which fucks up elements whose position depends on the resolution
-ctypes.windll.user32.SetProcessDPIAware()
-
-# Initialise pygame
-pg.init()
-
-# setting up display
-display = pg.display.set_mode((1920, 1080))
-pg.display.set_caption('QPuzzler')
-disp_Width = display.get_width()
-disp_Height = display.get_height()
-fps_Limiter = pg.time.Clock()
-
-# text shenanigans
-pg.font.init()
-normal_Font = pg.font.Font("square.ttf", 48)
-menu_Font = pg.font.Font("square.ttf", 192)
-small_font = pg.font.Font("square.ttf", 24)
-fontdict = {
-    "menu" : menu_Font, 
-    "normal" : normal_Font
-}
-
-def draw_text(display, text, color, font, X, Y, ):
-    textobj = font.render(text, 1, color)
-    textrect = textobj.get_rect()
-    textrect.center = (X, Y)
-    display.blit(textobj, textrect)
-
-# colors we're actually gonna use
-colordict = {
-    "white" : (255, 255, 255), 
-    "black" : (0, 0, 0), 
-    "grey" : (150, 150, 150),
-    "light grey" : (200,200,200), 
-    "blue" : (0, 137, 255), 
-    "red" : (255, 50, 50), 
-    "yellow" : (240, 240, 50),
-    "purple" : (138,43,226),
-    "pink" : (255,105,180),
-    "dark green" : (50,205,50)
-    }
-
-# Things to draw the gates
-gatedict = {
-    "H" : colordict["blue"],
-    "X" : colordict["red"],
-    "T" : colordict["yellow"],
-    "Z" : colordict["purple"],
-    "S" : colordict["pink"],
-    "if" : colordict["black"],
-    "SWAP" : colordict["dark green"]
-}
+renderer = Views.renderer()
 
 # main menu buttons
 level_Select_Button = pg.Rect(0, 0, 400, 100)
-level_Select_Button.center = (disp_Width/2, 3*disp_Height/6)
+level_Select_Button.center = (renderer.disp_Width/2, 3*renderer.disp_Height/6)
 options_Button = pg.Rect(0, 0, 400, 100)
-options_Button.center = (disp_Width/2, 4*disp_Height/6)
+options_Button.center = (renderer.disp_Width/2, 4*renderer.disp_Height/6)
 exit_Button = pg.Rect(0, 0, 400, 100)
-exit_Button.center = (disp_Width/2, 5*disp_Height/6)
+exit_Button.center = (renderer.disp_Width/2, 5*renderer.disp_Height/6)
 main_Menu_Buttons = (level_Select_Button, options_Button, exit_Button)
 
 # options buttons
 back_Button = pg.Rect(0, 0, 200, 100)
-back_Button.center = (disp_Width/5, 7*disp_Height/8)
+back_Button.center = (renderer.disp_Width/5, 7*renderer.disp_Height/8)
 apply_Button = pg.Rect(0, 0, 200, 100)
-apply_Button.center = (4*disp_Width/5, 7* disp_Height/8)
+apply_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 help_Button = pg.Rect(0, 0, 400, 100)
-help_Button.center =(disp_Width/2, disp_Height/2)
+help_Button.center =(renderer.disp_Width/2, renderer.disp_Height/2)
 option_Buttons = (back_Button, apply_Button, help_Button)
 
 # help screen buttons
 back_help_Button = pg.Rect(0, 0, 400, 100)
-back_help_Button.center = (210, disp_Height-60)
+back_help_Button.center = (210, renderer.disp_Height-60)
 qubit_help_Button = pg.Rect(0, 0, 400, 100)
 qubit_help_Button.center = (210, 60)
 swapgate_help_Button = pg.Rect(0, 0, 400, 100)
@@ -113,19 +62,19 @@ level4 = pickle.load(open("Levels\level4_file", "rb"))
 Levels.append(level4)
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
-start_Button.center = (4*disp_Width/5, 7* disp_Height/8)
+start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 level_starters = []
 i = 0
 for level in Levels:
     Button = pg.Rect(0, 0, 200, 200)
-    Button.center = ((i*240) + disp_Width/5, disp_Height/4)
+    Button.center = ((i*240) + renderer.disp_Width/5, renderer.disp_Height/4)
     level_starters.append(Button)
     i += 1
 
 # level buttons / setup:
 
-"""
+
 # level 1
 level1_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 1")
 #level1_ogfile.add_track(cl.Track(0))
@@ -202,7 +151,7 @@ level4_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 4")
 #level4_ogfile.name = "level 4"
 pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
 #print (f"pickled level 4 file: \n{pickled_level4}\n")
-"""
+
 
 def save_levels(levels):
     levelfile_text = ["Levels\leveltest_file", "Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file"]
@@ -219,24 +168,15 @@ def main_menu():
     click = False #suddenly, python doesn't like it when click's value is given elsewhere, 
     running = True
     while running:
-        fps_Limiter.tick(60)
-        #everything that needs to be rendered:
-        display.fill(colordict["white"])
-        for button in main_Menu_Buttons:
-            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        draw_text(display, "QPUZZLER", colordict["black"], fontdict["menu"], disp_Width/2, disp_Height/5)
-        draw_text(display, "LEVEL SELECT", colordict["black"], fontdict["normal"], disp_Width/2, 3*disp_Height/6)
-        draw_text(display, "OPTIONS", colordict["black"], fontdict["normal"], disp_Width/2, 4*disp_Height/6)
-        draw_text(display, "EXIT", colordict["black"], fontdict["normal"], disp_Width/2, 5*disp_Height/6)
-        pg.display.update()
+        renderer.main_menu_view(main_Menu_Buttons)
 
         #the interactive bits, events and what to when they occur, (update section)
         #the bit that checks if the mouse touches a button when it's clicked
         if click:
             if level_Select_Button.collidepoint(mx, my):
-                level_select(display)
+                level_select()
             if options_Button.collidepoint(mx, my):
-                options_menu(display)
+                options_menu()
             if exit_Button.collidepoint(mx, my):
                 save_levels(Levels)
                 running = False
@@ -256,7 +196,7 @@ def main_menu():
                     click = True #this one here is the important one
     pg.quit()
 
-def level_select(display):
+def level_select():
     
     click = False
     running = True
@@ -264,22 +204,7 @@ def level_select(display):
     chosen_level_index = 0
 
     while running:
-        fps_Limiter.tick(60)
-        #render section
-        display.fill(colordict["white"])
-        for button in level_Select_Buttons:
-            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        for button in level_starters:
-            if button is chosen_level:
-                pg.draw.rect(display, colordict["red"], button, 10)
-            else: pg.draw.rect(display, colordict["black"], button, 10)
-        draw_text(display, "BACK", colordict["black"], fontdict["normal"], disp_Width/5, 7*disp_Height/8)
-        draw_text(display, "START", colordict["black"], fontdict["normal"], 4*disp_Width/5, 7* disp_Height/8)
-        for x in range(len(Levels)):
-            if level_starters[x] is chosen_level:
-                draw_text(display, Levels[x].name, colordict["red"], fontdict["normal"], disp_Width/5 + 240*x, disp_Height/4)
-            else: draw_text(display, Levels[x].name, colordict["black"], fontdict["normal"], disp_Width/5 + 240*x, disp_Height/4)
-        pg.display.update()
+        renderer.level_select_view(Levels, level_Select_Buttons, chosen_level, level_starters)
 
         #update section
         #buttons
@@ -288,7 +213,7 @@ def level_select(display):
                 running = False
             elif start_Button.collidepoint((mx, my)):
                 #current_level = pickle.load(open("Levels\level1_file", "rb"))
-                level(display, Levels[chosen_level_index])
+                level(Levels[chosen_level_index])
                 chosen_level = None
             for button in level_starters:
                 if button.collidepoint((mx, my)):
@@ -321,16 +246,7 @@ def options_menu(display):
     running = True
     
     while running :
-        fps_Limiter.tick(60)
-        #render section
-        display.fill(colordict["white"])
-        for button in option_Buttons:
-            pg.draw.rect(display, colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
-        draw_text(display, "OPTIONS", colordict["black"], fontdict["menu"], disp_Width/2, disp_Height/5)
-        draw_text(display, "HELP", colordict["black"], fontdict["normal"], disp_Width/2, disp_Height/2)
-        draw_text(display, "BACK", colordict["black"], fontdict["normal"], disp_Width/5, 7*disp_Height/8)
-        draw_text(display, "APPLY", colordict["black"], fontdict["normal"], 4*disp_Width/5, 7*disp_Height/8)
-        pg.display.update()
+        renderer.options_menu_view(option_Buttons)
 
         #update section
         #buttons
@@ -356,7 +272,7 @@ def options_menu(display):
                     (mx, my) = pg.mouse.get_pos()
                     click = True #this one here is the important one
 
-def help_screen(display):
+def help_screen():
 
     running = True
     click = False
@@ -371,22 +287,7 @@ def help_screen(display):
     sgate_help_text = "7"
 
     while running :
-        fps_Limiter.tick(60)
-
-        #render section
-        display.fill(colordict["white"])
-        for button in help_Buttons:
-            pg.draw.rect(display, colordict["black"], button, 10)
-        draw_text(display, chosen_button_text, colordict["black"], fontdict["normal"], disp_Width/2, disp_Height/2)
-        draw_text(display, "BACK", colordict["black"], fontdict["normal"], 210, disp_Height-60)
-        draw_text(display, "QUANTUM BIT", colordict["black"], fontdict["normal"], 210, 60)
-        draw_text(display, "SWAP GATE", colordict["black"], fontdict["normal"], 210, 180)
-        draw_text(display, "H GATE", colordict["black"], fontdict["normal"], 210, 300)
-        draw_text(display, "X GATE", colordict["black"], fontdict["normal"], 210, 420)
-        draw_text(display, "T GATE", colordict["black"], fontdict["normal"], 210, 540)
-        draw_text(display, "Z GATE", colordict["black"], fontdict["normal"], 210, 660)
-        draw_text(display, "S GATE", colordict["black"], fontdict["normal"], 210, 780)
-        pg.display.update()
+        renderer.help_screen_view(help_Buttons)
 
         #update section
         #buttons
@@ -435,67 +336,9 @@ def level(display, level):
     holding_aux_gate = False
     extra_track_button = pg.Rect(430, 10, 80, 50)
     
-    def draw_gate(gate):
-        if isinstance(gate, cl.I_Gate):
-            pass
-        elif isinstance(gate,cl.Conditional_Gate):
-            pg.draw.rect(display, colordict["grey"], gate.rectangle, 10)
-            draw_text(display, str(gate), colordict["grey"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-            if gate.current_Track:
-                pg.draw.rect(display, colordict["grey"], gate.aux_rectangle, 10)
-                if gate.rectangle.y < gate.aux_rectangle.y:
-                    pg.draw.line(display,colordict["grey"], gate.rectangle.midbottom, gate.aux_rectangle.midtop, 10)
-                else:
-                    pg.draw.line(display,colordict["grey"], gate.rectangle.midtop, gate.aux_rectangle.midbottom, 10)
-        elif isinstance(gate, cl.SWAP_Gate):
-            pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
-            pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
-            draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-            
-            if not gate in level.available_gates and not gate.current_Track:
-                pg.draw.rect(display, gatedict[str(gate)], gate.aux_gate.rectangle)
-                pg.draw.rect(display, colordict["black"], gate.aux_gate.rectangle, 10)
-                draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.aux_gate.rectangle.centerx, gate.aux_gate.rectangle.centery)
-        else:
-            pg.draw.rect(display, gatedict[str(gate)], gate.rectangle)
-            pg.draw.rect(display, colordict["black"], gate.rectangle, 10)
-            draw_text(display, str(gate), colordict["black"], fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-    
-    def draw_level(level):
-    
-        first_layer_elements = []
-    
-        display.fill(colordict["white"])
-    
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, 10, 400, disp_Height-240))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, 10, 400, disp_Height-240), 10)
-    
-        pg.draw.rect(display, colordict["white"], pg.Rect(10, disp_Height-210, disp_Width-20, 200))
-        pg.draw.rect(display, colordict["black"], pg.Rect(10, disp_Height-210, disp_Width-20, 200), 10)
-        draw_text(display, level.goal_text, colordict["black"], fontdict["normal"], 200, 35)    
-    
-        pg.draw.rect(display, colordict["grey"], pg.Rect(430, 10, 80, 50), 10)
-        pg.draw.line(display, colordict["grey"],(470, 20),(470,50), 10)
-        pg.draw.line(display, colordict["grey"],(455, 35),(485,35), 10)
-    
-        for track in level.tracks:
-            pg.draw.rect(display, colordict["light grey"], track.rectangle, 10)
-            for gate in track.gates:
-                if isinstance(gate, cl.Conditional_Gate):
-                    first_layer_elements.append(gate)
-                    continue
-                draw_gate(gate)
-        for gate in level.available_gates:
-            draw_gate(gate)
-        for gate in first_layer_elements:
-            draw_gate(gate)
-    
     #game loop
     while running:
-        fps_Limiter.tick(60)
-        
-        draw_level(level)
-        pg.display.update()
+        renderer.level_view(level, held_rectangle)
         
         for track in level.tracks:
             if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not holding_aux_rectangle:
