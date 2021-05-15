@@ -109,8 +109,8 @@ class renderer():
         self.draw_text(self.display, "START", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7* self.disp_Height/8)
         for x in range(len(levels)):
             if level_starters[x] is chosen_level:
-                self.draw_text(self.display, levels[x].name, self.colordict["red"], self.fontdict["normal"], self.disp_Width/5 + 140*x, self.disp_Height/4)
-            else: self.draw_text(self.display, levels[x].name, self.colordict["black"], self.fontdict["normal"], self.disp_Width/5 + 140*x, self.disp_Height/4)
+                self.draw_text(self.display, levels[x].name, self.colordict["red"], self.fontdict["normal"], self.disp_Width/5 + 240*x, self.disp_Height/4)
+            else: self.draw_text(self.display, levels[x].name, self.colordict["black"], self.fontdict["normal"], self.disp_Width/5 + 240*x, self.disp_Height/4)
         pg.display.update()
     
     def options_menu_view(self, option_Buttons):
