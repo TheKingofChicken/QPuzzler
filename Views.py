@@ -194,6 +194,7 @@ class renderer():
         
         for track in level.tracks:
             pg.draw.rect(self.display, self.colordict["light grey"], track.rectangle, 10)
+        for track in level.tracks:
             for gate in track.gates:
                 if isinstance(gate, cl.Conditional_Gate):
                     first_layer_elements.append(gate)

@@ -243,11 +243,10 @@ class SWAP_Gate(Quantum_Gate):
                 self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position + self.aux_gate.distance]
         elif name == "current_Position":
             self.SWAPcurrent_Position = value
-            try:
-                if not self.aux_gate.current_Position == value:
-                    self.aux_gate.current_Position = value
-            except AttributeError:
+            if not self.aux_gate.current_Position == value:
                 self.aux_gate.current_Position = value
+        elif name == "distance":
+            self.aux_gate.distance = value
         else:
             super(SWAP_Gate, self).__setattr__(name, value)
     
@@ -258,6 +257,9 @@ class SWAP_Gate(Quantum_Gate):
             return self.SWAPcurrent_Track
         elif name == "current_Position":
             return self.SWAPcurrent_Position
+        elif name == "distance":
+            return self.aux_gate.distance
+        else: raise AttributeError
     
     def __str__(self):
         return "SWAP"
@@ -301,18 +303,9 @@ class AUX_Gate(Quantum_Gate):
         if name == "conditional":
             self.aux_gate.SWAPconditional = value
         elif name == "current_Track":
-            original_track = self.SWAPcurrent_Track
-            original_aux_track = self.aux_gate.current_Track
-            try:
-                self.SWAPcurrent_Track = value
-                try:
-                    if not self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance] == value:
-                        self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance]
-                except AttributeError:
-                    self.aux_gate.current_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance]
-            except IndexError:
-                self.SWAPcurrent_Track = original_track
-                self.aux_gate.current_Track = original_aux_track
+            self.SWAPcurrent_Track = value
+            if not self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance] == value:
+                self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance]
         elif name == "current_Position":
             self.SWAPcurrent_Position = value
             try:
@@ -330,6 +323,7 @@ class AUX_Gate(Quantum_Gate):
             return self.SWAPcurrent_Track
         elif name == "current_Position":
             return self.SWAPcurrent_Position
+        else: raise AttributeError
     
     def __str__(self):
         return "SWAP"

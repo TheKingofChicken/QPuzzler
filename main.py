@@ -333,7 +333,7 @@ def level(level):
     track_Rectangle_X = 420
     (mx, my) = (0, 0)
     holding_aux_rectangle = False
-    holding_aux_gate = False
+    changing_distance = False
     extra_track_button = pg.Rect(430, 10, 80, 50)
     
     #game loop
@@ -343,7 +343,7 @@ def level(level):
         for track in level.tracks:
             if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not holding_aux_rectangle:
                 new_pos = math.trunc((mx-505)/125)
-                if not new_pos == held_rectangle.current_Position or not held_rectangle.current_Track == track:
+                if (not new_pos == held_rectangle.current_Position or not held_rectangle.current_Track == track) and not changing_distance:
                     held_rectangle = track.move_gate(new_pos, held_rectangle)
             for gate in track.gates:
                 if isinstance(gate, cl.Conditional_Gate):
@@ -417,6 +417,14 @@ def level(level):
                                 holding = True
                                 held_rectangle = gate
                                 break
+                elif event.button == 2:
+                    for track in level.tracks:
+                        for gate in track.gates:
+                            if (isinstance(gate, cl.AUX_Gate) or isinstance(gate, cl.SWAP_Gate)) and gate.rectangle.collidepoint(mx, my):
+                                changing_distance = True
+                                held_rectangle = gate
+                                holding = True
+                                gate.unlink()
                 elif event.button == 3:
                     gate_is_found = False
                     for track in level.tracks:
@@ -443,17 +451,29 @@ def level(level):
                     holding = False
                     held_rectangle = None
                     holding_aux_rectangle = False
+                elif event.button == 2:
+                    if isinstance(held_rectangle, cl.SWAP_Gate) or isinstance(held_rectangle, cl.AUX_Gate):
+                        for track in level.tracks:
+                            if track.rectangle.collidepoint(mx,my):
+                                held_rectangle.distance = abs(track.position - held_rectangle.aux_gate.current_Track.position)
+                                track.move_gate(held_rectangle.current_Position, held_rectangle)
+                                break
+                        holding = False
+                        held_rectangle = None
+                        changing_distance = False        
         if holding :
             if held_rectangle in level.tracks:
                 held_rectangle.rectangle.centery = my
             elif holding_aux_rectangle:
                 held_rectangle.aux_rectangle.center = (mx, my)
+            elif changing_distance:
+                held_rectangle.rectangle.centery = my
             elif isinstance(held_rectangle, cl.SWAP_Gate):
                 held_rectangle.rectangle.center = (mx,my)
-                held_rectangle.aux_gate.rectangle.center = (mx, my+120)
+                held_rectangle.aux_gate.rectangle.center = (mx, my+(held_rectangle.aux_gate.distance * 150))
             elif isinstance(held_rectangle, cl.AUX_Gate):
                 held_rectangle.rectangle.center = (mx,my)
-                held_rectangle.aux_gate.rectangle.center = (mx, my-120)
+                held_rectangle.aux_gate.rectangle.center = (mx, my-(held_rectangle.aux_gate.distance * 150))
             else :held_rectangle.rectangle.center = (mx, my)
 
 
