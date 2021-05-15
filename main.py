@@ -52,14 +52,14 @@ base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100
 current_level = cl.Level([], [], base_Gates,"goal and tutorial bit", "test level")
 #pickled_level = pickle.dump(current_level, open("Levels\leveltest_file", "wb"))
 Levels = [current_level]
-level1 = pickle.load(open("Levels\level1_file", "rb"))
+"""level1 = pickle.load(open("Levels\level1_file", "rb"))
 Levels.append(level1)
 level2 = pickle.load(open("Levels\level2_file", "rb"))
 Levels.append(level2)
 level3 = pickle.load(open("Levels\level3_file", "rb"))
 Levels.append(level3)
 level4 = pickle.load(open("Levels\level4_file", "rb"))
-Levels.append(level4)
+Levels.append(level4)"""
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
@@ -73,7 +73,7 @@ for level in Levels:
     i += 1
 
 # level buttons / setup:
-
+"""
 
 # level 1
 level1_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 1")
@@ -151,7 +151,7 @@ level4_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 4")
 #level4_ogfile.name = "level 4"
 pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
 #print (f"pickled level 4 file: \n{pickled_level4}\n")
-
+"""
 
 def save_levels(levels):
     levelfile_text = ["Levels\leveltest_file", "Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file"]
@@ -237,7 +237,7 @@ def level_select():
                     click = True #this one here is the important one
 
 
-def options_menu(display):
+def options_menu():
 
     def apply_settings():
             pass
@@ -257,7 +257,7 @@ def options_menu(display):
                 apply_settings()
                 running = False
             if help_Button.collidepoint((mx, my)):
-                help_screen(display)
+                help_screen()
                 running = False
         #events
         click = False
@@ -322,7 +322,7 @@ def help_screen():
                     (mx, my) = pg.mouse.get_pos()
                     click = True #this one here is the important one
 
-def level(display, level):
+def level(level):
     running = True
     #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
     holding = False
@@ -343,16 +343,8 @@ def level(display, level):
         for track in level.tracks:
             if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not holding_aux_rectangle:
                 new_pos = math.trunc((mx-505)/125)
-                if new_pos != held_rectangle.current_Position or held_rectangle.rectangle.collidepoint((mx,my)):
+                if not new_pos == held_rectangle.current_Position or not held_rectangle.current_Track == track:
                     held_rectangle = track.move_gate(new_pos, held_rectangle)
-                    if isinstance(held_rectangle, cl.SWAP_Gate):
-                        try:
-                            if holding_aux_gate:
-                                level.tracks[level.tracks.index(held_rectangle.current_Track) - 1].move_gate(new_pos, held_rectangle.aux_gate)
-                            else:
-                                level.tracks[level.tracks.index(held_rectangle.current_Track) + 1].move_gate(new_pos, held_rectangle.aux_gate)
-                        except IndexError:
-                            pass
             for gate in track.gates:
                 if isinstance(gate, cl.Conditional_Gate):
                     if gate.conditional:
@@ -394,23 +386,13 @@ def level(display, level):
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if extra_track_button.collidepoint((mx, my)):
-                        level.tracks.append(cl.Track(cl.Quantum_Bit, level, len(level.tracks)))
+                        level.tracks.append(cl.Track(cl.Quantum_Bit(), level, len(level.tracks)))
                     else:
                         rectangle_is_gate = False
                         for track in level.tracks:
                             for gate in track.gates:
                                 if isinstance(gate, cl.I_Gate):
                                     continue
-                                elif isinstance(gate, cl.SWAP_Gate):
-                                    if gate.aux_gate.rectangle.collidepoint(mx, my):
-                                        holding = True
-                                        rectangle_is_gate = True
-                                        held_rectangle = gate
-                                        gate.unlink()
-                                        if level.tracks.index(gate.current_Track) > level.tracks.index(gate.aux_gate.current_Track):
-                                            holding_aux_gate = False
-                                        else:
-                                            holding_aux_gate = True
                                 elif gate.rectangle.collidepoint(mx, my):
                                     holding = True
                                     held_rectangle = gate
@@ -458,33 +440,20 @@ def level(display, level):
                                     level.assign_Conditional(gate, held_rectangle)
                     elif held_rectangle in level.available_gates: 
                         new_pos = math.trunc((mx-505)/125)
-                        for track in level.tracks:
-                            if track.rectangle.collidepoint((mx, my)):
-                                track.move_gate(new_pos, held_rectangle)
-                            if isinstance(held_rectangle, cl.SWAP_Gate):
-                                try:
-                                    if holding_aux_gate:
-                                        level.tracks[level.tracks.index(held_rectangle.current_Track) - 1].move_gate(new_pos, held_rectangle.aux_gate)
-                                    else:
-                                        level.tracks[level.tracks.index(held_rectangle.current_Track) + 1].move_gate(new_pos, held_rectangle.aux_gate)
-                                except IndexError:
-                                    pass
                     holding = False
                     held_rectangle = None
                     holding_aux_rectangle = False
-                    holding_aux_gate = False
         if holding :
             if held_rectangle in level.tracks:
                 held_rectangle.rectangle.centery = my
             elif holding_aux_rectangle:
                 held_rectangle.aux_rectangle.center = (mx, my)
             elif isinstance(held_rectangle, cl.SWAP_Gate):
-                if holding_aux_gate:
-                    held_rectangle.rectangle.center = (mx,my)
-                    held_rectangle.aux_gate.rectangle.center = (mx, my-120)
-                else:
-                    held_rectangle.rectangle.center = (mx,my)
-                    held_rectangle.aux_gate.rectangle.center = (mx, my+120)
+                held_rectangle.rectangle.center = (mx,my)
+                held_rectangle.aux_gate.rectangle.center = (mx, my+120)
+            elif isinstance(held_rectangle, cl.AUX_Gate):
+                held_rectangle.rectangle.center = (mx,my)
+                held_rectangle.aux_gate.rectangle.center = (mx, my-120)
             else :held_rectangle.rectangle.center = (mx, my)
 
 

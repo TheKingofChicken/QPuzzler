@@ -132,7 +132,7 @@ class renderer():
         self.display.fill(self.colordict["white"])
         for button in help_Buttons:
             pg.draw.rect(self.display, self.colordict["black"], button, 10)
-        self.draw_text(self.display, self.chosen_button_text, self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
+        self.draw_text(self.display, "", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         self.draw_text(self.display, "BACK", self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height-60)
         self.draw_text(self.display, "QUANTUM BIT", self.colordict["black"], self.fontdict["normal"], 210, 60)
         self.draw_text(self.display, "SWAP GATE", self.colordict["black"], self.fontdict["normal"], 210, 180)

@@ -16,10 +16,6 @@ class Quantum_Gate():
         else:
             self.rectangle = rectangle
 
-    def set_current_placement(self, coords):
-        self.current_Track = coords[0]
-        self.current_position = coords[1]
-
     def add_conditional(self, new_conditional):
         self.conditional = new_conditional 
         
@@ -40,11 +36,6 @@ class Track(): #class for the track which each qbit moves along
         self.gates = []
         self.level = level
         self.position = position
-class Track(): #class for the track which each gate moves along
-    def __init__(self, input):
-        self.input = input
-        self.gates = []
-        self.total_Cost = 0
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
     def move_gate(self, pos, new_gate):#moves around gates in the different tracks
@@ -55,7 +46,7 @@ class Track(): #class for the track which each gate moves along
         method_Bypass = False
         method_Bypass = isinstance(new_gate, I_Gate)
         if not method_Bypass:
-            method_Bypass = (isinstance(new_gate, AUX_Gate) and pos == 0) or (isinstance(new_gate, SWAP_Gate) and self.position + 1 == len(self.level.tracks))
+            method_Bypass = (isinstance(new_gate, AUX_Gate) and self.position == 0) or (isinstance(new_gate, SWAP_Gate) and self.position + 1 == len(self.level.tracks))
         
         if not method_Bypass:
             
@@ -84,11 +75,13 @@ class Track(): #class for the track which each gate moves along
                     if not pos < len(level_Tracks[self.position - new_gate.distance].gates):
                         for x in range(pos - len(level_Tracks[self.position - new_gate.distance].gates) + 1):
                             level_Tracks[self.position - new_gate.distance].gates.append(I_Gate(0,None,self, len(self.gates) + x))
-            
-            updated_gate = copy.copy(new_gate)
-            if has_aux_gate:
-                updated_gate.aux_gate = copy.copy(new_gate.aux_gate)
-                updated_gate.aux_gate.aux_gate = updated_gate
+            if not new_gate.current_Track:
+                updated_gate = copy.copy(new_gate)
+                if has_aux_gate:
+                    updated_gate.aux_gate = copy.copy(new_gate.aux_gate)
+                    updated_gate.aux_gate.aux_gate = updated_gate
+            else:
+                updated_gate = new_gate
             updated_gate.current_Position = pos
             updated_gate.current_Track = self
             if isinstance(self.gates[pos], I_Gate):
@@ -245,18 +238,9 @@ class SWAP_Gate(Quantum_Gate):
         if name == "conditional":
             self.SWAPconditional = value
         elif name == "current_Track":
-            original_track = self.SWAPcurrent_Track
-            original_aux_track = self.aux_gate.SWAPcurrent_Track
-            try:
-                self.SWAPcurrent_Track = value
-                try:
-                    if not self.aux_gate.SWAPcurrent_Track == value:
-                        self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position + self.aux_gate.distance]
-                except AttributeError:
-                    self.aux_gate.current_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position + self.aux_gate.distance]
-            except IndexError:
-                self.SWAPcurrent_Track = original_track
-                self.aux_gate.SWAPcurrent_Track = original_aux_track
+            self.SWAPcurrent_Track = value
+            if not self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position + self.aux_gate.distance] == value:
+                self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position + self.aux_gate.distance]
         elif name == "current_Position":
             self.SWAPcurrent_Position = value
             try:
@@ -274,7 +258,6 @@ class SWAP_Gate(Quantum_Gate):
             return self.SWAPcurrent_Track
         elif name == "current_Position":
             return self.SWAPcurrent_Position
-    
     
     def __str__(self):
         return "SWAP"
@@ -309,7 +292,7 @@ class AUX_Gate(Quantum_Gate):
         self.cost = cost
         self.SWAPconditional = None
         self.SWAPcurrent_Track = None
-        self.SWAPcurrent_Position = None
+        self.SWAPcurrent_Position = 0
         self.distance = 1
         self.rectangle = pg.Rect(430, 0, 100, 100)
         self.aux_gate = aux_gate
@@ -323,7 +306,7 @@ class AUX_Gate(Quantum_Gate):
             try:
                 self.SWAPcurrent_Track = value
                 try:
-                    if not self.aux_gate.SWAPcurrent_Track == value:
+                    if not self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance] == value:
                         self.aux_gate.SWAPcurrent_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance]
                 except AttributeError:
                     self.aux_gate.current_Track = self.SWAPcurrent_Track.level.tracks[self.SWAPcurrent_Track.position - self.distance]
