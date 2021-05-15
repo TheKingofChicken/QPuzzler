@@ -55,6 +55,9 @@ start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
+# level buttons / setup:
+Levels = levelops.load_levels()
+
 level_starters = []
 i = 0
 for level in Levels:
@@ -62,9 +65,6 @@ for level in Levels:
     Button.center = ((i*240) + renderer.disp_Width/5, renderer.disp_Height/4)
     level_starters.append(Button)
     i += 1
-
-# level buttons / setup:
-Levels = levelops.load_levels()
 
 
 
