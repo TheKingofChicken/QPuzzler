@@ -326,7 +326,7 @@ def level(level):
     running = True
     #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
     holding = False
-    held_rectangle = None
+    held_gate = None
     base_Gate_Rectangle_Y = 890
     base_Gate_Rectangle_X = 30
     track_Rectangle_Y = 70
@@ -338,37 +338,37 @@ def level(level):
     
     #game loop
     while running:
-        renderer.level_view(level, held_rectangle)
+        renderer.level_view(level, held_gate)
         
         for track in level.tracks:
-            if track.rectangle.collidepoint((mx, my)) and isinstance(held_rectangle, cl.Quantum_Gate) and not holding_aux_rectangle:
+            if track.rectangle.collidepoint((mx, my)) and isinstance(held_gate, cl.Quantum_Gate) and not holding_aux_rectangle:
                 new_pos = math.trunc((mx-505)/125)
-                if (not new_pos == held_rectangle.current_Position or not held_rectangle.current_Track == track) and not changing_distance:
-                    held_rectangle = track.move_gate(new_pos, held_rectangle)
+                if (not new_pos == held_gate.current_Position or not held_gate.current_Track == track) and not changing_distance:
+                    held_gate = track.move_gate(new_pos, held_gate)
             for gate in track.gates:
                 if isinstance(gate, cl.Conditional_Gate):
                     if gate.conditional:
                         gate.aux_rectangle = gate.conditional.rectangle.inflate(30,30)
                     elif not holding_aux_rectangle:
                         gate.aux_rectangle = pg.Rect(gate.rectangle.midbottom[0] - 15, gate.rectangle.midbottom[1] + 20, 30, 30)
-                if gate is held_rectangle:#skips the whole positioning code if the gate is the one being currently held
+                if gate is held_gate:#skips the whole positioning code if the gate is the one being currently held
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
-            if isinstance(held_rectangle, cl.Track):#everything inside this if is to change the position of the track when it is dropped
+            if isinstance(held_gate, cl.Track):#everything inside this if is to change the position of the track when it is dropped
                 if track.rectangle.inflate((20, 0)).collidepoint((mx, my)):
-                    if level.tracks.index(held_rectangle) < level.tracks.index(track):
+                    if level.tracks.index(held_gate) < level.tracks.index(track):
                         offset = 1
                     else: offset = 0
-                    level.move_track(level.tracks.index(track)+offset,held_rectangle)
+                    level.move_track(level.tracks.index(track)+offset,held_gate)
             # display the track and the total cost the of track
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
-            if track is held_rectangle:
+            if track is held_gate:
                 track.rectangle.centery = my
         #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
         # Box at the bottom of the screen, base_Gates, ...
         for gate in level.available_gates:
-            if gate is held_rectangle:
+            if gate is held_gate:
                 continue
             gate.rectangle.x = base_Gate_Rectangle_X + (125 * level.available_gates.index(gate))
             gate.rectangle.y = base_Gate_Rectangle_Y
@@ -395,34 +395,30 @@ def level(level):
                                     continue
                                 elif gate.rectangle.collidepoint(mx, my):
                                     holding = True
-                                    held_rectangle = gate
+                                    held_gate = gate
                                     rectangle_is_gate = True
                                     gate.unlink()
                                 elif isinstance(gate, cl.Conditional_Gate):
                                     if gate.aux_rectangle.collidepoint(mx, my):
                                         holding = True
-                                        held_rectangle = gate
+                                        held_gate = gate
                                         rectangle_is_gate = True
                                         holding_aux_rectangle  = True
                                         gate.unlink()
                                         break
                             if rectangle_is_gate:
                                 break
-                            if track.rectangle.collidepoint(mx, my):
-                                holding = True
-                                held_rectangle = track
-                                break
                         for gate in level.available_gates:
                             if gate.rectangle.collidepoint(mx, my):
                                 holding = True
-                                held_rectangle = gate
+                                held_gate = gate
                                 break
                 elif event.button == 2:
                     for track in level.tracks:
                         for gate in track.gates:
                             if (isinstance(gate, cl.AUX_Gate) or isinstance(gate, cl.SWAP_Gate)) and gate.rectangle.collidepoint(mx, my):
                                 changing_distance = True
-                                held_rectangle = gate
+                                held_gate = gate
                                 holding = True
                                 gate.unlink()
                 elif event.button == 3:
@@ -439,42 +435,42 @@ def level(level):
                                 break
                         if gate_is_found:
                             break
+                        if track.rectangle.collidepoint(mx, my):
+                            track.delete_track()
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     if holding_aux_rectangle:
                         for track in level.tracks:
                             for gate in track.gates:
                                 if gate.rectangle.collidepoint(mx, my) and not isinstance(gate, cl.Conditional_Gate):
-                                    level.assign_Conditional(gate, held_rectangle)
-                    elif held_rectangle in level.available_gates: 
+                                    level.assign_Conditional(gate, held_gate)
+                    elif held_gate in level.available_gates: 
                         new_pos = math.trunc((mx-505)/125)
                     holding = False
-                    held_rectangle = None
+                    held_gate = None
                     holding_aux_rectangle = False
                 elif event.button == 2:
-                    if isinstance(held_rectangle, cl.SWAP_Gate) or isinstance(held_rectangle, cl.AUX_Gate):
+                    if isinstance(held_gate, cl.SWAP_Gate) or isinstance(held_gate, cl.AUX_Gate):
                         for track in level.tracks:
                             if track.rectangle.collidepoint(mx,my):
-                                held_rectangle.distance = abs(track.position - held_rectangle.aux_gate.current_Track.position)
-                                track.move_gate(held_rectangle.current_Position, held_rectangle)
+                                held_gate.distance = abs(track.position - held_gate.aux_gate.current_Track.position)
+                                track.move_gate(held_gate.current_Position, held_gate)
                                 break
                         holding = False
-                        held_rectangle = None
+                        held_gate = None
                         changing_distance = False        
         if holding :
-            if held_rectangle in level.tracks:
-                held_rectangle.rectangle.centery = my
-            elif holding_aux_rectangle:
-                held_rectangle.aux_rectangle.center = (mx, my)
+            if holding_aux_rectangle:
+                held_gate.aux_rectangle.center = (mx, my)
             elif changing_distance:
-                held_rectangle.rectangle.centery = my
-            elif isinstance(held_rectangle, cl.SWAP_Gate):
-                held_rectangle.rectangle.center = (mx,my)
-                held_rectangle.aux_gate.rectangle.center = (mx, my+(held_rectangle.aux_gate.distance * 150))
-            elif isinstance(held_rectangle, cl.AUX_Gate):
-                held_rectangle.rectangle.center = (mx,my)
-                held_rectangle.aux_gate.rectangle.center = (mx, my-(held_rectangle.aux_gate.distance * 150))
-            else :held_rectangle.rectangle.center = (mx, my)
+                held_gate.rectangle.centery = my
+            elif isinstance(held_gate, cl.SWAP_Gate):
+                held_gate.rectangle.center = (mx,my)
+                held_gate.aux_gate.rectangle.center = (mx, my+(held_gate.aux_gate.distance * 150))
+            elif isinstance(held_gate, cl.AUX_Gate):
+                held_gate.rectangle.center = (mx,my)
+                held_gate.aux_gate.rectangle.center = (mx, my-(held_gate.aux_gate.distance * 150))
+            else :held_gate.rectangle.center = (mx, my)
 
 
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure

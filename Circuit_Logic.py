@@ -103,27 +103,17 @@ class Track(): #class for the track which each qbit moves along
         
     
     def delete_gate(self, del_gate):
-        after_gate = False
-        for gate in self.gates:
-            if after_gate:
-                gate.current_Position -= 1
-                gate.unlink()
-            if gate == del_gate:
-                after_gate = True
+        self.gates.insert(del_gate.current_Position, I_Gate(0,None,self,del_gate.current_Position))
         if hasattr(del_gate, 'aux_gate'):
-            after_aux_gate = False
-            for gate in self.gates:
-                if after_aux_gate:
-                    gate.current_Position -= 1
-                    gate.unlink()
-                if gate == del_gate:
-                    after_aux_gate = True
+            self.gates.insert(del_gate.aux_gate.current_Position, I_Gate(0,None,self,del_gate.current_Position))
             del_gate.aux_gate.current_Track.gates.remove(del_gate.aux_gate)
-            del_gate.aux_gate.unlink()
-            del_gate.aux_gate.aux_gate = None
-            del_gate.aux_gate = None
         self.gates.remove(del_gate)
         del_gate.unlink()
+    
+    def delete_track(self):
+        for gate in self.gates:
+            self.delete_gate(gate)
+        self.level.tracks.remove(self)
     
     def i_gate_cleaner(self):
         I_gates_length = 0
@@ -155,7 +145,7 @@ class Level():
         self.tracks.insert(pos, new_track)
         
     def assign_Conditional(self, gate, conditional):
-        if gate.current_Position == conditional.current_Position and (self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) + 1 or self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) - 1):
+        if (gate.current_Position == conditional.current_Position and (self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) + 1 or self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) - 1)) and not isinstance(gate, I_Gate):
             gate.unlink()
             conditional.unlink()
             gate.conditional = conditional
