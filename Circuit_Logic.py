@@ -28,11 +28,11 @@ class Quantum_Gate():
                 self.conditional = None
 
 class Quantum_Bit:
-    def __init__(self, state = (complex(1,0), complex(0,0))):
+    def __init__(self, state = [complex(1,0), complex(0,0)]):
         self.state = state
 
-    def set_state(self, zero_Prob, one_Prob, zero_Angle, one_Angle):
-        self.state = [zero_Prob, zero_Angle, one_Prob, one_Angle]
+    def set_state(self, real_zero, imag_zero, real_one, imag_one):
+        self.state = [complex(real_zero,imag_zero), complex(real_one,imag_one)]
 
     def update(self, statevector_Coordinates):
        self.state =  statevector_Coordinates
@@ -165,21 +165,27 @@ class Level():
             conditional.aux_rectangle = gate.rectangle.inflate(30,30)
 
     def run(self):
+        self.tracks[1].input = [Quantum_Bit(state = [complex(0,0), complex(1,0)])]
         #construction of the adequate QuantumCircuit object
         for x in range(len(self.tracks[0].input)):
+            circuit_state = []
             simulator = qs.Aer.get_backend("statevector_simulator")
             simulator.set_options(device='GPU')
             qr = qs.QuantumRegister(len(self.tracks))
             cr = qs.ClassicalRegister(len(self.tracks))
             qc = qs.QuantumCircuit(qr,cr)
             for qbit_index in range(len(self.tracks)):
-                qc.initialize(qs.quantum_info.Statevector(self.tracks[qbit_index].input[x].state), qr[qbit_index])
-            for gate_Layer in zip(self.tracks):
-                for gate in gate_Layer:
-                    gate.Qiskit_Equivalent_Dispatcher(qr)
+                for qbit_coord in self.tracks[qbit_index].input[x].state:
+                    circuit_state.append(qbit_coord/math.sqrt(len(self.tracks)))
+            qc.initialize(circuit_state, qr)
+            qc.snapshot("debut")
+            """for gate_Layer in zip(self.tracks):
+                for gate in gate_Layer.gates:
+                    gate.Qiskit_Equivalent_Dispatcher(qr)"""
             qc.snapshot("final state")
-            self.results.append(qs.execute(qc, backend = simulator))
-            self.snapshots.append(self.results.data()["snapshots"]["statevector"])
+            self.results.append(qs.execute(qc, backend = simulator).result())
+            self.snapshots.append(self.results[0].data()["snapshots"]["statevector"])
+            print(self.snapshots[0]["debut"])
         
 
 class Conditional_Gate(Quantum_Gate):
