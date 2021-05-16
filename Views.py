@@ -107,10 +107,16 @@ class renderer():
             else: pg.draw.rect(self.display, self.colordict["black"], button, 10)
         self.draw_text(self.display, "BACK", self.colordict["black"], self.fontdict["normal"], self.disp_Width/5, 7*self.disp_Height/8)
         self.draw_text(self.display, "START", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7* self.disp_Height/8)
+        i = 0
+        j = 0
         for x in range(len(levels)):
             if level_starters[x] is chosen_level:
-                self.draw_text(self.display, levels[x].name, self.colordict["red"], self.fontdict["normal"], self.disp_Width/5 + 240*x, self.disp_Height/4)
-            else: self.draw_text(self.display, levels[x].name, self.colordict["black"], self.fontdict["normal"], self.disp_Width/5 + 240*x, self.disp_Height/4)
+                self.draw_text(self.display, levels[x].name, self.colordict["red"], self.fontdict["normal"], self.disp_Width/5 + (240*i), self.disp_Height/4 + (240*j))
+            else: self.draw_text(self.display, levels[x].name, self.colordict["black"], self.fontdict["normal"], self.disp_Width/5 + (240*i), self.disp_Height/4 + (240*j))
+            i += 1
+            if i > 5:
+                i = 0
+                j += 1
         pg.display.update()
     
     def options_menu_view(self, option_Buttons):
@@ -185,8 +191,10 @@ class renderer():
     
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, 10, 400, self.disp_Height-240))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, 10, 400, self.disp_Height-240), 10)
-        self.draw_text(self.display, level.name, self.colordict["black"], self.fontdict["normal"], 200, 35)    
-        self.draw_text(self.display, str(level.total_Cost), self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height - 300)
+        self.draw_text(self.display, level.name, self.colordict["black"], self.fontdict["normal"], 210, 60)
+        for track in level.tracks:
+            self.draw_text(self.display, str(track.input.get_state()), self.colordict["black"], self.fontdict["normal"], 210, track.rectangle.centery)
+        self.draw_text(self.display, str(level.total_Cost), self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height - 280)
 
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200), 10)

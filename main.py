@@ -60,11 +60,15 @@ Levels = levelops.load_levels()
 
 level_starters = []
 i = 0
+j = 0
 for level in Levels:
     Button = pg.Rect(0, 0, 200, 200)
-    Button.center = ((i*240) + renderer.disp_Width/5, renderer.disp_Height/4)
+    Button.center = ((i*240) + renderer.disp_Width/5, (j*240) + renderer.disp_Height/4)
     level_starters.append(Button)
     i += 1
+    if i > 5:
+        i = 0
+        j += 1
 
 
 
