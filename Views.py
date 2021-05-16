@@ -171,6 +171,9 @@ class renderer():
             pg.draw.rect(self.display, self.gatedict[str(gate)], gate.rectangle)
             pg.draw.rect(self.display, self.colordict["black"], gate.rectangle, 10)
             self.draw_text(self.display, str(gate), self.colordict["black"], self.fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
+
+        if gate in level.available_gates and not gate is held_rectangle:
+            self.draw_text(self.display, str(gate.cost), self.colordict["black"], self.fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery + 100)
     
     def level_view(self, level, held_rectangle):
         
@@ -182,10 +185,11 @@ class renderer():
     
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, 10, 400, self.disp_Height-240))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, 10, 400, self.disp_Height-240), 10)
-    
+        self.draw_text(self.display, level.name, self.colordict["black"], self.fontdict["normal"], 200, 35)    
+        self.draw_text(self.display, str(level.total_Cost), self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height - 300)
+
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200), 10)
-        self.draw_text(self.display, level.goal_text, self.colordict["black"], self.fontdict["normal"], 200, 35)    
     
         pg.draw.rect(self.display, self.colordict["grey"], pg.Rect(430, 10, 80, 50), 10)
         pg.draw.line(self.display, self.colordict["grey"],(470, 20),(470,50), 10)

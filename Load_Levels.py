@@ -5,7 +5,7 @@ import pickle
 
 class levelloader():
 
-    base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
+    base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(90, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(100,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(110,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(130,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(140,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
     levelfile_text = ["Levels\leveltest_file", "Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file"]
     goaltext_list = ["leveltest goal", "level1 goal", "level2 goal", "level3 goal", "level4 goal"]
 
@@ -30,9 +30,8 @@ class levelloader():
             pickled_level = pickle.dump(levels[x], open(self.levelfile_text[x], "wb"))
 
     def setup_levels(self):
-        """
         # level 1
-        level1_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 1")
+        level1_ogfile = cl.Level([], self.base_Gates, "goal : tbd", "level 1")
         #level1_ogfile.add_track(cl.Track(0))
         #level1_ogfile.add_track(cl.Track(0))
         #level1_ogfile.goal_text = "goal : tbd"
@@ -47,7 +46,7 @@ class levelloader():
         #track2_level2 = cl.Track(0)
         #track3_level2 = cl.Track(0)
 
-        level2_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 2")
+        level2_ogfile = cl.Level([], self.base_Gates, "goal : tbd", "level 2")
         #track1_level2.gates.append(gate1_level2)
         #gate1_level2.current_Track = track1_level2
         #track2_level2.gates.append(gate2_level2)
@@ -70,7 +69,7 @@ class levelloader():
         #track2_level3 = cl.Track(0)
         #track3_level3 = cl.Track(0)
 
-        level3_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 3")
+        level3_ogfile = cl.Level([], self.base_Gates, "goal : tbd", "level 3")
         #track1_level3.gates.append(gate1_level3)
         #gate1_level3.current_Track = track1_level3
         #track1_level3.gates.append(gate2_level3)
@@ -93,7 +92,7 @@ class levelloader():
         #track2_level4 = cl.Track(0)
         #track3_level4 = cl.Track(0)
 
-        level4_ogfile = cl.Level([], [], base_Gates, "goal : tbd", "level 4")
+        level4_ogfile = cl.Level([], self.base_Gates, "goal : tbd", "level 4")
         #track1_level4.gates.append(gate1_level4)
         #gate1_level4.current_Track = track1_level4
         #track1_level4.gates.append(gate2_level4)
@@ -107,4 +106,3 @@ class levelloader():
         #level4_ogfile.name = "level 4"
         pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
         #print (f"pickled level 4 file: \n{pickled_level4}\n")
-        """

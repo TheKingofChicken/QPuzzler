@@ -50,19 +50,8 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 
 
 # level select buttons
-base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
-current_level = cl.Level([], base_Gates,"goal and tutorial bit", "test level")
-#pickled_level = pickle.dump(current_level, open("Levels\leveltest_file", "wb"))
-Levels = [current_level]
-"""level1 = pickle.load(open("Levels\level1_file", "rb"))
-Levels.append(level1)
-level2 = pickle.load(open("Levels\level2_file", "rb"))
-Levels.append(level2)
-level3 = pickle.load(open("Levels\level3_file", "rb"))
-Levels.append(level3)
-level4 = pickle.load(open("Levels\level4_file", "rb"))
-Levels.append(level4)"""
 # includes back_button
+levelops.setup_levels()
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
