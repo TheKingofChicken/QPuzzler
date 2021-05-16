@@ -1,10 +1,9 @@
 import pygame as pg
-import ctypes
 import Views
 import Load_Levels
 import Circuit_Logic as cl
 import Levels
-import math
+from math import trunc
 import pickle
 
 renderer = Views.renderer()
@@ -259,7 +258,7 @@ def level(level):
         
         for track in level.tracks:
             if track.rectangle.collidepoint((mx, my)) and isinstance(held_gate, cl.Quantum_Gate) and not holding_aux_rectangle:
-                new_pos = math.trunc((mx-505)/125)
+                new_pos = trunc((mx-505)/125)
                 if (not new_pos == held_gate.current_Position or not held_gate.current_Track == track) and not changing_distance:
                     held_gate = track.move_gate(new_pos, held_gate)
             for gate in track.gates:
@@ -367,7 +366,7 @@ def level(level):
                                 if gate.rectangle.collidepoint(mx, my) and not isinstance(gate, cl.Conditional_Gate):
                                     level.assign_Conditional(gate, held_gate)
                     elif held_gate in level.available_gates: 
-                        new_pos = math.trunc((mx-505)/125)
+                        new_pos = trunc((mx-505)/125)
                     holding = False
                     held_gate = None
                     holding_aux_rectangle = False

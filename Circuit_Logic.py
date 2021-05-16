@@ -1,8 +1,9 @@
 import qiskit as qs
-import math
 import pygame as pg
-import copy
-import cmath
+from math import pi
+from copy import copy
+from numpy import array
+from more_itertools import interleave_longest
 
 class Quantum_Gate():
         
@@ -26,22 +27,19 @@ class Quantum_Gate():
                 self.conditional.aux_rectangle = pg.Rect(self.rectangle.midbottom[0], self.rectangle.midbottom[1] - 10, 30, 30)
                 self.conditional.conditional = None
                 self.conditional = None
+    
+    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
+        if hasattr(self, "conditional") and not self.conditional== None:
+            self.conditional_qiskit_equivalent(Quantum_Circuit)
+        else:
+            self.qiskit_equivalent(Quantum_Circuit)
 
 class Quantum_Bit:
-    def __init__(self, state = [complex(1,0), complex(0,0)]):
+    def __init__(self, state = array([complex(1,0), complex(0,0)])):
         self.state = state
 
     def set_state(self, real_zero, imag_zero, real_one, imag_one):
-        self.state = [complex(real_zero,imag_zero), complex(real_one,imag_one)]
-
-    def update(self, statevector_Coordinates):
-       self.state =  statevector_Coordinates
-    """the statevector qiskit uses to describe entangled qbits are incomplete, for example: qbit 0 is (50%, 0%) and qbit 1 is (0%, 50%)
-        so far, the way we've found to deal with this is to add the possibilities together, but we still need to check if it would work
-        all the time """
-
-    def get_state(self):
-        return self.state
+        self.state = array([complex(real_zero,imag_zero), complex(real_one,imag_one)])
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, level, position, input = [Quantum_Bit()]):
@@ -87,9 +85,9 @@ class Track(): #class for the track which each qbit moves along
                         for x in range(pos - len(level_Tracks[self.position - new_gate.distance].gates) + 1):
                             level_Tracks[self.position - new_gate.distance].gates.append(I_Gate(0,None,self, len(self.gates) + x))
             if not new_gate.current_Track:
-                updated_gate = copy.copy(new_gate)
+                updated_gate = copy(new_gate)
                 if has_aux_gate:
-                    updated_gate.aux_gate = copy.copy(new_gate.aux_gate)
+                    updated_gate.aux_gate = copy(new_gate.aux_gate)
                     updated_gate.aux_gate.aux_gate = updated_gate
             else:
                 updated_gate = new_gate
@@ -163,29 +161,27 @@ class Level():
             gate.conditional = conditional
             conditional.conditional = gate
             conditional.aux_rectangle = gate.rectangle.inflate(30,30)
-
+    
     def run(self):
-        self.tracks[1].input = [Quantum_Bit(state = [complex(0,0), complex(1,0)])]
         #construction of the adequate QuantumCircuit object
         for x in range(len(self.tracks[0].input)):
-            circuit_state = []
+            gate_series = []
             simulator = qs.Aer.get_backend("statevector_simulator")
             simulator.set_options(device='GPU')
             qr = qs.QuantumRegister(len(self.tracks))
             cr = qs.ClassicalRegister(len(self.tracks))
             qc = qs.QuantumCircuit(qr,cr)
             for qbit_index in range(len(self.tracks)):
-                for qbit_coord in self.tracks[qbit_index].input[x].state:
-                    circuit_state.append(qbit_coord/math.sqrt(len(self.tracks)))
-            qc.initialize(circuit_state, qr)
+                gate_series.append(self.tracks[qbit_index].gates)
+                qc.initialize(self.tracks[qbit_index].input[x].state, qr[qbit_index])
             qc.snapshot("debut")
-            """for gate_Layer in zip(self.tracks):
-                for gate in gate_Layer.gates:
-                    gate.Qiskit_Equivalent_Dispatcher(qr)"""
+            for gate in list(interleave_longest(*gate_series)):
+                gate.qiskit_equivalent_dispatcher(qc)
             qc.snapshot("final state")
             self.results.append(qs.execute(qc, backend = simulator).result())
             self.snapshots.append(self.results[0].data()["snapshots"]["statevector"])
             print(self.snapshots[0]["debut"])
+            print(self.snapshots[0]["final state"])
         
 
 class Conditional_Gate(Quantum_Gate):
@@ -199,6 +195,9 @@ class Conditional_Gate(Quantum_Gate):
         else:
             self.rectangle = rectangle
         self.aux_rectangle = pg.Rect(self.rectangle.midbottom[0], self.rectangle.midbottom[1] - 10, 30, 30)
+    
+    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
+        pass
     
     def __str__(self):
         return "if"
@@ -261,21 +260,15 @@ class SWAP_Gate(Quantum_Gate):
     
     def __repr__(self):
         return self.__str__()
-        
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
     
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.swap(Quantum_Circuit.qbits[self.current_Track.Position], self.target_Track)  
+        Quantum_Circuit.swap(Quantum_Circuit.qubits[self.current_Track.Position], self.target_Track)  
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.cswap(Quantum_Circuit.qbits[self.Conditional.current_Track.position] , Quantum_Circuit.qbits[self.current_Track.Position], Quantum_Circuit.qbits[self.aux_gate.current_Track.Position])
+        Quantum_Circuit.cswap(Quantum_Circuit.qubits[self.conditional.current_Track.position] , Quantum_Circuit.qubits[self.current_Track.Position], Quantum_Circuit.qubits[self.aux_gate.current_Track.Position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -338,20 +331,14 @@ class H_Gate(Quantum_Gate):
     def __repr__(self):
         return self.__str__()
     
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None :
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
-    
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.h(Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.h(Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.ch(Quantum_Circuit.qbits[self.Conditional.current_Track.position], Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.ch(Quantum_Circuit.qubits[self.conditional.current_Track.position], Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -364,21 +351,15 @@ class X_Gate(Quantum_Gate):
 
     def __repr__(self):
         return self.__str__()
-
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
     
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.x(Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.x(Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.cnot(Quantum_Circuit.qbits[self.Conditional.current_Track.position], Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.cnot(Quantum_Circuit.qubits[self.conditional.current_Track.position], Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -391,21 +372,15 @@ class T_Gate(Quantum_Gate):
 
     def __repr__(self):
         return self.__str__()
-
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
     
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.p(math.pi/4, Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.p(pi/4, Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.cp(math.pi/4, Quantum_Circuit.qbits[self.Conditional.current_Track.position], Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.cp(pi/4, Quantum_Circuit.qubits[self.conditional.current_Track.position], Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -419,20 +394,14 @@ class Z_Gate(Quantum_Gate):
     def __repr__(self):
         return self.__str__()
     
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
-    
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.p(math.pi, Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.p(pi, Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.cp(math.pi, Quantum_Circuit.qbits[self.Conditional.current_Track.position], Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.cp(pi, Quantum_Circuit.qubits[self.conditional.current_Track.position], Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -446,20 +415,14 @@ class S_Gate(Quantum_Gate):
     def __repr__(self):
         return self.__str__()
     
-    def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
-        if self.Conditional is None or self.conditional is False:
-            self.Qiskit_Equivalent(Quantum_Circuit)
-        else:
-            self.Conditional_Qiskit_Equivalent(Quantum_Circuit)
-    
     def qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.p(math.pi/2, Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.p(pi/2, Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def conditional_qiskit_equivalent(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.cp(math.pi/2, Quantum_Circuit.qbits[self.Conditional.current_Track.position], Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.cp(pi/2, Quantum_Circuit.qubits[self.conditional.current_Track.position], Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
@@ -475,7 +438,7 @@ class I_Gate(Quantum_Gate):
     
     def qiskit_equivalent_dispatcher(self, Quantum_Circuit):
         Quantum_Circuit.barrier()
-        Quantum_Circuit.id(Quantum_Circuit.qbits[self.current_Track.position])
+        Quantum_Circuit.id(Quantum_Circuit.qubits[self.current_Track.position])
         return Quantum_Circuit
     
     def __copy__(self):
