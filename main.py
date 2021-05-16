@@ -50,6 +50,18 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 
 
 # level select buttons
+base_Gates = [cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.X_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100)), cl.T_Gate(120,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Z_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.S_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.Conditional_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100)), cl.SWAP_Gate(None,None,None,None, rectangle = pg.Rect(0, 0, 100, 100))]
+current_level = cl.Level([], base_Gates,"goal and tutorial bit", "test level")
+#pickled_level = pickle.dump(current_level, open("Levels\leveltest_file", "wb"))
+Levels = [current_level]
+"""level1 = pickle.load(open("Levels\level1_file", "rb"))
+Levels.append(level1)
+level2 = pickle.load(open("Levels\level2_file", "rb"))
+Levels.append(level2)
+level3 = pickle.load(open("Levels\level3_file", "rb"))
+Levels.append(level3)
+level4 = pickle.load(open("Levels\level4_file", "rb"))
+Levels.append(level4)"""
 # includes back_button
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
@@ -67,6 +79,11 @@ for level in Levels:
     i += 1
 
 
+
+#level buttons:
+extra_track_button = pg.Rect(430, 10, 80, 50)
+execute_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-100, 300, 90)
+level_help_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-210, 300, 90)
 
 # Game loops:
 """each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
@@ -242,6 +259,7 @@ def level(level):
     track_Rectangle_Y = 70
     track_Rectangle_X = 420
     (mx, my) = (0, 0)
+    past_frame_mouse_cords = (0,0)
     holding_aux_rectangle = False
     changing_distance = False
     extra_track_button = pg.Rect(430, 10, 80, 50)
@@ -284,6 +302,7 @@ def level(level):
             gate.rectangle.y = base_Gate_Rectangle_Y
         
         #update section
+        past_frame_mouse_cords = (mx,my)
         (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type is pg.QUIT:
@@ -296,7 +315,11 @@ def level(level):
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if extra_track_button.collidepoint((mx, my)):
-                        level.tracks.append(cl.Track(cl.Quantum_Bit(), level, len(level.tracks)))
+                        level.tracks.append(cl.Track(level, len(level.tracks)))
+                    elif level_help_button.collidepoint(mx,my):
+                        help_screen()
+                    elif execute_button.collidepoint(mx,my):
+                        level.run()
                     else:
                         rectangle_is_gate = False
                         for track in level.tracks:
@@ -345,7 +368,7 @@ def level(level):
                                 break
                         if gate_is_found:
                             break
-                        if track.rectangle.collidepoint(mx, my):
+                        if track.rectangle.collidepoint(mx, my) and track.input == cl.Quantum_bit():
                             track.delete_track()
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -380,6 +403,9 @@ def level(level):
             elif isinstance(held_gate, cl.AUX_Gate):
                 held_gate.rectangle.center = (mx,my)
                 held_gate.aux_gate.rectangle.center = (mx, my-(held_gate.aux_gate.distance * 150))
+            elif isinstance(held_gate, cl.Conditional_Gate):
+                held_gate.rectangle.center = (mx, my)
+                held_gate.aux_rectangle.center = (past_frame_mouse_cords[0], past_frame_mouse_cords[1] + 75)
             else :held_gate.rectangle.center = (mx, my)
 
 

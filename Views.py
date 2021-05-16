@@ -144,13 +144,12 @@ class renderer():
         pg.display.update()
     
     def draw_gate(self, level, gate, held_rectangle):
-        self.draw_text(self.display,str(gate),self.colordict["black"], self.fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
         if isinstance(gate, cl.I_Gate):
             pass
         elif isinstance(gate,cl.Conditional_Gate):
             pg.draw.rect(self.display, self.colordict["grey"], gate.rectangle, 10)
             self.draw_text(self.display, str(gate), self.colordict["grey"], self.fontdict["normal"], gate.rectangle.centerx, gate.rectangle.centery)
-            if gate.current_Track:
+            if gate.current_Track or gate is held_rectangle:
                 pg.draw.rect(self.display, self.colordict["grey"], gate.aux_rectangle, 10)
                 if gate.rectangle.y < gate.aux_rectangle.y:
                     pg.draw.line(self.display,self.colordict["grey"], gate.rectangle.midbottom, gate.aux_rectangle.midtop, 10)
@@ -184,13 +183,18 @@ class renderer():
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, 10, 400, self.disp_Height-240))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, 10, 400, self.disp_Height-240), 10)
     
-        pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-20, 200))
-        pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, self.disp_Height-210, self.disp_Width-20, 200), 10)
+        pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200))
+        pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200), 10)
         self.draw_text(self.display, level.goal_text, self.colordict["black"], self.fontdict["normal"], 200, 35)    
     
         pg.draw.rect(self.display, self.colordict["grey"], pg.Rect(430, 10, 80, 50), 10)
         pg.draw.line(self.display, self.colordict["grey"],(470, 20),(470,50), 10)
         pg.draw.line(self.display, self.colordict["grey"],(455, 35),(485,35), 10)
+        
+        pg.draw.rect(self.display, self.colordict["black"], pg.Rect(self.disp_Width - 310, self.disp_Height-100, 300, 90), 10)
+        pg.draw.rect(self.display, self.colordict["black"], pg.Rect(self.disp_Width - 310, self.disp_Height-210, 300, 90), 10)
+        self.draw_text(self.display,"execute", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 55)
+        self.draw_text(self.display,"help", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 159)
         
         for track in level.tracks:
             pg.draw.rect(self.display, self.colordict["light grey"], track.rectangle, 10)
