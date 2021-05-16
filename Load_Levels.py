@@ -40,7 +40,7 @@ class levelloader():
         level1_qbit1 = cl.Quantum_Bit()
         level1_qbit1.set_state(0, 1, 0, 0)
         level1_goal = "Return the qubit with the opposite value"
-        print(f"level1 qbit1 state : {level1_qbit1.get_state()}")
+        print(f"level1 qbit1 state : {level1_qbit1.state}")
 
         # Initialize level
         level1_ogfile = cl.Level([level1_qbit1], self.base_Gates, level1_goal, "Level 1")
