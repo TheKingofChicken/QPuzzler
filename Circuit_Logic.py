@@ -44,7 +44,7 @@ class Quantum_Bit:
         return self.state
 
 class Track(): #class for the track which each qbit moves along
-    def __init__(self, level, position, input = {Quantum_Bit()}):
+    def __init__(self, level, position, input = [Quantum_Bit()]):
         self.input = input
         self.gates = []
         self.level = level
@@ -173,13 +173,14 @@ class Level():
             cr = qs.ClassicalRegister(len(self.tracks))
             qc = qs.QuantumCircuit(qr,cr)
             for qbit_index in range(len(self.tracks)):
-                qc.initialize(qs.statevector(self.tracks[qbit_index].input[x]), qr[qbit_index])
+                qc.initialize(qs.quantum_info.Statevector(self.tracks[qbit_index].input[x].state), qr[qbit_index])
             for gate_Layer in zip(self.tracks):
                 for gate in gate_Layer:
                     gate.Qiskit_Equivalent_Dispatcher(qr)
             qc.snapshot("final state")
             self.results.append(qs.execute(qc, backend = simulator))
             self.snapshots.append(self.results.data()["snapshots"]["statevector"])
+        
 
 class Conditional_Gate(Quantum_Gate):
     def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None):

@@ -12,7 +12,7 @@ class levelloader():
     def load_levels(self):
         Levels = []
 
-        test_level = cl.Level([], [], self.base_Gates,"goal and tutorial bit", "test level")
+        test_level = cl.Level([], self.base_Gates,"goal and tutorial bit", "test level")
         Levels.append(test_level)
         level1 = pickle.load(open("Levels\level1_file", "rb"))
         Levels.append(level1)

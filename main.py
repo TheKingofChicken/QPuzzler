@@ -368,7 +368,7 @@ def level(level):
                                 break
                         if gate_is_found:
                             break
-                        if track.rectangle.collidepoint(mx, my) and track.input == cl.Quantum_bit():
+                        if track.rectangle.collidepoint(mx, my) and track.input == [cl.Quantum_bit()] * len(track.input):
                             track.delete_track()
             if event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
