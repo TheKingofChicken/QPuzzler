@@ -1,8 +1,9 @@
+import itertools
 import qiskit as qs
 import pygame as pg
 from math import pi
 from copy import copy
-from numpy import array
+from numpy import array, angle, array_equal
 from more_itertools import interleave_longest
 
 class Quantum_Gate():
@@ -40,10 +41,13 @@ class Quantum_Bit:
 
     def set_state(self, real_zero, imag_zero, real_one, imag_one):
         self.state = array([complex(real_zero,imag_zero), complex(real_one,imag_one)])
+    
+    def __str__(self):
+        return "0:" + abs(self.state[0]) + "%, angle: " + angle(self.state[0]) + "; 1: " + abs(self.state[1]) + "%, angle: " + angle(self.state[1])
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, level, position, input = [Quantum_Bit()]):
-        self.input = []
+        self.input = input
         self.gates = []
         self.level = level
         self.position = position
@@ -97,11 +101,25 @@ class Track(): #class for the track which each qbit moves along
                 self.gates[pos] = updated_gate
             else:
                 self.gates.insert(pos, updated_gate)
+                after_gate = False
+                for gate in self.gates:
+                    if gate is updated_gate:
+                        after_gate = True
+                    if after_gate and not gate is updated_gate:
+                        gate.current_Position +=1
+                        gate.unlink()
             if has_aux_gate:
                 if isinstance(updated_gate.aux_gate.current_Track.gates[pos], I_Gate):
                     updated_gate.aux_gate.current_Track.gates[pos] = updated_gate.aux_gate
                 else:
                     updated_gate.aux_gate.current_Track.gates.insert(pos, updated_gate.aux_gate)
+                    after_gate = False
+                    for gate in updated_gate.aux_gate.current_Track.gates:
+                        if gate is updated_gate.aux_gate:
+                            after_gate = True
+                        if after_gate and not gate is updated_gate.aux_gate:
+                            gate.current_Position +=1
+                            gate.unlink()
             
             self.i_gate_cleaner()
             if has_aux_gate:
@@ -150,10 +168,6 @@ class Level():
     def clear(self):
         self.tracks.clear()
         
-    def move_track(self, pos, new_track):
-        self.tracks.remove(new_track)
-        self.tracks.insert(pos, new_track)
-        
     def assign_Conditional(self, gate, conditional):
         if (gate.current_Position == conditional.current_Position and (self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) + 1 or self.tracks.index(gate.current_Track) == self.tracks.index(conditional.current_Track) - 1)) and not isinstance(gate, I_Gate):
             gate.unlink()
@@ -164,6 +178,9 @@ class Level():
     
     def run(self):
         #construction of the adequate QuantumCircuit object
+        self.results = []
+        self.snapshots = []
+        self.output = [array([complex(1,0), complex(0,0)])]
         for x in range(len(self.tracks[0].input)):
             gate_series = []
             simulator = qs.Aer.get_backend("statevector_simulator")
@@ -171,18 +188,27 @@ class Level():
             qr = qs.QuantumRegister(len(self.tracks))
             cr = qs.ClassicalRegister(len(self.tracks))
             qc = qs.QuantumCircuit(qr,cr)
-            for qbit_index in range(len(self.tracks)):
-                gate_series.append(self.tracks[qbit_index].gates)
-                qc.initialize(self.tracks[qbit_index].input[x].state, qr[qbit_index])
-            qc.snapshot("debut")
+            for qubit_index in range(len(self.tracks)):
+                gate_series.append(self.tracks[qubit_index].gates)
+                qc.initialize(self.tracks[qubit_index].input[x].state, qr[qubit_index])
             for gate in list(interleave_longest(*gate_series)):
                 gate.qiskit_equivalent_dispatcher(qc)
             qc.snapshot("final state")
             self.results.append(qs.execute(qc, backend = simulator).result())
-            self.snapshots.append(self.results[0].data()["snapshots"]["statevector"])
-            print(self.snapshots[0]["debut"])
-            print(self.snapshots[0]["final state"])
-        
+            self.snapshots.append(self.results[x].data()["snapshots"]["statevector"]["final state"][0])
+    
+    def check_if_successful(self):
+        victory = True
+        for test_number in range(len(self.output)):
+            victory = array_equal(self.output[test_number], self.snapshots[test_number])
+            if not victory:
+                inputs = []
+                for track in self.tracks:
+                    inputs.append(track.input[test_number])
+                return [victory, self.output[test_number], self.snapshots[test_number], inputs]
+        else:
+            return [victory]
+
 
 class Conditional_Gate(Quantum_Gate):
     def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None):

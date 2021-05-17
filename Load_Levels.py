@@ -39,16 +39,21 @@ class levelloader():
         # level 1
         # Setup goal
         level1_qbit1 = cl.Quantum_Bit()
+        level1_qbit2 = cl.Quantum_Bit()
         level1_qbit1.set_state(0, 0, 1, 0)
+        level1_qbit2.set_state(1, 0, 0, 0)
+        
         level1_goal = "Return the qubit with the opposite value using the x gate"
         #print(f"level1 qbit1 state : {level1_qbit1.state}")
 
         # Initialize level
-        level1_ogfile = cl.Level([level1_qbit1], self.base_Gates, level1_goal, "Level 1")
+        level1_ogfile = cl.Level([level1_qbit1, level1_qbit2], self.base_Gates, level1_goal, "Level 1")
 
         level1_input1 = cl.Quantum_Bit()
+        level1_input2 = cl.Quantum_Bit()
         level1_input1.set_state(1, 0, 0, 0)
-        level1_track1 = cl.Track(level1_ogfile, 0, [level1_input1])
+        level1_input2.set_state(0, 0, 1, 0)
+        level1_track1 = cl.Track(level1_ogfile, 0, [level1_input1, level1_input2])
         level1_track1.input.append(level1_input1)
         level1_ogfile.add_track(level1_track1)
         

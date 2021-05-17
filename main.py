@@ -45,7 +45,9 @@ zgate_help_Button = pg.Rect(0, 0, 400, 100)
 zgate_help_Button.center = (210, 660)
 sgate_help_Button = pg.Rect(0, 0, 400, 100)
 sgate_help_Button.center = (210, 780)
-help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate_help_Button, xgate_help_Button, tgate_help_Button, zgate_help_Button, sgate_help_Button)
+ifgate_help_Button = pg.Rect(0, 0, 400, 100)
+ifgate_help_Button.center = (210, 900)
+help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate_help_Button, xgate_help_Button, tgate_help_Button, zgate_help_Button, sgate_help_Button, ifgate_help_Button)
 
 
 
@@ -133,7 +135,7 @@ def level_select():
                 running = False
             elif start_Button.collidepoint((mx, my)):
                 #current_level = pickle.load(open("Levels\level1_file", "rb"))
-                level(Levels[chosen_level_index])
+                current_level(Levels[chosen_level_index])
                 chosen_level = None
             for button in level_starters:
                 if button.collidepoint((mx, my)):
@@ -198,13 +200,14 @@ def help_screen():
     click = False
     chosen_button_text = ""
 
-    qubit_help_text = ["The Quantum Bit is the carrier of quantum information.", "While a Classical Bit takes a value of either 0 or 1,", "the value of qubit can be represented by a set of", "two dimensional vectors. In QPuzzler, a qubit is assigned", "to each track, and its value can be changed by placing", "various gates along the track."]
+    qubit_help_text = ["The Quantum Bit is the carrier of quantum information.", "While a Classical Bit takes a value of either 0 or 1,", "the value of qubit can be represented by a set of", "two probabilities and two directions,"," the probability two measure both zero and one"," and the direction of those probabilities"]
     swapgate_help_text = ["The SWAP gate exchanges the value of two qubits."]
-    hgate_help_text = ["The H gate, also known as the Hadamard gate, is used to", "generate a superposition, which refers to the fact that", "a qubit can exist in multiple states at once. Its value", "can be a combination of both 0 and 1. When a h gate is applied", "and the qubit is measured immediatly after, its value collapses", "into either 0 or 1."]
-    xgate_help_text = ["The X gate, or the NOT gate, is the simplest gate.", "It takes a value of 0 and turns it into 1, and it takes", "a value of 1 and turns it into 0. In other words,", "it flips the state of the qubit along the X axis. This gate", "is also called the NOT gate in reference to the classical", "NOT gate, because it behaves in the same way."]
-    tgate_help_text = ["The T gate applies a rotation of quarter PI, 90 degrees,", "around the Z axis. It behaves similarly to the Z gate."]
-    zgate_help_text = ["The Z gate applies a rotation of PI, 180 degrees, around the Z axis.", "It turns a value of 1 into negative 1, and turns a value of 0", "back into 0. Like the X gate, it flips the state", "along an axis, but unlike the X gate, it takes advantage of", "the two dimensional nature of the qubit and acts on", "the phase of the qubit."]
-    sgate_help_text = ["The S gate applies a rotation of half PI, 90 degrees,", "around the Z axis. It behaves similarly to the Z gate."]
+    hgate_help_text = ["The H gate, also known as the Hadamard gate, is used to", "generate a superposition, which refers to the fact that", "a qubit can exist in multiple states at once. Its value", "can be a combination of both 0 and 1.", "The H gate is also used to undo a superposition", "We encourage you to play around to understand it better"]
+    xgate_help_text = ["The X gate, or the NOT gate, is the simplest gate.", "it takes a qbit and switches its two probabilities around", "the probability to measure 0 and this probabilitys angle"," are assigned to 1 and vice versa.", "This gate is also called the NOT gate"]
+    tgate_help_text = ["The T gate applies a rotation of quarter PI, 45 degrees,", "to the 1s probability angle"]
+    zgate_help_text = ["The Z gate applies a rotation of PI, 180 degrees", "to the 1s probability angle"]
+    sgate_help_text = ["The S gate applies a rotation of half PI, 90 degrees,", "to the 1s probability angle"]
+    ifgate_help_text = ["The if gate isnt really a gate, it modifies another gate", "the if gate only work if tied to another gate", "it will read its qbits value,"," and only allow the other gate to act if this value is one", "but what happens if it reads a superposition?"]
 
     while running :
         renderer.help_screen_view(help_Buttons, chosen_button_text)
@@ -228,6 +231,9 @@ def help_screen():
                 chosen_button_text = zgate_help_text
             elif sgate_help_Button.collidepoint((mx, my)):
                 chosen_button_text = sgate_help_text
+            elif ifgate_help_Button.collidepoint((mx, my)):
+                chosen_button_text = ifgate_help_text
+                
 
         #events
         click = False
@@ -242,12 +248,12 @@ def help_screen():
                     (mx, my) = pg.mouse.get_pos()
                     click = True #this one here is the important one
 
-def level(level):
+def current_level(level):
     running = True
     #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
     holding = False
     held_gate = None
-    base_Gate_Rectangle_Y = 890
+    base_Gate_Rectangle_Y = renderer.disp_Height - 190
     base_Gate_Rectangle_X = 30
     track_Rectangle_Y = 70
     track_Rectangle_X = 420
@@ -259,6 +265,7 @@ def level(level):
     
     #game loop
     while running:
+        
         renderer.level_view(level, held_gate)
         
         for track in level.tracks:
@@ -294,6 +301,11 @@ def level(level):
             gate.rectangle.x = base_Gate_Rectangle_X + (125 * level.available_gates.index(gate))
             gate.rectangle.y = base_Gate_Rectangle_Y
         
+        level.total_Cost = 0
+        for track in level.tracks:
+            for gate in track.gates:
+                level.total_Cost += gate.cost
+        
         #update section
         past_frame_mouse_cords = (mx,my)
         (mx, my) = pg.mouse.get_pos()
@@ -301,11 +313,11 @@ def level(level):
             if event.type is pg.QUIT:
                 levelops.save_levels(Levels)
                 pg.quit()
-            if event.type == pg.KEYDOWN:
+            elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     levelops.save_levels(Levels)
                     running = False
-            if event.type == pg.MOUSEBUTTONDOWN:
+            elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if extra_track_button.collidepoint((mx, my)):
                         level.tracks.append(cl.Track(level, len(level.tracks)))
@@ -313,6 +325,7 @@ def level(level):
                         help_screen()
                     elif execute_button.collidepoint(mx,my):
                         level.run()
+                        running = level_end_screen(level)
                     else:
                         rectangle_is_gate = False
                         for track in level.tracks:
@@ -361,9 +374,9 @@ def level(level):
                                 break
                         if gate_is_found:
                             break
-                        if track.rectangle.collidepoint(mx, my) and track.input == [cl.Quantum_Bit()] * len(track.input):
+                        if track.rectangle.collidepoint(mx, my) and track.position >= len(track.level.output[0]):
                             track.delete_track()
-            if event.type == pg.MOUSEBUTTONUP:
+            elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
                     if holding_aux_rectangle:
                         for track in level.tracks:
@@ -401,7 +414,72 @@ def level(level):
                 held_gate.aux_rectangle.center = (past_frame_mouse_cords[0], past_frame_mouse_cords[1] + 75)
             else :held_gate.rectangle.center = (mx, my)
 
+def level_end_screen(level):
+    mask = pg.Surface((renderer.disp_Width, renderer.disp_Height))
+    mask.fill((100,100,100))
+    renderer.display.blit(mask,(0,0), special_flags=pg.BLEND_RGBA_SUB)
+    level_output = level.check_if_successful()
+    red_squares = 0
+    test_number = 0
+    running = True
+    
+    while running:
+        if renderer.level_end_screen_view(level, red_squares, test_number):
+            test_number +=1
+            red_squares = 0
+            if test_number == len(level.output):
+                if level_output[0]:
+                    running = victory(Levels, level)
+                else: loss(level_output)
+            
+        red_squares += 1
+        for event in pg.event.get():
+            if event.type is pg.QUIT:
+                pg.quit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
 
+def victory(Levels, level):
+    running = True
+    next_level_button  = pg.Rect(0,0, 400, 100)
+    next_level_button.center = (renderer.disp_Width/2,renderer.disp_Height/2 + 200)
+    
+    while running:
+        renderer.victory_View(next_level_button)
+        for event in pg.event.get():
+            if event.type is pg.QUIT:
+                pg.quit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                (mx,my) = pg.mouse.get_pos()
+                if event.button == 1:
+                    if next_level_button.collidepoint(mx,my):
+                        current_level(Levels[Levels.index(level) + 1])
+                        return False
+
+def loss(uncorrect_arrays):
+    running = True
+    back_button = pg.Rect(0,0, 200, 100)
+    back_button.center = (renderer.disp_Width/2,renderer.disp_Height/2 + 200)
+    while running:
+        renderer.loss_View(uncorrect_arrays[1:])
+        
+        for event in pg.event.get():
+            if event.type is pg.QUIT:
+                pg.quit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    running = False
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                (mx,my) = pg.mouse.get_pos()
+                if event.button == 1:
+                    if back_button.collidepoint(mx,my):
+                        return True
+                    
+            
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
     main_menu()
