@@ -46,11 +46,12 @@ class Quantum_Bit:
         return "0:" + abs(self.state[0]) + "%, angle: " + angle(self.state[0]) + "; 1: " + abs(self.state[1]) + "%, angle: " + angle(self.state[1])
 
 class Track(): #class for the track which each qbit moves along
-    def __init__(self, level, position, input = [Quantum_Bit()]):
+    def __init__(self, level, position, input = [Quantum_Bit()], deletable = False):
         self.input = input
         self.gates = []
         self.level = level
         self.position = position
+        self.deletable = deletable
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
     def move_gate(self, pos, new_gate):#moves around gates in the different tracks

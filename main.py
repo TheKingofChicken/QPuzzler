@@ -374,7 +374,7 @@ def current_level(level):
                                 break
                         if gate_is_found:
                             break
-                        if track.rectangle.collidepoint(mx, my) and track.position >= len(track.level.output[0]):
+                        if track.rectangle.collidepoint(mx, my) and track.deletable):
                             track.delete_track()
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
