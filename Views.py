@@ -289,22 +289,24 @@ class renderer():
         if red_squares > 0:
             return True
     
-    def loss_View(self, uncorrect_arrays):
+    def loss_View(self, uncorrect_arrays, back_button):
         background = pg.Rect(self.disp_Width/2, self.disp_Height/2, self.disp_Width/2, self.disp_Height/2)
         background.center = (self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["white"], background)
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
+        #pg.draw.rect(self.display, self.colordict["black"], back_button, 10)
         
+        #self.draw_text(self.display, "back", self.colordict["black"], self.fontdict["normal"], back_button.centerx, back_button.centery)
         self.draw_text(self.display, "error", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2 - self.disp_Height/8)
         self.draw_text(self.display, "input", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "correct answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "wrong answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "good answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "your answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8 + 15, self.disp_Width/4 + self.disp_Width/7)
         for array_index in range(len(uncorrect_arrays)):
             if isinstance(uncorrect_arrays[array_index], numpy.ndarray):
-                self.draw_quantum_state(uncorrect_arrays[array_index], self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/4 + self.disp_Height/2)
+                self.draw_quantum_state(uncorrect_arrays[array_index], self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/2)
             else:
                 for subarray_index in range(len(uncorrect_arrays[array_index])):
-                        self.draw_quantum_state(uncorrect_arrays[array_index][subarray_index].state, self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/4 + (subarray_index+1) * self.disp_Height/(2*(1+len(uncorrect_arrays[array_index]))))
+                        self.draw_quantum_state(uncorrect_arrays[array_index][subarray_index].state, self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/4 + (subarray_index+1) * self.disp_Height/(2*(1+len(uncorrect_arrays[array_index]))), vertically = False)
         pg.display.update()
     
     def victory_View(self, next_level_button):
@@ -314,5 +316,5 @@ class renderer():
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
         self.draw_text(self.display, "Level complete", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["black"], next_level_button, 10)
-        self.draw_text(self.display, "level select", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
+        self.draw_text(self.display, "next_level", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
         pg.display.update()

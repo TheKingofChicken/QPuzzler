@@ -205,7 +205,7 @@ class Level():
                 inputs = []
                 for track in self.tracks:
                     inputs.append(track.input[test_number])
-                return [victory, self.output[test_number], self.snapshots[test_number], inputs]
+                return [victory, inputs, self.output[test_number], self.snapshots[test_number]]
         else:
             return [victory]
 

@@ -325,7 +325,7 @@ def current_level(level):
                         help_screen()
                     elif execute_button.collidepoint(mx,my):
                         level.run()
-                        running = level_end_screen(level)
+                        level_end_screen(level)
                     else:
                         rectangle_is_gate = False
                         for track in level.tracks:
@@ -428,9 +428,10 @@ def level_end_screen(level):
             test_number +=1
             red_squares = 0
             if test_number == len(level.output):
+                test_number = 0
                 if level_output[0]:
                     running = victory(Levels, level)
-                else: loss(level_output)
+                else: running = loss(level_output)
             
         red_squares += 1
         for event in pg.event.get():
@@ -465,19 +466,19 @@ def loss(uncorrect_arrays):
     back_button = pg.Rect(0,0, 200, 100)
     back_button.center = (renderer.disp_Width/2,renderer.disp_Height/2 + 200)
     while running:
-        renderer.loss_View(uncorrect_arrays[1:])
+        renderer.loss_View(uncorrect_arrays[1:], back_button)
         
         for event in pg.event.get():
             if event.type is pg.QUIT:
                 pg.quit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    running = False
+                    return False
             elif event.type == pg.MOUSEBUTTONDOWN:
                 (mx,my) = pg.mouse.get_pos()
                 if event.button == 1:
                     if back_button.collidepoint(mx,my):
-                        return True
+                        return False
                     
             
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
