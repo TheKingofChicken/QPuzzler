@@ -43,7 +43,7 @@ class levelloader():
         level1_qbit1.set_state(0, 0, 1, 0)
         level1_qbit2.set_state(1, 0, 0, 0)
         
-        level1_goal = "Return the qubit with the opposite value using the x gate"
+        level1_goal = "Return the qubit with it's 0 and 1 probabilities flipped"
         #print(f"level1 qbit1 state : {level1_qbit1.state}")
 
         # Initialize level
@@ -63,7 +63,7 @@ class levelloader():
         # Setup goal
         level2_qbit1 = cl.Quantum_Bit()
         level2_qbit1.set_state(0, 0, -1, 0)
-        level2_goaltext = "Turn a value of 1 into negative 1 using the z gate"
+        level2_goaltext = "rotate this qubits 1 probability by 180 degrees"
 
         # Initialize level
         level2_ogfile = cl.Level([level2_qbit1], self.base_Gates, level2_goaltext, "Level 2")

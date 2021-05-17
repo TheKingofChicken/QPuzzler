@@ -54,7 +54,7 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 # level select buttons
 # includes back_button
 levelops.setup_levels()
-start_Button = pg.Rect(0, 0, 200, 100)
+"""start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
@@ -81,9 +81,9 @@ execute_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-100, 30
 level_help_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-210, 300, 90)
 
 # Game loops:
-"""each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
+each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
 update and render sections, the player can move between those different game states by using buttons, which just launches the corresponding 
-game loop and interrupts the current one"""
+game loop and interrupts the current one
 
 # main menu loop
 def main_menu():
@@ -483,4 +483,4 @@ def loss(uncorrect_arrays):
             
 # runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
 if __name__ == "__main__":
-    main_menu()
+    main_menu()"""

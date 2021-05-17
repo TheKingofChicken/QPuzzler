@@ -229,7 +229,7 @@ class renderer():
             self.draw_quantum_state(track.input[0].state, 210, track.rectangle.centery)
         
         self.draw_text(self.display, str(level.total_Cost), self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height - 280)
-
+        self.draw_text(self.display, level.goal_text, self.colordict["black"], self.fontdict["normal"], self.disp_Width/2 + 200, self.disp_Height - 280)
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200), 10)
     
@@ -316,5 +316,5 @@ class renderer():
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
         self.draw_text(self.display, "Level complete", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["black"], next_level_button, 10)
-        self.draw_text(self.display, "next_level", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
+        self.draw_text(self.display, "next level", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
         pg.display.update()

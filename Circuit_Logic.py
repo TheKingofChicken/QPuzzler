@@ -176,7 +176,7 @@ class Level():
             conditional.conditional = gate
             conditional.aux_rectangle = gate.rectangle.inflate(30,30)
     
-    def run(self):
+    def compile(self):
         #construction of the adequate QuantumCircuit object
         self.results = []
         self.snapshots = []
