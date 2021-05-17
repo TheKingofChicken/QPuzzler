@@ -10,7 +10,7 @@ import math
 renderer = Views.renderer()
 levelops = Load_Levels.levelloader()
 
-# main menu buttons
+# Boutons menu principal
 level_Select_Button = pg.Rect(0, 0, 400, 100)
 level_Select_Button.center = (renderer.disp_Width/2, 3*renderer.disp_Height/6)
 options_Button = pg.Rect(0, 0, 400, 100)
@@ -19,7 +19,7 @@ exit_Button = pg.Rect(0, 0, 400, 100)
 exit_Button.center = (renderer.disp_Width/2, 5*renderer.disp_Height/6)
 main_Menu_Buttons = (level_Select_Button, options_Button, exit_Button)
 
-# options buttons
+# Boutons menu options
 back_Button = pg.Rect(0, 0, 200, 100)
 back_Button.center = (renderer.disp_Width/5, 7*renderer.disp_Height/8)
 apply_Button = pg.Rect(0, 0, 200, 100)
@@ -28,7 +28,7 @@ help_Button = pg.Rect(0, 0, 400, 100)
 help_Button.center =(renderer.disp_Width/2, renderer.disp_Height/2)
 option_Buttons = (back_Button, apply_Button, help_Button)
 
-# help screen buttons
+# Boutons menu d'aide
 back_help_Button = pg.Rect(0, 0, 400, 100)
 back_help_Button.center = (210, renderer.disp_Height-60)
 qubit_help_Button = pg.Rect(0, 0, 400, 100)
@@ -49,16 +49,14 @@ ifgate_help_Button = pg.Rect(0, 0, 400, 100)
 ifgate_help_Button.center = (210, 900)
 help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate_help_Button, xgate_help_Button, tgate_help_Button, zgate_help_Button, sgate_help_Button, ifgate_help_Button)
 
-
-
-# level select buttons
-# includes back_button
+# Boutons menu selection des niveaux
+# le bouton "back" est inclu
 levelops.setup_levels()
-"""start_Button = pg.Rect(0, 0, 200, 100)
+start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
-# level buttons / setup:
+# Création des niveaux à partir des fichiers
 Levels = levelops.load_levels()
 
 level_starters = []
@@ -73,27 +71,25 @@ for level in Levels:
         i = 0
         j += 1
 
-
-
-#level buttons:
+# Boutons du jeu (dans les niveaux)
 extra_track_button = pg.Rect(430, 10, 80, 50)
 execute_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-100, 300, 90)
 level_help_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-210, 300, 90)
 
-# Game loops:
-each different game "screen", so the main menu, the options page, level select, and the such, has it's own game loop, which contains the 
-update and render sections, the player can move between those different game states by using buttons, which just launches the corresponding 
-game loop and interrupts the current one
+# Boucles de jeu
+""" Tous les "écrans" différents (menu principal, menu option, menu selection du niveau, etc.) a sa propre boucle qui contient 
+les sections d'actualisation. Le joueur utilise les boutons pour naviguer les différents menus, qui lance la bonne boucle et ferme
+la précédente."""
 
-# main menu loop
+# Boucle du menu principal
 def main_menu():
-    click = False #suddenly, python doesn't like it when click's value is given elsewhere, 
+    click = False # L'absence de cette ligne cause une erreur...
     running = True
     while running:
         renderer.main_menu_view(main_Menu_Buttons)
 
-        #the interactive bits, events and what to when they occur, (update section)
-        #the bit that checks if the mouse touches a button when it's clicked
+        # Actualisation : la partie intéractive, vérification de click, etc.
+        # On vérifie si le curseur touche un bouton
         if click:
             if level_Select_Button.collidepoint(mx, my):
                 level_select()
@@ -102,7 +98,8 @@ def main_menu():
             if exit_Button.collidepoint(mx, my):
                 levelops.save_levels(Levels)
                 running = False
-        #the bit that takes care of the different events
+
+        # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
@@ -115,7 +112,7 @@ def main_menu():
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     (mx, my) = pg.mouse.get_pos()
-                    click = True #this one here is the important one
+                    click = True # La partie importante
     pg.quit()
 
 def level_select():
@@ -128,13 +125,12 @@ def level_select():
     while running:
         renderer.level_select_view(Levels, level_Select_Buttons, chosen_level, level_starters)
 
-        #update section
-        #buttons
+        # Actualisation
+        # Boutons
         if click:
             if back_Button.collidepoint((mx, my)):
                 running = False
             elif start_Button.collidepoint((mx, my)):
-                #current_level = pickle.load(open("Levels\level1_file", "rb"))
                 current_level(Levels[chosen_level_index])
                 chosen_level = None
             for button in level_starters:
@@ -145,7 +141,7 @@ def level_select():
                         chosen_level = button
                         chosen_level_index = level_starters.index(button)
                     
-        #events
+        # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
@@ -156,7 +152,7 @@ def level_select():
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     (mx, my) = pg.mouse.get_pos()
-                    click = True #this one here is the important one
+                    click = True # La partie importante
 
 
 def options_menu():
@@ -170,8 +166,8 @@ def options_menu():
     while running :
         renderer.options_menu_view(option_Buttons)
 
-        #update section
-        #buttons
+        # Actualisation
+        # Boutons
         if click:
             if back_Button.collidepoint((mx, my)):
                 running = False
@@ -181,7 +177,7 @@ def options_menu():
             if help_Button.collidepoint((mx, my)):
                 help_screen()
                 running = False
-        #events
+        # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
@@ -192,7 +188,7 @@ def options_menu():
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     (mx, my) = pg.mouse.get_pos()
-                    click = True #this one here is the important one
+                    click = True # La partie importante
 
 def help_screen():
 
@@ -200,20 +196,20 @@ def help_screen():
     click = False
     chosen_button_text = ""
 
-    qubit_help_text = ["The Quantum Bit is the carrier of quantum information.", "While a Classical Bit takes a value of either 0 or 1,", "the value of qubit can be represented by a set of", "two probabilities and two directions,"," the probability two measure both zero and one"," and the direction of those probabilities"]
-    swapgate_help_text = ["The SWAP gate exchanges the value of two qubits."]
-    hgate_help_text = ["The H gate, also known as the Hadamard gate, is used to", "generate a superposition, which refers to the fact that", "a qubit can exist in multiple states at once. Its value", "can be a combination of both 0 and 1.", "The H gate is also used to undo a superposition", "We encourage you to play around to understand it better"]
-    xgate_help_text = ["The X gate, or the NOT gate, is the simplest gate.", "it takes a qbit and switches its two probabilities around", "the probability to measure 0 and this probabilitys angle"," are assigned to 1 and vice versa.", "This gate is also called the NOT gate"]
-    tgate_help_text = ["The T gate applies a rotation of quarter PI, 45 degrees,", "to the 1s probability angle"]
-    zgate_help_text = ["The Z gate applies a rotation of PI, 180 degrees", "to the 1s probability angle"]
-    sgate_help_text = ["The S gate applies a rotation of half PI, 90 degrees,", "to the 1s probability angle"]
-    ifgate_help_text = ["The if gate isnt really a gate, it modifies another gate", "the if gate only work if tied to another gate", "it will read its qbits value,"," and only allow the other gate to act if this value is one", "but what happens if it reads a superposition?"]
+    qubit_help_text = ["Le Quantum Bit contient de l'information quantique.", "Un Classical Bit prend une valeur de 0 ou 1,", "mais la valeur d'un qubit peut être représentée par un ensemble de", "deux probabilités et deux directions."]
+    swapgate_help_text = ["La SWAP gate échange la valeur de deux qubits."]
+    hgate_help_text = ["La H gate, aussi connue sous le nom d'Hadamard gate, sert à", "générer une superposition, ce qui signifie qu'un", "qubit dans plusieurs états à la fois. Sa valeur", "peut être une combinaison de 0 et 1.", "La H gate peut aussi défaire une superposition. Il vaut mieux", "jouer au jeu pour se familiariser avec ces concepts."]
+    xgate_help_text = ["La X gate, ou la NOT gate, est la gate la plus simple.", "Elle prend un qubit et échange ses deux probabilités.", "La probabilité de mesurer 0 et l'angle de cette probabilité","est assignée à 1 et vice versa."]
+    tgate_help_text = ["La T gate applique une rotation d'un quart de PI, 45 degrées,", "à l'angle de la probabilité 1"]
+    zgate_help_text = ["La Z gate applique une rotation de PI, 180 degrees", "à l'angle de la probabilité 1"]
+    sgate_help_text = ["La S gate applique une rotation d'une demie PI, 90 degrees,", "à l'angle de la probabilité 1"]
+    ifgate_help_text = ["La IF gate n'est pas vraiment une gate, elle modifie une autre gate.", "La IF gate fonctionne seulement si elle est associée à", "une autre gate. Elle lit la valeur du qubit,","et permet seulement à l'autre gate d'agir si la valeur est 1.", "Mais que se passe-t-il si elle lit une superposition?"]
 
     while running :
         renderer.help_screen_view(help_Buttons, chosen_button_text)
 
-        #update section
-        #buttons
+        # Actualisation
+        # Boutons du menu
         if click:
             if back_help_Button.collidepoint((mx, my)):
                 running = False
@@ -235,7 +231,7 @@ def help_screen():
                 chosen_button_text = ifgate_help_text
                 
 
-        #events
+        # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
@@ -246,11 +242,11 @@ def help_screen():
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     (mx, my) = pg.mouse.get_pos()
-                    click = True #this one here is the important one
+                    click = True # Le plus important
 
 def current_level(level):
     running = True
-    #eveyrthing after this is given a value during the update section, its just given one at the start here so the first render section stop whyning
+    # Toutes ces valeurs sont définies dans la section d'actualisation, mais cette section évite des erreurs...
     holding = False
     held_gate = None
     base_Gate_Rectangle_Y = renderer.disp_Height - 190
@@ -263,7 +259,7 @@ def current_level(level):
     changing_distance = False
     extra_track_button = pg.Rect(430, 10, 80, 50)
     
-    #game loop
+    # Boucle de jeu
     while running:
         
         renderer.level_view(level, held_gate)
@@ -279,22 +275,21 @@ def current_level(level):
                         gate.aux_rectangle = gate.conditional.rectangle.inflate(30,30)
                     elif not holding_aux_rectangle:
                         gate.aux_rectangle = pg.Rect(gate.rectangle.midbottom[0] - 15, gate.rectangle.midbottom[1] + 20, 30, 30)
-                if gate is held_gate:#skips the whole positioning code if the gate is the one being currently held
+                if gate is held_gate:# On passe le code de positionnement si le joueur tient la gate
                     continue
                 gate.rectangle.center = (track.rectangle.x + (125*(1+track.gates.index(gate))), track.rectangle.centery)
-            if isinstance(held_gate, cl.Track):#everything inside this if is to change the position of the track when it is dropped
+            if isinstance(held_gate, cl.Track):# Change la position du track
                 if track.rectangle.inflate((20, 0)).collidepoint((mx, my)):
                     if level.tracks.index(held_gate) < level.tracks.index(track):
                         offset = 1
                     else: offset = 0
                     level.move_track(level.tracks.index(track)+offset,held_gate)
-            # display the track and the total cost the of track
+            # Affichage de track
             track.rectangle.y = track_Rectangle_Y + (160 * level.tracks.index(track))
             track.rectangle.x = track_Rectangle_X
             if track is held_gate:
                 track.rectangle.centery = my
-        #here the code is pretty much exactly repeted, except that it positions the gates on the track, and makes the gates follow the track
-        # Box at the bottom of the screen, base_Gates, ...
+        # Ici, le code est répété, mais il positione les gates sur les tracks et s'assure qu'il sont alignés
         for gate in level.available_gates:
             if gate is held_gate:
                 continue
@@ -306,7 +301,7 @@ def current_level(level):
             for gate in track.gates:
                 level.total_Cost += gate.cost
         
-        #update section
+        # Actualisation du jeu
         past_frame_mouse_cords = (mx,my)
         (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
@@ -324,7 +319,7 @@ def current_level(level):
                     elif level_help_button.collidepoint(mx,my):
                         help_screen()
                     elif execute_button.collidepoint(mx,my):
-                        level.run()
+                        level.compile()
                         level_end_screen(level)
                     else:
                         rectangle_is_gate = False
@@ -374,7 +369,7 @@ def current_level(level):
                                 break
                         if gate_is_found:
                             break
-                        if track.rectangle.collidepoint(mx, my) and track.deletable):
+                        if track.rectangle.collidepoint(mx, my) and track.deletable:
                             track.delete_track()
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -481,6 +476,6 @@ def loss(uncorrect_arrays):
                         return False
                     
             
-# runs main_Menu() if the file's name is main, which it is, just as a safekeeping measure
+# Exécute le menu principal (main_Menu()) si le nom du fichier est main. C'est une mesure de précaution pour s'assurer que le jeu démarre toujours.
 if __name__ == "__main__":
-    main_menu()"""
+    main_menu()

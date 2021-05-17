@@ -38,17 +38,17 @@ class renderer():
         # Initialise pygame
         pg.init()
         
-        # setting up display
+        # Initialise l'affichage
         self.display = pg.display.set_mode((1920, 1080))
         pg.display.set_caption('QPuzzler')
         self.disp_Width = self.display.get_width()
         self.disp_Height = self.display.get_height()
         self.fps_Limiter = pg.time.Clock()
 
-        # text shenanigans
+        # Initialise la police de texte
         pg.font.init()
 
-        # colors we're actually gonna use
+        # Les couleurs que nous allons utiliser
         self.colordict = {
             "white" : (255, 255, 255), 
             "black" : (0, 0, 0), 
@@ -62,7 +62,7 @@ class renderer():
             "dark green" : (50,205,50)
             }
 
-        # Things to draw the gates
+        # Assigne des couleurs au gates
         self.gatedict = {
             "H" : self.colordict["blue"],
             "X" : self.colordict["red"],
@@ -72,7 +72,7 @@ class renderer():
             "if" : self.colordict["black"],
             "SWAP" : self.colordict["dark green"]
         }
-        # text shenanigans
+
         normal_Font = pg.font.Font("square.ttf", 48)
         menu_Font = pg.font.Font("square.ttf", 192)
         self.fontdict = {
@@ -144,28 +144,28 @@ class renderer():
     
     def main_menu_view(self, main_Menu_Buttons):
         self.fps_Limiter.tick(60)
-        #everything that needs to be rendered:
+        # Tout ce qui doit être affiché
         self.display.fill(self.colordict["white"])
         for button in main_Menu_Buttons:
-            pg.draw.rect(self.display, self.colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+            pg.draw.rect(self.display, self.colordict["black"], button, 10) # La 4e donnée remplace le rectangle rempli par une bordure
         self.draw_text(self.display, "QPUZZLER", self.colordict["black"], self.fontdict["menu"], self.disp_Width/2, self.disp_Height/5)
-        self.draw_text(self.display, "level SELECT", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, 3*self.disp_Height/6)
+        self.draw_text(self.display, "SELECTION NIVEAU", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, 3*self.disp_Height/6)
         self.draw_text(self.display, "OPTIONS", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, 4*self.disp_Height/6)
-        self.draw_text(self.display, "EXIT", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, 5*self.disp_Height/6)
+        self.draw_text(self.display, "SORTIE", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, 5*self.disp_Height/6)
         pg.display.update()
     
     def level_select_view(self, levels, level_Select_Buttons, chosen_level, level_starters):
         self.fps_Limiter.tick(60)
-        #render section
+        # Tout ce qui doit être affiché
         self.display.fill(self.colordict["white"])
         for button in level_Select_Buttons:
-            pg.draw.rect(self.display, self.colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+            pg.draw.rect(self.display, self.colordict["black"], button, 10) # La 4e donnée remplace le rectangle rempli par une bordure
         for button in level_starters:
             if button is chosen_level:
                 pg.draw.rect(self.display, self.colordict["red"], button, 10)
             else: pg.draw.rect(self.display, self.colordict["black"], button, 10)
-        self.draw_text(self.display, "BACK", self.colordict["black"], self.fontdict["normal"], self.disp_Width/5, 7*self.disp_Height/8)
-        self.draw_text(self.display, "START", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7* self.disp_Height/8)
+        self.draw_text(self.display, "RETOUR", self.colordict["black"], self.fontdict["normal"], self.disp_Width/5, 7*self.disp_Height/8)
+        self.draw_text(self.display, "ACCEPTER", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7* self.disp_Height/8)
         i = 0
         j = 0
         for x in range(len(levels)):
@@ -180,14 +180,14 @@ class renderer():
     
     def options_menu_view(self, option_Buttons):
         self.fps_Limiter.tick(60)
-        #render section
+        # Tout ce qui doit être affiché
         self.display.fill(self.colordict["white"])
         for button in option_Buttons:
-            pg.draw.rect(self.display, self.colordict["black"], button, 10) #the 4th parametter replaces the filled rectangle with an the outline of a rectangle
+            pg.draw.rect(self.display, self.colordict["black"], button, 10) # La 4e donnée remplace le rectangle rempli par une bordure
         self.draw_text(self.display, "OPTIONS", self.colordict["black"], self.fontdict["menu"], self.disp_Width/2, self.disp_Height/5)
-        self.draw_text(self.display, "HELP", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
-        self.draw_text(self.display, "BACK", self.colordict["black"], self.fontdict["normal"], self.disp_Width/5, 7*self.disp_Height/8)
-        self.draw_text(self.display, "APPLY", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7*self.disp_Height/8)
+        self.draw_text(self.display, "AIDE", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
+        self.draw_text(self.display, "RETOUR", self.colordict["black"], self.fontdict["normal"], self.disp_Width/5, 7*self.disp_Height/8)
+        self.draw_text(self.display, "ACCEPTER", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7*self.disp_Height/8)
         pg.display.update()
     
     def help_screen_view(self, help_Buttons, chosen_button_text):
@@ -198,7 +198,7 @@ class renderer():
         for button in help_Buttons:
             pg.draw.rect(self.display, self.colordict["black"], button, 10)
         self.draw_text(self.display, "", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
-        self.draw_text(self.display, "BACK", self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height-60)
+        self.draw_text(self.display, "RETOUR", self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height-60)
         self.draw_text(self.display, "QUANTUM BIT", self.colordict["black"], self.fontdict["normal"], 210, 60)
         self.draw_text(self.display, "SWAP GATE", self.colordict["black"], self.fontdict["normal"], 210, 180)
         self.draw_text(self.display, "H GATE", self.colordict["black"], self.fontdict["normal"], 210, 300)
@@ -206,7 +206,7 @@ class renderer():
         self.draw_text(self.display, "T GATE", self.colordict["black"], self.fontdict["normal"], 210, 540)
         self.draw_text(self.display, "Z GATE", self.colordict["black"], self.fontdict["normal"], 210, 660)
         self.draw_text(self.display, "S GATE", self.colordict["black"], self.fontdict["normal"], 210, 780)
-        self.draw_text(self.display, "if GATE", self.colordict["black"], self.fontdict["normal"], 210, 900)
+        self.draw_text(self.display, "IF GATE", self.colordict["black"], self.fontdict["normal"], 210, 900)
         i = 0
         for x in range(len(chosen_button_text)):
             self.draw_text(self.display, chosen_button_text[x], self.colordict["black"], self.fontdict["normal"], self.disp_Width/2 + 200, 200 + (100*i))
@@ -239,8 +239,8 @@ class renderer():
         
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(self.disp_Width - 310, self.disp_Height-100, 300, 90), 10)
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(self.disp_Width - 310, self.disp_Height-210, 300, 90), 10)
-        self.draw_text(self.display,"execute", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 55)
-        self.draw_text(self.display,"help", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 159)
+        self.draw_text(self.display,"executer", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 55)
+        self.draw_text(self.display,"aide", self.colordict["black"], self.fontdict["normal"], self.disp_Width-150, self.disp_Height - 159)
         
         for track in level.tracks:
             pg.draw.rect(self.display, self.colordict["light grey"], track.rectangle, 10)
@@ -265,9 +265,9 @@ class renderer():
         pg.draw.rect(self.display, self.colordict["white"], background)
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
         
-        self.draw_text(self.display, "input", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "correct answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "initial", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "bonne reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
         
         level.output = [array([complex(0,1), complex(0,0)])]
         quantum_states = [level.tracks, level.output, level.snapshots]
@@ -297,10 +297,10 @@ class renderer():
         #pg.draw.rect(self.display, self.colordict["black"], back_button, 10)
         
         #self.draw_text(self.display, "back", self.colordict["black"], self.fontdict["normal"], back_button.centerx, back_button.centery)
-        self.draw_text(self.display, "error", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2 - self.disp_Height/8)
+        self.draw_text(self.display, "erreur", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2 - self.disp_Height/8)
         self.draw_text(self.display, "input", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "good answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "your answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8 + 15, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "bonne answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "votre answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8 + 15, self.disp_Width/4 + self.disp_Width/7)
         for array_index in range(len(uncorrect_arrays)):
             if isinstance(uncorrect_arrays[array_index], numpy.ndarray):
                 self.draw_quantum_state(uncorrect_arrays[array_index], self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/2)
@@ -314,7 +314,7 @@ class renderer():
         background.center = (self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["white"], background)
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
-        self.draw_text(self.display, "Level complete", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
+        self.draw_text(self.display, "Niveau completé", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["black"], next_level_button, 10)
-        self.draw_text(self.display, "next level", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
+        self.draw_text(self.display, "Prochain niveau", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
         pg.display.update()

@@ -45,7 +45,7 @@ class Quantum_Bit:
     def __str__(self):
         return "0:" + abs(self.state[0]) + "%, angle: " + angle(self.state[0]) + "; 1: " + abs(self.state[1]) + "%, angle: " + angle(self.state[1])
 
-class Track(): #class for the track which each qbit moves along
+class Track(): # Classe des track sur lesquelles sont placées les gates
     def __init__(self, level, position, input = [Quantum_Bit()], deletable = False):
         self.input = input
         self.gates = []
@@ -54,7 +54,7 @@ class Track(): #class for the track which each qbit moves along
         self.deletable = deletable
         self.rectangle = pg.Rect(430, 0, 1480, 150)
     
-    def move_gate(self, pos, new_gate):#moves around gates in the different tracks
+    def move_gate(self, pos, new_gate):# Sert à changer la position des gates
         has_aux_gate = hasattr(new_gate, "aux_gate")
         
         level_Tracks = self.level.tracks
@@ -178,7 +178,7 @@ class Level():
             conditional.aux_rectangle = gate.rectangle.inflate(30,30)
     
     def compile(self):
-        #construction of the adequate QuantumCircuit object
+        # Construction de l'objet QuantumCircuit
         self.results = []
         self.snapshots = []
         self.output = [array([complex(1,0), complex(0,0)])]
@@ -199,6 +199,7 @@ class Level():
             self.snapshots.append(self.results[x].data()["snapshots"]["statevector"]["final state"][0])
     
     def check_if_successful(self):
+        # Vérification de la solution du joueur
         victory = True
         for test_number in range(len(self.output)):
             victory = array_equal(self.output[test_number], self.snapshots[test_number])
@@ -237,8 +238,8 @@ class Conditional_Gate(Quantum_Gate):
     
 
 
-# here we start setting up the quantum gate that'll be in the final game
-# they're all exactly the same, except for their Qiskit_Equivalent
+# Ici, on définit toutes les gates qui seront dans le jeu
+# Elles sont toutes pareilles, sauf pour le Qiskit_Equivalent
 class SWAP_Gate(Quantum_Gate):
     
     def __init__(self, cost, conditional, current_Track, current_Position, rectangle = None, aux_gate = None):

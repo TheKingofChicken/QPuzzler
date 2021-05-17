@@ -7,7 +7,7 @@ import math
 
 class levelloader():
 
-    # Availables gates
+    # Initialisation des gates
     Hgate = cl.H_Gate(80, None, None, None, rectangle = pg.Rect(0, 0, 100, 100))
     Xgate = cl.X_Gate(90, None, None, None, rectangle = pg.Rect(0, 0, 100, 100))
     Tgate = cl.T_Gate(100, None, None, None, rectangle = pg.Rect(0, 0, 100, 100))
@@ -32,22 +32,22 @@ class levelloader():
             pickled_level = pickle.dump(levels[x], open(self.levelfile_text[x], "wb"))
 
     def setup_levels(self):
-        # test level
-        test_level = cl.Level([], self.base_Gates,"goal and tutorial bit", "test level")
+        # Niveau test
+        test_level = cl.Level([], self.base_Gates,"tutoriel", "test")
         pickled_testlevel = pickle.dump(test_level, open("Levels\leveltest_file", "wb"))
 
-        # level 1
-        # Setup goal
+        # Niveau 1
+        # Initialisation du but
         level1_qbit1 = cl.Quantum_Bit()
         level1_qbit2 = cl.Quantum_Bit()
         level1_qbit1.set_state(0, 0, 1, 0)
         level1_qbit2.set_state(1, 0, 0, 0)
         
-        level1_goal = "Return the qubit with it's 0 and 1 probabilities flipped"
+        level1_goal = "Creez un qubit avec des probilités de 0 et 1 probabilities inversées"
         #print(f"level1 qbit1 state : {level1_qbit1.state}")
 
-        # Initialize level
-        level1_ogfile = cl.Level([level1_qbit1, level1_qbit2], self.base_Gates, level1_goal, "Level 1")
+        # Initialise niveau
+        level1_ogfile = cl.Level([level1_qbit1, level1_qbit2], self.base_Gates, level1_goal, "Niveau 1")
 
         level1_input1 = cl.Quantum_Bit()
         level1_input2 = cl.Quantum_Bit()
@@ -59,14 +59,14 @@ class levelloader():
         
         pickled_level1 = pickle.dump(level1_ogfile, open("Levels\level1_file", "wb"))
 
-        # level 2
-        # Setup goal
+        # Niveau 2
+        # Initialisation du but
         level2_qbit1 = cl.Quantum_Bit()
         level2_qbit1.set_state(0, 0, -1, 0)
-        level2_goaltext = "rotate this qubits 1 probability by 180 degrees"
+        level2_goaltext = "Appliquez une rotation à la probabilité 1 de 180 degrees"
 
-        # Initialize level
-        level2_ogfile = cl.Level([level2_qbit1], self.base_Gates, level2_goaltext, "Level 2")
+        # Initialise niveau
+        level2_ogfile = cl.Level([level2_qbit1], self.base_Gates, level2_goaltext, "Niveau 2")
         
         level2_input1 = cl.Quantum_Bit()
         level2_input1.set_state(0, 0, 1, 0)
@@ -76,14 +76,14 @@ class levelloader():
 
         pickled_level2 = pickle.dump(level2_ogfile, open("Levels\level2_file", "wb"))
 
-        # level 3
-        # Setup goal
+        # Niveau 3
+        # Initialisation du but
         level3_qbit1 = cl.Quantum_Bit()
         level3_qbit1.set_state(0, (1/math.sqrt(2)), 0, (1/math.sqrt(2)))
-        level3_goaltext = "Create a superposition using the H gate"
+        level3_goaltext = "Creez une superposition"
 
-        # Initialize level
-        level3_ogfile = cl.Level([level3_qbit1], self.base_Gates, level3_goaltext, "Level 3")
+        # Initialise niveau
+        level3_ogfile = cl.Level([level3_qbit1], self.base_Gates, level3_goaltext, "Niveau 3")
 
         level3_input1 = cl.Quantum_Bit()
         level3_input1.set_state(1, 0, 0, 0)
@@ -93,14 +93,14 @@ class levelloader():
 
         pickled_level3 = pickle.dump(level3_ogfile, open("Levels\level3_file", "wb"))
 
-        # level 4
-        # Setup goal
+        # Niveau 4
+        # Initialisation du but
         level4_qbit1 = cl.Quantum_Bit()
         level4_qbit1.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
-        level4_goaltext = "Using a qubit already in superposition, create a circuit that always returns 0"
+        level4_goaltext = "Avec unn qubit deja en superposition, creez un circuit qui donne toujours 0"
 
-        # Initialize level
-        level4_ogfile = cl.Level([level4_qbit1], self.base_Gates, level4_goaltext, "Level 4")
+        # Initialise niveau
+        level4_ogfile = cl.Level([level4_qbit1], self.base_Gates, level4_goaltext, "Niveau 4")
         
         level4_input1 = cl.Quantum_Bit()
         level4_input1.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
@@ -110,16 +110,16 @@ class levelloader():
 
         pickled_level4 = pickle.dump(level4_ogfile, open("Levels\level4_file", "wb"))
 
-        # level 5
-        # Setup goal
+        # Niveau 5
+        # Initialisation du but
         level5_qbit1 = cl.Quantum_Bit()
         level5_qbit1.set_state(1, 0, 0, 0)
         level5_qbit2 = cl.Quantum_Bit()
         level5_qbit2.set_state(1, 0, 0, 0)
         level5_goaltext = ""
 
-        # Initialize level
-        level5_ogfile = cl.Level([level5_qbit1, level5_qbit2], self.base_Gates, level5_goaltext, "Level 5")
+        # Initialise niveau
+        level5_ogfile = cl.Level([level5_qbit1, level5_qbit2], self.base_Gates, level5_goaltext, "Niveau 5")
         
         level5_input1 = cl.Quantum_Bit()
         level5_input1.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
@@ -134,16 +134,16 @@ class levelloader():
 
         pickled_level5 = pickle.dump(level5_ogfile, open("Levels\level5_file", "wb"))
 
-        # level 6
-        # Setup goal
+        # Niveau 6
+        # Initialisation du but
         level6_qbit1 = cl.Quantum_Bit()
         level6_qbit1.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
         level6_qbit2 = cl.Quantum_Bit()
         level6_qbit2.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
-        level6_goaltext = "Create a circuit that has equal vectors in 4 directions"
+        level6_goaltext = ""
 
-        # Initialize level
-        level6_ogfile = cl.Level([level6_qbit1, level6_qbit2], self.base_Gates, level6_goaltext, "Level 6")
+        # Initialise niveau
+        level6_ogfile = cl.Level([level6_qbit1, level6_qbit2], self.base_Gates, level6_goaltext, "Niveau 6")
         
         level6_input1 = cl.Quantum_Bit()
         level6_input1.set_state(1, 0, 0, 0)
@@ -158,16 +158,16 @@ class levelloader():
 
         pickled_level6 = pickle.dump(level6_ogfile, open("Levels\level6_file", "wb"))
         
-        # level 7
-        # Setup goal
+        # Niveau 7
+        # Initialisation du but
         level7_qbit1 = cl.Quantum_Bit()
         level7_qbit1.set_state(0, 1, 0, 0)
         level7_qbit2 = cl.Quantum_Bit()
         level7_qbit2.set_state(1, 0, 0, 0)
-        level7_goaltext = "Exchange the value of two qubits using the SWAP gate"
+        level7_goaltext = "Echangez la valeur des deux qubits"
 
-        # Initialize level
-        level7_ogfile = cl.Level([level7_qbit1, level7_qbit2], self.base_Gates, level7_goaltext, "Level 7")
+        # Initialise niveau
+        level7_ogfile = cl.Level([level7_qbit1, level7_qbit2], self.base_Gates, level7_goaltext, "Niveau 7")
         
         level7_input1 = cl.Quantum_Bit()
         level7_input1.set_state(1, 0, 0, 0)
@@ -182,16 +182,16 @@ class levelloader():
 
         pickled_level7 = pickle.dump(level7_ogfile, open("Levels\level7_file", "wb"))
 
-        # level 8
-        # Setup goal
+        # Niveau 8
+        # Initialisation du but
         level8_qbit1 = cl.Quantum_Bit()
         level8_qbit1.set_state((1/math.sqrt(2)), 0, (1/math.sqrt(2)), 0)
         level8_qbit2 = cl.Quantum_Bit()
         level8_qbit2.set_state(0, 0, 1, 0)
-        level8_goaltext = "Circuit output : [0.70710678+0.j, 0.70710678+0.j, 0.+0.j, 0.+0.j]"
+        level8_goaltext = "Output du circuit : [0.70710678+0.j, 0.70710678+0.j, 0.+0.j, 0.+0.j]"
 
-        # Initialize level
-        level8_ogfile = cl.Level([level8_qbit1, level8_qbit2], self.base_Gates, level8_goaltext, "Level 8")
+        # Initialise niveau
+        level8_ogfile = cl.Level([level8_qbit1, level8_qbit2], self.base_Gates, level8_goaltext, "Niveau 8")
         
         level8_input1 = cl.Quantum_Bit()
         level8_input1.set_state(1, 0, 0, 0)
