@@ -43,7 +43,7 @@ class Quantum_Bit:
 
 class Track(): #class for the track which each qbit moves along
     def __init__(self, level, position, input = [Quantum_Bit()]):
-        self.input = input
+        self.input = []
         self.gates = []
         self.level = level
         self.position = position

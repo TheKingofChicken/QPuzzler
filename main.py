@@ -5,6 +5,7 @@ import Circuit_Logic as cl
 import Levels
 from math import trunc
 import pickle
+import math
 
 renderer = Views.renderer()
 levelops = Load_Levels.levelloader()
@@ -197,16 +198,16 @@ def help_screen():
     click = False
     chosen_button_text = ""
 
-    qubit_help_text = "1"
-    swapgate_help_text = "2"
-    hgate_help_text = "3"
-    xgate_help_text = "4"
-    tgate_help_text = "5"
-    zgate_help_text = "6"
-    sgate_help_text = "7"
+    qubit_help_text = ["The Quantum Bit is the carrier of quantum information.", "While a Classical Bit takes a value of either 0 or 1,", "the value of qubit can be represented by a set of", "two dimensional vectors. In QPuzzler, a qubit is assigned", "to each track, and its value can be changed by placing", "various gates along the track."]
+    swapgate_help_text = ["The SWAP gate exchanges the value of two qubits."]
+    hgate_help_text = ["The H gate, also known as the Hadamard gate, is used to", "generate a superposition, which refers to the fact that", "a qubit can exist in multiple states at once. Its value", "can be a combination of both 0 and 1. When a h gate is applied", "and the qubit is measured immediatly after, its value collapses", "into either 0 or 1."]
+    xgate_help_text = ["The X gate, or the NOT gate, is the simplest gate.", "It takes a value of 0 and turns it into 1, and it takes", "a value of 1 and turns it into 0. In other words,", "it flips the state of the qubit along the X axis. This gate", "is also called the NOT gate in reference to the classical", "NOT gate, because it behaves in the same way."]
+    tgate_help_text = ["The T gate applies a rotation of quarter PI, 90 degrees,", "around the Z axis. It behaves similarly to the Z gate."]
+    zgate_help_text = ["The Z gate applies a rotation of PI, 180 degrees, around the Z axis.", "It turns a value of 1 into negative 1, and turns a value of 0", "back into 0. Like the X gate, it flips the state", "along an axis, but unlike the X gate, it takes advantage of", "the two dimensional nature of the qubit and acts on", "the phase of the qubit."]
+    sgate_help_text = ["The S gate applies a rotation of half PI, 90 degrees,", "around the Z axis. It behaves similarly to the Z gate."]
 
     while running :
-        renderer.help_screen_view(help_Buttons)
+        renderer.help_screen_view(help_Buttons, chosen_button_text)
 
         #update section
         #buttons

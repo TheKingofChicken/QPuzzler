@@ -131,7 +131,7 @@ class renderer():
         self.draw_text(self.display, "APPLY", self.colordict["black"], self.fontdict["normal"], 4*self.disp_Width/5, 7*self.disp_Height/8)
         pg.display.update()
     
-    def help_screen_view(self, help_Buttons):
+    def help_screen_view(self, help_Buttons, chosen_button_text):
         self.fps_Limiter.tick(60)
 
         #render section
@@ -147,6 +147,10 @@ class renderer():
         self.draw_text(self.display, "T GATE", self.colordict["black"], self.fontdict["normal"], 210, 540)
         self.draw_text(self.display, "Z GATE", self.colordict["black"], self.fontdict["normal"], 210, 660)
         self.draw_text(self.display, "S GATE", self.colordict["black"], self.fontdict["normal"], 210, 780)
+        i = 0
+        for x in range(len(chosen_button_text)):
+            self.draw_text(self.display, chosen_button_text[x], self.colordict["black"], self.fontdict["normal"], self.disp_Width/2 + 200, 200 + (100*i))
+            i += 1
         pg.display.update()
     
     def draw_gate(self, level, gate, held_rectangle):
@@ -192,8 +196,10 @@ class renderer():
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, 10, 400, self.disp_Height-240))
         pg.draw.rect(self.display, self.colordict["black"], pg.Rect(10, 10, 400, self.disp_Height-240), 10)
         self.draw_text(self.display, level.name, self.colordict["black"], self.fontdict["normal"], 210, 60)
+        """
         for track in level.tracks:
             self.draw_text(self.display, str(track.input[0].state), self.colordict["black"], self.fontdict["normal"], 210, track.rectangle.centery)
+        """
         self.draw_text(self.display, str(level.total_Cost), self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height - 280)
 
         pg.draw.rect(self.display, self.colordict["white"], pg.Rect(10, self.disp_Height-210, self.disp_Width-340, 200))
