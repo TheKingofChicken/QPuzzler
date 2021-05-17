@@ -1,6 +1,9 @@
 import pygame as pg
-import ctypes
 import Circuit_Logic as cl
+import ctypes
+import numpy
+import math
+from numpy import array
 
 class renderer():
     
@@ -227,3 +230,24 @@ class renderer():
         for gate in first_layer_elements:
             self.draw_gate(level, gate, held_rectangle)
         pg.display.update()
+        
+    def draw_qbit(self, qbit, x, y): #used to represent on screen the state of a qbit
+        new_surface = pg.Surface((125,60))
+        new_surface.fill(self.colordict["white"])
+        zero_arrow_vector = (math.copysign(numpy.real(qbit.state[0])**2, numpy.real(qbit.state[0])), math.copysign(numpy.imag(qbit.state[0])**2, numpy.imag(qbit.state[0])))
+        one_arrow_vector = (math.copysign(numpy.real(qbit.state[1])**2,numpy.real(qbit.state[1])), math.copysign(numpy.imag(qbit.state[1])**2, numpy.imag(qbit.state[1])))
+        zero_arrow = ((42 + 20*zero_arrow_vector[0], 30 - 20*zero_arrow_vector[1]),(42 - 20*zero_arrow_vector[0], 30 + 20*zero_arrow_vector[1]))
+        one_arrow = ((84 + 20*one_arrow_vector[0], 30 - 20*one_arrow_vector[1]), (84 - 20*one_arrow_vector[0], 30 + 20*one_arrow_vector[1]))
+        pg.draw.line(new_surface,self.colordict["black"],zero_arrow[0], zero_arrow[1], 3)
+        pg.draw.line(new_surface,self.colordict["black"],one_arrow[0], one_arrow[1], 3)
+        pg.draw.circle(new_surface,self.colordict["black"], zero_arrow[0], 5)
+        pg.draw.circle(new_surface,self.colordict["black"], one_arrow[0], 5)
+        pg.draw.line(new_surface,self.colordict["black"], (5,5), (5,55), 2)
+        pg.draw.line(new_surface,self.colordict["black"], (120,5), (120,55), 2)
+        pg.draw.line(new_surface,self.colordict["black"], (5,5), (32,5), 2)
+        pg.draw.line(new_surface,self.colordict["black"], (5,55), (32,55), 2)
+        pg.draw.line(new_surface,self.colordict["black"], (120,5), (91,5), 2)
+        pg.draw.line(new_surface,self.colordict["black"], (120,55), (91,55), 2)
+        rect = new_surface.get_rect()
+        rect.center = (x,y)
+        self.display.blit(new_surface, rect)
