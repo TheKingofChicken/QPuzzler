@@ -52,7 +52,9 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 # Boutons menu selection des niveaux
 # le bouton "back" est inclu
 levelops.setup_levels()
-start_Button = pg.Rect(0, 0, 200, 100)
+Levels = levelops.load_levels()
+levelops.save_levels(Levels)
+"""start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
@@ -77,9 +79,9 @@ execute_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-100, 30
 level_help_button = pg.Rect(renderer.disp_Width - 310, renderer.disp_Height-210, 300, 90)
 
 # Boucles de jeu
-""" Tous les "écrans" différents (menu principal, menu option, menu selection du niveau, etc.) a sa propre boucle qui contient 
+Tous les "écrans" différents (menu principal, menu option, menu selection du niveau, etc.) a sa propre boucle qui contient 
 les sections d'actualisation. Le joueur utilise les boutons pour naviguer les différents menus, qui lance la bonne boucle et ferme
-la précédente."""
+la précédente.
 
 # Boucle du menu principal
 def main_menu():
@@ -478,4 +480,4 @@ def loss(uncorrect_arrays):
             
 # Exécute le menu principal (main_Menu()) si le nom du fichier est main. C'est une mesure de précaution pour s'assurer que le jeu démarre toujours.
 if __name__ == "__main__":
-    main_menu()
+    main_menu()"""

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e04a30b5-62ca-49b3-89ea-61b8066321a5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Circuit_Logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Circuit_Logic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Load_Levels.py" beforeDir="false" afterPath="$PROJECT_DIR$/Load_Levels.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1sgENCNp2eZnWaO0wTfNSOuSkmU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e04a30b5-62ca-49b3-89ea-61b8066321a5" name="Default Changelist" comment="" />
+      <created>1621285791865</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1621285791865</updated>
+    </task>
+    <servers />
+  </component>
+</project>

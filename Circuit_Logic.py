@@ -39,8 +39,11 @@ class Quantum_Bit:
     def __init__(self, state = array([complex(1,0), complex(0,0)])):
         self.state = state
 
-    def set_state(self, real_zero, imag_zero, real_one, imag_one):
-        self.state = array([complex(real_zero,imag_zero), complex(real_one,imag_one)])
+    def set_state(self, *args):
+        if len(args) == 1:
+            self.state = array([complex(args[0][0],args[0][1]), complex(args[0][2],args[0][3])])
+        elif len(args) == 4:
+            self.state = array([complex(args[0],args[1]), complex(args[2],args[3])])
     
     def __str__(self):
         return "0:" + abs(self.state[0]) + "%, angle: " + angle(self.state[0]) + "; 1: " + abs(self.state[1]) + "%, angle: " + angle(self.state[1])
