@@ -60,7 +60,6 @@ level_Select_Buttons = (back_Button, start_Button)
 
 # Création des niveaux à partir des fichiers
 Levels = levelops.load_levels()
-levelops.setup_levels()
 
 level_starters = []
 i = 0
@@ -99,18 +98,18 @@ def main_menu():
             if options_Button.collidepoint(mx, my):
                 options_menu()
             if exit_Button.collidepoint(mx, my):
-                #levelops.save_levels(Levels)
+                levelops.save_levels(Levels)
                 running = False
 
         # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
-                #levelops.save_levels(Levels)
+                levelops.save_levels(Levels)
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    #levelops.save_levels(Levels)
+                    levelops.save_levels(Levels)
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -309,11 +308,11 @@ def current_level(level):
         (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type is pg.QUIT:
-                #levelops.save_levels(Levels)
+                levelops.save_levels(Levels)
                 pg.quit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    #levelops.save_levels(Levels)
+                    levelops.save_levels(Levels)
                     running = False
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
