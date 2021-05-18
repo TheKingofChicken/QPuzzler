@@ -7,6 +7,9 @@ from math import trunc
 import pickle
 import math
 
+
+#DOCUMENTATION DANS DOCS
+
 renderer = Views.renderer()
 levelops = Load_Levels.levelloader()
 
@@ -51,15 +54,13 @@ help_Buttons = (back_help_Button, qubit_help_Button, swapgate_help_Button, hgate
 
 # Boutons menu selection des niveaux
 # le bouton "back" est inclu
-levelops.setup_levels()
-Levels = levelops.load_levels()
-levelops.save_levels(Levels)
 start_Button = pg.Rect(0, 0, 200, 100)
 start_Button.center = (4*renderer.disp_Width/5, 7* renderer.disp_Height/8)
 level_Select_Buttons = (back_Button, start_Button)
 
 # Création des niveaux à partir des fichiers
 Levels = levelops.load_levels()
+levelops.setup_levels()
 
 level_starters = []
 i = 0
@@ -98,18 +99,18 @@ def main_menu():
             if options_Button.collidepoint(mx, my):
                 options_menu()
             if exit_Button.collidepoint(mx, my):
-                levelops.save_levels(Levels)
+                #levelops.save_levels(Levels)
                 running = False
 
         # Test les événements (click de souris, clavier)
         click = False
         for event in pg.event.get():
             if event.type is pg.QUIT:
-                levelops.save_levels(Levels)
+                #levelops.save_levels(Levels)
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    levelops.save_levels(Levels)
+                    #levelops.save_levels(Levels)
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -308,11 +309,11 @@ def current_level(level):
         (mx, my) = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type is pg.QUIT:
-                levelops.save_levels(Levels)
+                #levelops.save_levels(Levels)
                 pg.quit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    levelops.save_levels(Levels)
+                    #levelops.save_levels(Levels)
                     running = False
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -463,7 +464,7 @@ def loss(uncorrect_arrays):
     back_button = pg.Rect(0,0, 200, 100)
     back_button.center = (renderer.disp_Width/2,renderer.disp_Height/2 + 200)
     while running:
-        renderer.loss_View(uncorrect_arrays[1:], back_button)
+        renderer.loss_View(uncorrect_arrays[1:])
         
         for event in pg.event.get():
             if event.type is pg.QUIT:

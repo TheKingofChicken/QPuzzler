@@ -17,7 +17,7 @@ class levelloader():
 
     base_Gates = [Hgate, Xgate, Tgate, Zgate, Sgate, CONDgate, SWAPgate]
     
-    levelfile_text = ["Levels\leveltest_file", "Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file", "Levels\level5_file", "Levels\level6_file", "Levels\level7_file", "Levels\level8_file"]
+    levelfile_text = ["Levels\level1_file", "Levels\level2_file", "Levels\level3_file", "Levels\level4_file", "Levels\level5_file", "Levels\level6_file", "Levels\level7_file", "Levels\level8_file"]
 
     def load_levels(self):
         Levels = []
@@ -33,8 +33,8 @@ class levelloader():
 
     def setup_levels(self):
         # Niveau test
-        test_level = cl.Level([], self.base_Gates,"tutoriel", "test")
-        pickled_testlevel = pickle.dump(test_level, open("Levels\leveltest_file", "wb"))
+        #test_level = cl.Level([], self.base_Gates,"tutoriel", "test")
+        #pickled_testlevel = pickle.dump(test_level, open("Levels\leveltest_file", "wb"))
 
         # Niveau 1
         # Initialisation du but
@@ -43,11 +43,11 @@ class levelloader():
         level1_qbit1.set_state(0, 0, 1, 0)
         level1_qbit2.set_state(1, 0, 0, 0)
         
-        level1_goal = "Creez un qubit avec des probilités de 0 et 1 probabilities inversées"
+        level1_goal = "Creez un qubit avec des probilites de 0 et 1 probabilities inversees"
         #print(f"level1 qbit1 state : {level1_qbit1.state}")
 
         # Initialize level
-        level1_ogfile = cl.Level([level1_qbit1, level1_qbit2], self.base_Gates[0:2], level1_goal, "Niveau 1")
+        level1_ogfile = cl.Level([level1_qbit1.state, level1_qbit2.state], self.base_Gates[0:2], level1_goal, "Niveau 1")
 
         level1_input1 = cl.Quantum_Bit()
         level1_input2 = cl.Quantum_Bit()
@@ -65,12 +65,14 @@ class levelloader():
         for x in range(2):
             level2_outputs.append(cl.Quantum_Bit())
         output_states = [(0,0,-1,0),(0,0,0,-1),(0,0,-1/math.sqrt(2),1/math.sqrt(2))]
+        outputs = []
         for qubit, state in zip(level2_outputs, output_states):
             qubit.set_state(state)
-        level2_goaltext = "Appliquez une rotation à la probabilité 1 de 180 degrees"
+            outputs.append(qubit.state)
+        level2_goaltext = "Appliquez une rotation a la probabilite 1 de 180 degrees"
 
         # Initialize level
-        level2_ogfile = cl.Level(level2_outputs, self.base_Gates[2:6], level2_goaltext, "Niveau 2")
+        level2_ogfile = cl.Level(outputs, self.base_Gates[2:5], level2_goaltext, "Niveau 2")
         
         level2_inputs = [cl.Quantum_Bit()]
         for x in range(2):
@@ -86,23 +88,24 @@ class levelloader():
         # Niveau 3
         # Initialisation du but
         level3_output = []
+        num = 1/math.sqrt(2)
         for x in range(5):
             level3_output.append(((cl.Quantum_Bit()),(cl.Quantum_Bit())))
         output_states = [((1,0,0,0),(1,0,0,0)),
-                         ((1/math.sqrt(2),0,1/math.sqrt(2),0),(0,0,1,0)),
+                         ((0,0,num,num),(0,0,1,0)),
                          ((1,0,0,0),(1,0,0,0)),
                          ((1,0,0,0),(1,0,0,0)),
-                         ((1/math.sqrt(2),0,1/math.sqrt(2),0),(0,0,1,0))]
+                         ((0,0,num,num),(0,0,1,0))]
         for qubit_pair, output_pair in zip(level3_output, output_states):
             for qubit, output in zip(qubit_pair, output_pair):
                 qubit.set_state(output)
         output = []
         for output_pair in level3_output:
-            output.append(kron(output_pair[0].state,output_pair[1].state))
-        level3_goaltext = "mettez le qubit 1 en superpositionsi le qbit 2 est un"
-
+            output.append(kron(output_pair[1].state,output_pair[0].state))
+        level3_goaltext = "mettez le qubit 1 en superposition si le qbit 2 est un"
+        
         # Initialise niveau
-        level3_ogfile = cl.Level(output, self.base_Gates[0:2].append(self.base_Gates[6]), level3_goaltext, "Niveau 3")
+        level3_ogfile = cl.Level(output, [self.base_Gates[0],self.base_Gates[1],self.base_Gates[5]], level3_goaltext, "Niveau 3")
 
         level3_input = []
         for x in range(5):
@@ -112,11 +115,11 @@ class levelloader():
                         ((1,0,0,0),(1,0,0,0)),
                         ((1,0,0,0),(1,0,0,0)),
                         ((1,0,0,0),(0,0,1,0))]
-        for qubit_pair, output_pair in zip(level3_input, input_states):
-            for qubit, output in zip(qubit_pair, output_pair):
-                qubit.set_state(output)
+        for qubit_pair, input_pair in zip(level3_input, input_states):
+            for qubit, input in zip(qubit_pair, input_pair):
+                qubit.set_state(input)
         level3_track1 = cl.Track(level3_ogfile, 0, input = [])
-        level3_track2 = cl.Track(level3_ogfile, 0, input = [])
+        level3_track2 = cl.Track(level3_ogfile, 1, input = [])
         for qubit_pair in level3_input:
             level3_track1.input.append(qubit_pair[0])
             level3_track2.input.append(qubit_pair[1])

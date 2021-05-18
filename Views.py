@@ -200,13 +200,13 @@ class renderer():
         self.draw_text(self.display, "", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         self.draw_text(self.display, "RETOUR", self.colordict["black"], self.fontdict["normal"], 210, self.disp_Height-60)
         self.draw_text(self.display, "QUANTUM BIT", self.colordict["black"], self.fontdict["normal"], 210, 60)
-        self.draw_text(self.display, "SWAP GATE", self.colordict["black"], self.fontdict["normal"], 210, 180)
-        self.draw_text(self.display, "H GATE", self.colordict["black"], self.fontdict["normal"], 210, 300)
-        self.draw_text(self.display, "X GATE", self.colordict["black"], self.fontdict["normal"], 210, 420)
-        self.draw_text(self.display, "T GATE", self.colordict["black"], self.fontdict["normal"], 210, 540)
-        self.draw_text(self.display, "Z GATE", self.colordict["black"], self.fontdict["normal"], 210, 660)
-        self.draw_text(self.display, "S GATE", self.colordict["black"], self.fontdict["normal"], 210, 780)
-        self.draw_text(self.display, "IF GATE", self.colordict["black"], self.fontdict["normal"], 210, 900)
+        self.draw_text(self.display, "PORTE SWAP", self.colordict["black"], self.fontdict["normal"], 210, 180)
+        self.draw_text(self.display, "PORTE H", self.colordict["black"], self.fontdict["normal"], 210, 300)
+        self.draw_text(self.display, "PORTE X", self.colordict["black"], self.fontdict["normal"], 210, 420)
+        self.draw_text(self.display, "PORTE T", self.colordict["black"], self.fontdict["normal"], 210, 540)
+        self.draw_text(self.display, "PORTE Z", self.colordict["black"], self.fontdict["normal"], 210, 660)
+        self.draw_text(self.display, "PORTE S", self.colordict["black"], self.fontdict["normal"], 210, 780)
+        self.draw_text(self.display, "PORTE IF", self.colordict["black"], self.fontdict["normal"], 210, 900)
         i = 0
         for x in range(len(chosen_button_text)):
             self.draw_text(self.display, chosen_button_text[x], self.colordict["black"], self.fontdict["normal"], self.disp_Width/2 + 200, 200 + (100*i))
@@ -269,7 +269,6 @@ class renderer():
         self.draw_text(self.display, "bonne reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
         self.draw_text(self.display, "reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
         
-        level.output = [array([complex(0,1), complex(0,0)])]
         quantum_states = [level.tracks, level.output, level.snapshots]
         for column in range(len(quantum_states)):
             for row in range(len(quantum_states[column])):
@@ -281,15 +280,15 @@ class renderer():
                         self.draw_quantum_state(quantum_states[column][row].input[test_number].state, self.disp_Width/4 + (column+1)* self.disp_Width/8, self.disp_Height/4 + (row+1) * self.disp_Height/(2*(1+len(quantum_states[column]))), vertically = False)
                 else:
                     if red_squares > 0:
-                        self.draw_quantum_state(quantum_states[column][test_number], self.disp_Width/4 + (column+1)* self.disp_Width/8, self.disp_Height/4 + (row+1) * self.disp_Height/(2*(1+len(quantum_states[column]))), background = self.colordict["red"])
+                        self.draw_quantum_state(quantum_states[test_number], self.disp_Width/4 + (column+1)* self.disp_Width/8, self.disp_Height/4 + (row+1) * self.disp_Height/(2*(1+len(quantum_states[column]))), background = self.colordict["red"])
                         red_squares -= 5
                     else:
-                        self.draw_quantum_state(quantum_states[column][test_number], self.disp_Width/4 + (column+1)* self.disp_Width/8, self.disp_Height/4 + (row+1) * self.disp_Height/(2*(1+len(quantum_states[column]))))
+                        self.draw_quantum_state(quantum_states[test_number], self.disp_Width/4 + (column+1)* self.disp_Width/8, self.disp_Height/4 + (row+1) * self.disp_Height/(2*(1+len(quantum_states[column]))))
         pg.display.update()
         if red_squares > 0:
             return True
     
-    def loss_View(self, uncorrect_arrays, back_button):
+    def loss_View(self, uncorrect_arrays):
         background = pg.Rect(self.disp_Width/2, self.disp_Height/2, self.disp_Width/2, self.disp_Height/2)
         background.center = (self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["white"], background)
@@ -298,9 +297,9 @@ class renderer():
         
         #self.draw_text(self.display, "back", self.colordict["black"], self.fontdict["normal"], back_button.centerx, back_button.centery)
         self.draw_text(self.display, "erreur", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2 - self.disp_Height/8)
-        self.draw_text(self.display, "input", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "bonne answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
-        self.draw_text(self.display, "votre answer", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8 + 15, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "initial", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "bonne reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 2* self.disp_Width/8, self.disp_Width/4 + self.disp_Width/7)
+        self.draw_text(self.display, "votre reponse", self.colordict["black"], self.fontdict["normal"],self.disp_Width/4 + 3* self.disp_Width/8 + 50, self.disp_Width/4 + self.disp_Width/7)
         for array_index in range(len(uncorrect_arrays)):
             if isinstance(uncorrect_arrays[array_index], numpy.ndarray):
                 self.draw_quantum_state(uncorrect_arrays[array_index], self.disp_Width/4 + (array_index+1)* self.disp_Width/8, self.disp_Height/2)
@@ -314,7 +313,7 @@ class renderer():
         background.center = (self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["white"], background)
         pg.draw.rect(self.display, self.colordict["black"], background, 10)
-        self.draw_text(self.display, "Niveau completé", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
+        self.draw_text(self.display, "Niveau complete", self.colordict["black"], self.fontdict["normal"], self.disp_Width/2, self.disp_Height/2)
         pg.draw.rect(self.display, self.colordict["black"], next_level_button, 10)
         self.draw_text(self.display, "Prochain niveau", self.colordict["black"], self.fontdict["normal"],next_level_button.centerx, next_level_button.centery)
         pg.display.update()

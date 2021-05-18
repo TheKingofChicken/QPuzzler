@@ -1,9 +1,9 @@
 import itertools
 import qiskit as qs
 import pygame as pg
-from math import pi
+from math import isclose, pi
 from copy import copy
-from numpy import array, angle, array_equal
+from numpy import array, angle, allclose
 from more_itertools import interleave_longest
 
 class Quantum_Gate():
@@ -184,7 +184,6 @@ class Level():
         # Construction de l'objet QuantumCircuit
         self.results = []
         self.snapshots = []
-        self.output = [array([complex(1,0), complex(0,0)])]
         for x in range(len(self.tracks[0].input)):
             gate_series = []
             simulator = qs.Aer.get_backend("statevector_simulator")
@@ -205,7 +204,7 @@ class Level():
         # Vérification de la solution du joueur
         victory = True
         for test_number in range(len(self.output)):
-            victory = array_equal(self.output[test_number], self.snapshots[test_number])
+            victory = (allclose(self.output[test_number], self.snapshots[test_number]))
             if not victory:
                 inputs = []
                 for track in self.tracks:
