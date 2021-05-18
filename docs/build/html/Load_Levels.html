@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Load_Levels module &#8212; Documentation QPuzzler 1.0.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Views module" href="Views.html" />
+    <link rel="prev" title="Circuit_Logic module" href="Circuit_Logic.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-Load_Levels">
+<span id="load-levels-module"></span><h1>Load_Levels module<a class="headerlink" href="#module-Load_Levels" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Load_Levels.levelloader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Load_Levels.</span></span><span class="sig-name descname"><span class="pre">levelloader</span></span><a class="headerlink" href="#Load_Levels.levelloader" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.CONDgate">
+<span class="sig-name descname"><span class="pre">CONDgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">if</span></em><a class="headerlink" href="#Load_Levels.levelloader.CONDgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.Hgate">
+<span class="sig-name descname"><span class="pre">Hgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">H</span></em><a class="headerlink" href="#Load_Levels.levelloader.Hgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.SWAPgate">
+<span class="sig-name descname"><span class="pre">SWAPgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">SWAP</span></em><a class="headerlink" href="#Load_Levels.levelloader.SWAPgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.Sgate">
+<span class="sig-name descname"><span class="pre">Sgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">S</span></em><a class="headerlink" href="#Load_Levels.levelloader.Sgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.Tgate">
+<span class="sig-name descname"><span class="pre">Tgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">T</span></em><a class="headerlink" href="#Load_Levels.levelloader.Tgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.Xgate">
+<span class="sig-name descname"><span class="pre">Xgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">X</span></em><a class="headerlink" href="#Load_Levels.levelloader.Xgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.Zgate">
+<span class="sig-name descname"><span class="pre">Zgate</span></span><em class="property"> <span class="pre">=</span> <span class="pre">Z</span></em><a class="headerlink" href="#Load_Levels.levelloader.Zgate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.base_Gates">
+<span class="sig-name descname"><span class="pre">base_Gates</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[H,</span> <span class="pre">X,</span> <span class="pre">T,</span> <span class="pre">Z,</span> <span class="pre">S,</span> <span class="pre">if,</span> <span class="pre">SWAP]</span></em><a class="headerlink" href="#Load_Levels.levelloader.base_Gates" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.levelfile_text">
+<span class="sig-name descname"><span class="pre">levelfile_text</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['Levels\\leveltest_file',</span> <span class="pre">'Levels\\level1_file',</span> <span class="pre">'Levels\\level2_file',</span> <span class="pre">'Levels\\level3_file',</span> <span class="pre">'Levels\\level4_file',</span> <span class="pre">'Levels\\level5_file',</span> <span class="pre">'Levels\\level6_file',</span> <span class="pre">'Levels\\level7_file',</span> <span class="pre">'Levels\\level8_file']</span></em><a class="headerlink" href="#Load_Levels.levelloader.levelfile_text" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.load_levels">
+<span class="sig-name descname"><span class="pre">load_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Load_Levels.levelloader.load_levels" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.save_levels">
+<span class="sig-name descname"><span class="pre">save_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Load_Levels.levelloader.save_levels" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Load_Levels.levelloader.setup_levels">
+<span class="sig-name descname"><span class="pre">setup_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Load_Levels.levelloader.setup_levels" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">QPuzzler</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">QPuzzler</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Circuit_Logic.html">Circuit_Logic module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Load_Levels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Views.html">Views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">QPuzzler</a><ul>
+      <li>Previous: <a href="Circuit_Logic.html" title="Chapitre précédent">Circuit_Logic module</a></li>
+      <li>Next: <a href="Views.html" title="Chapitre suivant">Views module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Elie Leblanc et Francois Lochhead.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Load_Levels.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

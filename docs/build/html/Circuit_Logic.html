@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Circuit_Logic module &#8212; Documentation QPuzzler 1.0.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="Load_Levels module" href="Load_Levels.html" />
+    <link rel="prev" title="QPuzzler" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-Circuit_Logic">
+<span id="circuit-logic-module"></span><h1>Circuit_Logic module<a class="headerlink" href="#module-Circuit_Logic" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.AUX_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">AUX_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cost</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aux_gate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.AUX_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.AUX_Gate.qiskit_equivalent_dispatcher">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.AUX_Gate.qiskit_equivalent_dispatcher" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Conditional_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Conditional_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cost</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_Track</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_Position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rectangle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Conditional_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Conditional_Gate.qiskit_equivalent_dispatcher">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Conditional_Gate.qiskit_equivalent_dispatcher" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.H_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">H_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.H_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.H_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.H_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.H_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.H_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.I_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">I_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.I_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.I_Gate.qiskit_equivalent_dispatcher">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.I_Gate.qiskit_equivalent_dispatcher" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Level">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_gates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Level.add_track">
+<span class="sig-name descname"><span class="pre">add_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level.add_track" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Level.assign_Conditional">
+<span class="sig-name descname"><span class="pre">assign_Conditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level.assign_Conditional" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Level.check_if_successful">
+<span class="sig-name descname"><span class="pre">check_if_successful</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level.check_if_successful" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Level.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level.clear" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Level.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Level.compile" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Bit">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Quantum_Bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([1.</span> <span class="pre">+</span> <span class="pre">0.j,</span> <span class="pre">0.</span> <span class="pre">+</span> <span class="pre">0.j])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Bit" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Bit.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real_zero</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_zero</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_one</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Bit.set_state" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Quantum_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Gate.add_conditional">
+<span class="sig-name descname"><span class="pre">add_conditional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_conditional</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Gate.add_conditional" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Gate.qiskit_equivalent_dispatcher">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Gate.qiskit_equivalent_dispatcher" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Quantum_Gate.unlink">
+<span class="sig-name descname"><span class="pre">unlink</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Quantum_Gate.unlink" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.SWAP_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">SWAP_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cost</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_Track</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_Position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rectangle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aux_gate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.SWAP_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.SWAP_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.SWAP_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.SWAP_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.SWAP_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.S_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">S_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.S_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.S_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.S_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.S_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.S_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.T_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">T_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.T_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.T_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.T_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.T_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.T_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Track">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">level,</span> <span class="pre">position,</span> <span class="pre">input=[&lt;Circuit_Logic.Quantum_Bit</span> <span class="pre">object&gt;],</span> <span class="pre">deletable=False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Track" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Track.delete_gate">
+<span class="sig-name descname"><span class="pre">delete_gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">del_gate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Track.delete_gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Track.delete_track">
+<span class="sig-name descname"><span class="pre">delete_track</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Track.delete_track" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Track.i_gate_cleaner">
+<span class="sig-name descname"><span class="pre">i_gate_cleaner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Track.i_gate_cleaner" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Track.move_gate">
+<span class="sig-name descname"><span class="pre">move_gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_gate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Track.move_gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.X_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">X_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.X_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.X_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.X_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.X_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.X_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Circuit_Logic.Z_Gate">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Circuit_Logic.</span></span><span class="sig-name descname"><span class="pre">Z_Gate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">cost</span></em>, <em class="sig-param"><span class="pre">conditional</span></em>, <em class="sig-param"><span class="pre">current_Track</span></em>, <em class="sig-param"><span class="pre">current_Position</span></em>, <em class="sig-param"><span class="pre">rectangle=&lt;rect(0</span></em>, <em class="sig-param"><span class="pre">0</span></em>, <em class="sig-param"><span class="pre">100</span></em>, <em class="sig-param"><span class="pre">100)&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Z_Gate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <a class="reference internal" href="#Circuit_Logic.Quantum_Gate" title="Circuit_Logic.Quantum_Gate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Circuit_Logic.Quantum_Gate</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Z_Gate.conditional_qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">conditional_qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Z_Gate.conditional_qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Circuit_Logic.Z_Gate.qiskit_equivalent">
+<span class="sig-name descname"><span class="pre">qiskit_equivalent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Quantum_Circuit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Circuit_Logic.Z_Gate.qiskit_equivalent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">QPuzzler</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">QPuzzler</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Circuit_Logic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Load_Levels.html">Load_Levels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Views.html">Views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">QPuzzler</a><ul>
+      <li>Previous: <a href="modules.html" title="Chapitre précédent">QPuzzler</a></li>
+      <li>Next: <a href="Load_Levels.html" title="Chapitre suivant">Load_Levels module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Elie Leblanc et Francois Lochhead.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Circuit_Logic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
